@@ -54,4 +54,5 @@ export * from "@ly_charts/LineChart";
 export * from "@ly_charts/PieChart";
 
 export * from "@ly_input/InputDate";
-export * from "@ly_input/InputCheckbox"
+export * from "@ly_input/InputCheckbox";
+export * from "@ly_input/InputFile";
