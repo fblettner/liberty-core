@@ -53,3 +53,4 @@ export * from "@ly_charts/BarChart";
 export * from "@ly_charts/LineChart";
 export * from "@ly_charts/PieChart";
 
+export * from "@ly_input/InputDate";

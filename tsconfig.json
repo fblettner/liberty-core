@@ -22,6 +22,7 @@
       "@ly_styles/*": ["src/styles/*"],
       "@ly_common/*": ["src/common/*"],
       "@ly_charts/*": ["src/charts/*"],
+      "@ly_input/*": ["src/input/*"],
     },
 
   },

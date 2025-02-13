@@ -31,6 +31,7 @@ export default defineConfig({
       "@ly_translations": path.resolve(__dirname, 'src/translations'),
       "@ly_common": path.resolve(__dirname, 'src/common'),
       "@ly_charts": path.resolve(__dirname, 'src/charts'),
+      "@ly_input": path.resolve(__dirname, 'src/input'),
     },
   },
 });
