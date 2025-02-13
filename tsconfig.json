@@ -21,7 +21,7 @@
       "@ly_translations/*": ["src/translations/*"], 
       "@ly_styles/*": ["src/styles/*"],
       "@ly_common/*": ["src/common/*"],
-      "@ly_features/*": ["src/features/*"],
+      "@ly_charts/*": ["src/charts/*"],
     },
 
   },
