@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "@ly_types/*": ["src/types/*"],
+      "@ly_utils/*": ["src/utils/*"],
+      "@ly_translations/*": ["src/translations/*"], 
+      "@ly_styles/*": ["src/styles/*"],
+      "@ly_common/*": ["src/common/*"],
+      "@ly_features/*": ["src/features/*"],
+    },
+
+  },
+  "include": ["src"]
+}
