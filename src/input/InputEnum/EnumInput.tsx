@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 NOMANA-IT and/or its affiliates.
+ * Copyright (c) 2022 NOMANA-IT and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  * *
  */
@@ -8,32 +8,39 @@ import { Fragment, SyntheticEvent, useCallback, useEffect, useMemo, useRef, useS
 import { t } from "i18next";
 
 // Custom Import
-import { ComponentProperties, LYComponentEvent, LYComponentMode } from "@ly_types/lyComponents"
+import { ComponentProperties, LYComponentEvent, LYComponentMode, LYComponentType } from "@ly_types/lyComponents"
 import { EEnumValues, EEnumHeader, IEnumOption } from "@ly_types/lyEnums";
 import { EnumPopper } from "@ly_input/InputEnum/EnumPopper";
 import { OnChangeFunction } from "@ly_input/InputEnum/utils/commonUtils";
 import { IEnumsResult } from "@ly_types/lyEnums";
-import { ESessionMode } from "@ly_types/lyApplications";
+import { ToolsDictionary } from "@ly_services/lyDictionary";
+import { ESessionMode, EApplications, IAppsProps } from "@ly_types/lyApplications";
+import { IFiltersProperties } from "@ly_types/lyFilters";
 import { ResultStatus } from "@ly_types/lyQuery";
+import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import { ESeverity, IDialogAction } from "@ly_utils/commonUtils";
 import { IErrorState } from "@ly_utils/commonUtils";
+import { IColumnsFilter } from "@ly_types/lyFilters";
 import Logger from "@ly_services/lyLogging";
 import { LYAddIcon, LYEditIcon } from "@ly_styles/icons";
 import { Div_AutoComplete } from "@ly_styles/Div";
 import { IconButton } from "@ly_common/IconButton";
 import { Select } from "@ly_common/Select";
-import { TextFieldVariants } from "@ly_types/common";
+import { ITransformedObject, TextFieldVariants } from "@ly_types/common";
 import { useDeviceDetection, useMediaQuery } from "@ly_common/UseMediaQuery";
+import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
 
 export interface IEnumInput {
     id: string;
     label: string;
+    enumID: number;
     defaultValue: string;
     disabled: boolean;
     variant: TextFieldVariants | undefined;
     freeSolo: boolean;
     searchByLabel?: boolean;
+    data?: IColumnsFilter | ITransformedObject;
     dynamic_params?: string;
     fixed_params?: string;
     sessionMode?: ESessionMode;
@@ -42,15 +49,14 @@ export interface IEnumInput {
     hideButton?: boolean;
     onChange: OnChangeFunction;
     setErrorState: React.Dispatch<React.SetStateAction<IErrorState>>;
-    getData: () => Promise<IEnumsResult>;
-    loggerAPI: string
-    dialogRef: React.RefObject<ComponentProperties | null>;
+    appsProperties: IAppsProps;
+    userProperties: IUsersProps;
     modulesProperties: IModulesProps;
 }
 
 export const EnumInput = (props: IEnumInput) => {
-    const { id, label, defaultValue, disabled, variant, freeSolo, searchByLabel, dynamic_params, fixed_params, 
-        sessionMode, overrideQueryPool, callFromTable, onChange, setErrorState, hideButton, getData, loggerAPI, dialogRef, modulesProperties } = props;
+    const { id, label, enumID, defaultValue, disabled, variant, freeSolo, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool, 
+        callFromTable, onChange, setErrorState, hideButton, appsProperties, userProperties,modulesProperties } = props;
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
 
@@ -67,13 +73,28 @@ export const EnumInput = (props: IEnumInput) => {
     const [selectedOption, setSelectedOption] = useState<IEnumOption | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
 
-    const inputRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const dialogRef = useRef<ComponentProperties>({
+        id: -1,
+        type: LYComponentType.FormsDialog,
+        label: label,
+        filters: [],
+        componentMode: LYComponentMode.add,
+        showPreviousButton: false,
+        isChildren: true
+    });
 
     const fetchEnumData = useCallback(async (getAllValues: boolean) => {
         // await new Promise(resolve => setTimeout(resolve, 1000));
         setIsLoading(true);
         try {
-            const results = await getData();
+            const results = await ToolsDictionary.getEnums({
+                appsProperties: appsProperties,
+                userProperties: userProperties,
+                [EEnumHeader.id]: enumID,
+                sessionMode: sessionMode ?? appsProperties[EApplications.session],
+                modulesProperties
+            });
             if (results.status === ResultStatus.success) {
                 setEnumState({
                     data: results.data,
@@ -96,8 +117,7 @@ export const EnumInput = (props: IEnumInput) => {
                 const logger = new Logger({
                     transactionName: "EnumInput.fetchEnumData",
                     modulesProperties: modulesProperties,
-                    data: results,
-                    loggerAPI: loggerAPI
+                    data: results
                 });
                 logger.logException("EnumInput: Failed to fetch enum data");
             }
@@ -105,15 +125,14 @@ export const EnumInput = (props: IEnumInput) => {
             const logger = new Logger({
                 transactionName: "EnumInput.fetchEnumData",
                 modulesProperties: modulesProperties,
-                data: error,
-                loggerAPI: loggerAPI    
+                data: error
             });
             logger.logException("EnumInput: Failed to fetch enum data");
             setErrorState({ open: true, message: t("unexpectedError"), severity: ESeverity.error });
 
             // Optional: Set an error state to show a message to the user
         }
-    }, [dynamic_params, fixed_params, sessionMode, overrideQueryPool, searchByLabel, defaultValue, selectedOption]);
+    }, [enumID, dynamic_params, fixed_params, sessionMode, overrideQueryPool, searchByLabel, defaultValue, selectedOption]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -124,7 +143,7 @@ export const EnumInput = (props: IEnumInput) => {
             }
         };
         fetchData();
-    }, [id]);
+    }, [enumID]);
 
     const handleFocus = useCallback(async () => {
         setIsLoading(true)
@@ -216,10 +235,47 @@ export const EnumInput = (props: IEnumInput) => {
 
 
     const onDialogOpen = useCallback((mode: LYComponentMode) => {
+        let filtersDLG: IFiltersProperties[] = [];
+        filtersDLG.push({
+            header: "",
+            field: EEnumValues.id,
+            value: enumID,
+            type: "string",
+            operator: "=",
+            defined: true,
+            rules: "",
+            disabled: true,
+            values: "",
+        });
+
+        if (mode !== LYComponentMode.add) {
+            filtersDLG.push({
+                header: "",
+                field: EEnumValues.value,
+                value: selectedOption ? selectedOption[EEnumValues.value] : null,
+                type: "string",
+                operator: "=",
+                defined: true,
+                rules: "",
+                disabled: true,
+                values: "",
+            });
+        }
+        dialogRef.current = {
+            id: GlobalSettings.getFramework.enums_dialog,
+            type: LYComponentType.FormsDialog,
+            label: label,
+            filters: filtersDLG,
+            componentMode: mode,
+            showPreviousButton: false,
+            isChildren: false,
+        };
+        setOpenDialog(true);
+
         setPopperOpen(false);
         setOpenDialog(true);
 
-    }, [selectedOption, id]);
+    }, [selectedOption, enumID]);
 
     const getOptionLabel = useMemo(() => (option: string | IEnumOption) => {
         if (typeof option === "string") {

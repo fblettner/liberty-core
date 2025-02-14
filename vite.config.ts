@@ -33,6 +33,7 @@ export default defineConfig({
       "@ly_charts": path.resolve(__dirname, 'src/charts'),
       "@ly_input": path.resolve(__dirname, 'src/input'),
       "@ly_services": path.resolve(__dirname, 'src/services'),
+      "@ly_forms": path.resolve(__dirname, 'src/forms'),
     },
   },
 });

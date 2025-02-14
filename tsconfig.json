@@ -24,6 +24,7 @@
       "@ly_charts/*": ["src/charts/*"],
       "@ly_input/*": ["src/input/*"],
       "@ly_services/*": ["src/services/*"],
+      "@ly_forms/*": ["src/forms/*"],
     },
 
   },

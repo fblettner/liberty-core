@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2025 NOMANA-IT and/or its affiliates.
+ * Copyright (c) 2022 NOMANA-IT and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  * *
  */
 import { ILoggerProps, ILoggerParams, TLoggerData, IBreadcrumbData } from "@ly_types/lyLogging";
 import { IModulesProps } from "@ly_types/lyModules";
 import { IRestResult } from "@ly_types/lyQuery";
+import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import * as Sentry from "@sentry/react";
 
 class Logger {
@@ -16,10 +17,9 @@ class Logger {
     private data: TLoggerData;
     private modulesProperties: IModulesProps;
     private query: number | null;
-    private loggerAPI: string;
 
     constructor(props: ILoggerProps) {
-        const { level, transactionName, method, url, data, query, loggerAPI } = props;
+        const { level, transactionName, method, url, data, query } = props;
         this.level = level ?? "info";
         this.transactionName = transactionName;
         this.method = method ?? null;
@@ -27,13 +27,12 @@ class Logger {
         this.data = data ?? null; // Allow null instead of an empty string
         this.modulesProperties = props.modulesProperties;
         this.query = query ?? null;
-        this.loggerAPI = loggerAPI;
     }
 
 
     // General log handler (message or exception)
     private log(props: ILoggerParams): void {
-        const { message, category, feature, isException, loggerAPI } = props;
+        const { message, category, feature, isException } = props;
         if (this.modulesProperties.sentry && this.modulesProperties.sentry.enabled) {
             Sentry.withScope(scope => {
                 scope.setTransactionName(this.transactionName);
@@ -94,7 +93,6 @@ class Logger {
                 category: category,
                 feature: feature,
                 isException: isException,
-                loggerAPI: loggerAPI,
             }
             this.logToBackend(logToBackendParams);
         }
@@ -103,7 +101,7 @@ class Logger {
 
     // Backend logging function
     private async logToBackend(props: ILoggerParams): Promise<void> {
-        const { message, category, feature, isException, loggerAPI } = props;
+        const { message, category, feature, isException } = props;
         const logData = {
             transactionName: this.transactionName,
             level: this.level,
@@ -137,7 +135,7 @@ class Logger {
 
         try {
             if (isException) {
-                await fetch(loggerAPI, {
+                await fetch(GlobalSettings.getBackendURL + "api/logs", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -146,7 +144,7 @@ class Logger {
                 });
             } else
             if (this.modulesProperties.debug && this.modulesProperties.debug.enabled)
-                await fetch(loggerAPI, {
+                await fetch(GlobalSettings.getBackendURL + "api/logs", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -166,7 +164,6 @@ class Logger {
             category: "http",
             feature: "database-api",
             isException: false,
-            loggerAPI: this.loggerAPI,
         }
         this.log(logParams);
     }
@@ -177,7 +174,6 @@ class Logger {
             category: "http",
             feature: "database-api",
             isException: true,
-            loggerAPI: this.loggerAPI,
         }
         this.log(logParams);
     }
@@ -188,7 +184,6 @@ class Logger {
             category: "http",
             feature: "rest-api",
             isException: false,
-            loggerAPI: this.loggerAPI,
         }
         this.log(logParams);
     }
@@ -199,7 +194,6 @@ class Logger {
             category: "http",
             feature: "rest-api",
             isException: true,
-            loggerAPI: this.loggerAPI,
         }
         this.log(logParams);
     }
@@ -210,7 +204,6 @@ class Logger {
             category: "debug",
             feature: "console",
             isException: false,
-            loggerAPI: this.loggerAPI,
         }
         this.log(logParams);
     }
@@ -221,7 +214,6 @@ class Logger {
             category: "debug",
             feature: "console",
             isException: true,
-            loggerAPI: this.loggerAPI,
         }
         this.log(logParams);
     }

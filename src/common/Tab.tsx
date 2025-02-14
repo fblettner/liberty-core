@@ -8,7 +8,7 @@ import React, { ReactElement } from "react";
 import styled from "@emotion/styled";
 import { alpha } from "@ly_types/common";
 
-interface TabProps {
+export interface TabProps {
     id: string;
     label: string | ReactElement | null;
     value: string | number;

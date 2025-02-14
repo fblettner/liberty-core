@@ -4,7 +4,10 @@
  * *
  */
 
-import { IColumnMetadata, ResultStatus } from "@ly_types/lyQuery";
+import { ResultStatus } from "@ly_types/lyQuery";
+import { ESessionMode, IAppsProps } from "@ly_types/lyApplications";
+import { IUsersProps } from "@ly_types/lyUsers";
+import { IModulesProps } from "@ly_types/lyModules";
 
 export enum EEnumHeader {
   id = "ENUM_ID",
@@ -35,7 +38,13 @@ export interface IEnumsResult {
   header: {
     [key in EEnumHeader]?: string;
   };
-  status?: ResultStatus.success;
+  status?: ResultStatus;
 }
 
-
+export interface IEnumProps {
+  appsProperties: IAppsProps;
+  userProperties: IUsersProps;
+  modulesProperties: IModulesProps;
+  [EEnumHeader.id]: number;
+  sessionMode?: ESessionMode;
+}

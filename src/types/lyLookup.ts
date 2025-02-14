@@ -54,7 +54,7 @@ export interface ILookupOption {
 
 
 export interface IGetLookup {
-  columns:  IColumnMetadata[],
+  columns:  ILookupColumn[],
   data: ILookupOption[],
   header: {
     [key in ELookup]?: string;
@@ -72,8 +72,16 @@ export interface IFetchParallelLookupData {
   modulesProperties: IModulesProps;
 }
 
-// Define an interface for the result
+export interface ILookupColumn {
+  header: string;
+  field: string;
+}
+
 export interface ILookupResult {
-  items: ILookupOption[];
-  status: ResultStatus;
+  columns: ILookupColumn[];
+  data: ILookupOption[];
+  header: {
+    [key in ELookup]?: string;
+  };
+  status?: ResultStatus;
 }

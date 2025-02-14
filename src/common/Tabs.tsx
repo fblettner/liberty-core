@@ -14,7 +14,7 @@ interface ChildrenTabProps {
     onClick?: (event: SyntheticEvent<Element, Event>) => void;
 }
 
-interface TabsProps {
+export interface TabsProps {
     value: string;
     onChange: (event: SyntheticEvent<Element, Event>, newValue: string) => void;
     variant?: 'standard' | 'scrollable';

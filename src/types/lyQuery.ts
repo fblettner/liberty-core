@@ -34,21 +34,25 @@ export enum QuerySource {
   Query = "query", /* DATA FROM LY_QRY_SQL */
 }
 
-export enum QueryRoute {
-  token = "api/auth/token",
-  user = "api/auth/user",
-  crud = "api/db/query",
-  oidc = "api/oidc",
-  open = "api/db/open",
-  close = "api/db/close",
-  encrypt = "api/fmw/encrypt",
-  audit = "api/db/audit",
-  modules = "api/fmw/modules",
-  applications = "api/fmw/applications",
-  themes = "api/fmw/themes",
-  ai_prompt = "api/ai/prompt",
-  ai_welcome = "api/ai/welcome",
-}
+export const QueryRoute: Record<string, string> = {
+  token: "api/auth/token",
+  user: "api/auth/user",
+  crud: "api/db/query",
+  oidc: "api/oidc",
+  open: "api/db/open",
+  close: "api/db/close",
+  encrypt: "api/fmw/encrypt",
+  audit: "api/db/audit",
+  modules: "api/fmw/modules",
+  applications: "api/fmw/applications",
+  themes: "api/fmw/themes",
+  ai_prompt: "api/ai/prompt",
+  ai_welcome: "api/ai/welcome",
+};
+
+export const overrideQueryRoute = (newRoutes: Partial<Record<string, string>>) => {
+  Object.assign(QueryRoute, newRoutes);
+};
 
 export enum QueryMethod {
   delete = "DELETE",
