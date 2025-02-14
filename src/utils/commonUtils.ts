@@ -1,10 +1,10 @@
-/*
- * Copyright (c) 2025 NOMANA-IT and/or its affiliates.
- * All rights reserved. Use is subject to license terms.
- * *
- */
+import { ThemeMode, SeverityVariant } from '@ly_types/common';
+import { LYComponentEvent } from '@ly_types/lyComponents';
+import { DialogKeys } from '@ly_types/lyDialogs';
+import { IEnumOption } from '@ly_types/lyEnums';
+import { ILookupOption } from '@ly_types/lyLookup';
+import { ITableRow } from '@ly_types/lyTables';
 import { VirtualElement } from '@popperjs/core';
-import { SeverityVariant, ThemeMode } from '@ly_types/common';
 
 export const getBoundingClientRectSafe = (element: HTMLElement | VirtualElement | null | undefined | (() => HTMLElement) | (() => VirtualElement)) => {
     if (element) {
@@ -43,6 +43,11 @@ export interface IErrorState {
 
 }
 
+export interface IDialogAction {
+    event: LYComponentEvent;
+    message: string;
+    keys: DialogKeys;
+}
 export enum ActionsType {
     button = "button",
     event = "event"
@@ -54,6 +59,13 @@ export interface IReserveStatus {
     status: boolean;
 }
 
+
+export interface OnChangeParams {
+    id: string;
+    value: IContentValue;
+    label: string;
+    data: IEnumOption | ILookupOption | [];
+}
 
 export type IContentValue = string | number | Date | boolean | null | unknown ;
 

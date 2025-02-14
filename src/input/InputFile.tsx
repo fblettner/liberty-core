@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2022 NOMANA-IT and/or its affiliates.
+ * Copyright (c) 2025 NOMANA-IT and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  * *
  */
 // React Import
-import React, { useState } from 'react';
+import React from 'react';
 import { t } from 'i18next';
 
 import { EStandardColor, ESeverity } from '@ly_utils/commonUtils';

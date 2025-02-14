@@ -3,6 +3,7 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
+import { IContentValue } from "@ly_utils/commonUtils";
 import { createContext, useContext } from "react";
 
 // Define Theme Modes
@@ -74,3 +75,11 @@ export const useZIndex = () => useContext(ZIndexContext);export const ZIndexCont
   resetZIndex: () => { },
 });
 
+export enum UIDisplayMode  {
+  dark = "dark",
+  light = "light"
+}
+
+export interface ITransformedObject {
+  [key: string]: { value: IContentValue };
+}

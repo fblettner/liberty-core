@@ -26,7 +26,7 @@ interface TableHeadProps extends HTMLAttributes<HTMLTableSectionElement> {
 
 
 // Table Cell Props
-interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
+export interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
     children?: ReactNode;
     align?: "left" | "center" | "right";
     colSpan?: number;
@@ -68,7 +68,7 @@ export function TableHead(props: TableHeadProps) {
 };
 
 // Table Row Props
-interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
+export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
     children: ReactNode;
     isSelected?: boolean;
     status?: "removed" | "edited" | "error";
