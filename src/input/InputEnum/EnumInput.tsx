@@ -8,7 +8,7 @@ import { Fragment, SyntheticEvent, useCallback, useEffect, useMemo, useRef, useS
 import { t } from "i18next";
 
 // Custom Import
-import { ComponentProperties, LYComponentEvent, LYComponentMode, LYComponentType } from "@ly_types/lyComponents"
+import { ComponentProperties, LYComponentEvent, LYComponentMode } from "@ly_types/lyComponents"
 import { EEnumValues, EEnumHeader, IEnumOption } from "@ly_types/lyEnums";
 import { EnumPopper } from "@ly_input/InputEnum/EnumPopper";
 import { OnChangeFunction } from "@ly_input/InputEnum/utils/commonUtils";

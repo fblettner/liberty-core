@@ -10,15 +10,14 @@ import React from "react";
 import { EnumGrid } from "@ly_input/InputEnum/EnumGrid";
 import { getBoundingClientRectSafe } from "@ly_utils/commonUtils";
 import { OnChangeFunction, OnCloseFunction } from "@ly_input/InputEnum/utils/commonUtils";
-import { IEnumOption } from "@ly_types/lyEnums";
+import { IEnumColumn, IEnumOption } from "@ly_types/lyEnums";
 import { Popper, PopperProps } from "@ly_common/Popper";
-import { IColumnMetadata } from "@ly_types/lyQuery";
 
 export interface IEnumPopper {
     id: string;
     popperProps: PopperProps;
     isLoading: boolean;
-    columns: IColumnMetadata[];
+    columns: IEnumColumn[];
     data: IEnumOption[];
     inputRef: React.RefObject<HTMLInputElement | null>;
     open: boolean;

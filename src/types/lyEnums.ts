@@ -19,13 +19,18 @@ export enum EEnumValues {
   display_add = "ENUM_DISPLAY_ADD"
 }
 
+export interface IEnumColumn {
+  header: string;
+  field: string;
+}
+
 export interface IEnumOption {
   [EEnumValues.value]: string;
   [EEnumValues.label]: string;
 }
 
 export interface IEnumsResult {
-  columns: IColumnMetadata[];
+  columns: IEnumColumn[];
   data: IEnumOption[];
   header: {
     [key in EEnumHeader]?: string;

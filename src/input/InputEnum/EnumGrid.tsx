@@ -4,8 +4,7 @@
  * *
  */
 // React Import
-import { EEnumValues, IEnumOption } from "@ly_types/lyEnums";
-import { IColumnMetadata } from "@ly_types/lyQuery";
+import { EEnumValues, IEnumColumn, IEnumOption } from "@ly_types/lyEnums";
 import { useEffect, useRef, useState } from "react";
 import { OnChangeFunction, OnCloseFunction } from "@ly_input/InputEnum/utils/commonUtils";
 import { useDeviceDetection, useMediaQuery } from "@ly_common/UseMediaQuery";
@@ -19,7 +18,7 @@ import { TableContainer, TableRow_Header, TableRow_Selected } from "@ly_styles/T
 export interface IEnumGrid {
     id: string;
     isLoading: boolean;
-    columns: IColumnMetadata[];
+    columns: IEnumColumn[];
     data: IEnumOption[];
     inputRef: React.RefObject<HTMLInputElement | null>;
     setSelectedOption: React.Dispatch<React.SetStateAction<IEnumOption | null>>;
@@ -88,7 +87,7 @@ export const EnumGrid = (props: IEnumGrid) => {
                                         paddingTop: '0px',
                                         paddingBottom: '0px',
                                     }}>
-                                    {columns.filter((item: IColumnMetadata) => item.field === EEnumValues.value)[0]["header"]}
+                                    {columns.filter((item: IEnumColumn) => item.field === EEnumValues.value)[0]["header"]}
                                 </TableCell>
                                 <TableCell
                                     style={{
@@ -101,7 +100,7 @@ export const EnumGrid = (props: IEnumGrid) => {
                                         paddingTop: '0px',
                                         paddingBottom: '0px',
                                     }}>
-                                    {columns.filter((item: IColumnMetadata) => item.field === EEnumValues.label)[0]["header"]}
+                                    {columns.filter((item: IEnumColumn) => item.field === EEnumValues.label)[0]["header"]}
                                 </TableCell>
                             </TableRow_Header>
                         </TableHead>
