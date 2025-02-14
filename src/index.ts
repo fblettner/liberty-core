@@ -56,6 +56,16 @@ export * from "@ly_input/InputDate";
 export * from "@ly_input/InputCheckbox";
 export * from "@ly_input/InputFile";
 export * from "@ly_input/InputEnum/InputEnum"
+export * from "@ly_input/InputLookup/InputLookup"
+export * from "@ly_input/InputAction"
+export * from "@ly_input/InputColor"
+
+export * from "@ly_forms/FormsChart/FormsChart"
+export * from "@ly_forms/FormsDashboard/FormsDashboard"
+export * from "@ly_forms/FormsDialog/FormsDialog"
+export * from "@ly_forms/FormsTable/FormsTable"
+export * from "@ly_forms/FormsTools/FormsTools"
+export * from "@ly_forms/FormsUpload/FormsUpload"
 
 export * from "@ly_types/common";
 export * from "@ly_types/lyQuery";

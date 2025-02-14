@@ -28,5 +28,5 @@
     },
 
   },
-  "include": ["src"]
+  "include": ["src", "src/components/forms/FormsTable/features/.tsx", "react-table-augmentation.d.ts"],
 }

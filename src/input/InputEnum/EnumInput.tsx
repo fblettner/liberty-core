@@ -30,6 +30,7 @@ import { ITransformedObject, TextFieldVariants } from "@ly_types/common";
 import { useDeviceDetection, useMediaQuery } from "@ly_common/UseMediaQuery";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
+import { DialogWidget } from "@ly_forms/FormsDialog/dialogs/DialogWidget";
 
 export interface IEnumInput {
     id: string;
@@ -55,8 +56,8 @@ export interface IEnumInput {
 }
 
 export const EnumInput = (props: IEnumInput) => {
-    const { id, label, enumID, defaultValue, disabled, variant, freeSolo, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool, 
-        callFromTable, onChange, setErrorState, hideButton, appsProperties, userProperties,modulesProperties } = props;
+    const { id, label, enumID, defaultValue, disabled, variant, freeSolo, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool,
+        callFromTable, onChange, setErrorState, hideButton, appsProperties, userProperties, modulesProperties } = props;
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
 
@@ -286,6 +287,22 @@ export const EnumInput = (props: IEnumInput) => {
 
     return (
         <Fragment>
+            <DialogWidget
+                open={openDialog}
+                componentProperties={dialogRef.current}
+                onClose={onDialogClose}
+                reserveStatus={
+                    {
+                        record: "",
+                        user: "",
+                        status: false
+                    }
+                }
+                onReserveRecord={() => { }}
+                appsProperties={appsProperties}
+                userProperties={userProperties}
+                modulesProperties={modulesProperties}
+            />
             <Div_AutoComplete>
                 <Select
                     ref={inputRef}

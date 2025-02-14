@@ -25,7 +25,7 @@ interface CardContentProps {
     style?: React.CSSProperties;
 }
 
-interface CardActionAreaProps {
+export interface CardActionAreaProps {
     onClick?: () => void;
     children: React.ReactNode;
     disabled?: boolean;

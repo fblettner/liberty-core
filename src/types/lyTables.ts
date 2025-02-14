@@ -15,6 +15,7 @@ import { EDictionaryType } from "@ly_types/lyDictionary";
 import { JSX } from "react";
 import { IEnumOption } from "@ly_types/lyEnums";
 import { ILookupOption } from "@ly_types/lyLookup";
+import { LYComponentEvent } from "@ly_types/lyComponents";
 
 export enum TablesGridHardCoded {
   addRow = "ADD_ROW",
@@ -194,3 +195,9 @@ export interface ITablesProperties {
 }
 
 
+export interface ISelectedRow {
+  event: LYComponentEvent,
+  status: "success" | "error" | "selected",
+  message: string,
+  keys: ITableRow
+}

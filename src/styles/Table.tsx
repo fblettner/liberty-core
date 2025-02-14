@@ -6,8 +6,11 @@
 import '@emotion/react';
 import styled from '@emotion/styled';
 import { TableCell, TableRow } from '@ly_common/Table';
+import { LYTableInstance } from '@ly_forms/FormsTable/utils/tanstackUtils';
 import { Div } from '@ly_styles/Div';
 import { DefaultZIndex } from '@ly_types/common';
+import { ITableRow } from '@ly_types/lyTables';
+import { Cell } from '@tanstack/react-table';
 
 export const TableContainer = styled(Div)(({ theme }) => ({
   width: "100%",
@@ -67,4 +70,18 @@ export const TableRow_Selected = styled(TableRow)<StyledTableRowProps>(({ theme,
   },
 }));
 
+interface StyledTableCellProps {
+  table: LYTableInstance<ITableRow>;
+  cell: Cell<ITableRow, unknown>
+}
 
+export const TableCell_Tanstack = styled(TableCell)<StyledTableCellProps>(({ theme, table, cell }) => ({
+  borderRight: `1px solid ${theme.palette.divider}`,
+  paddingTop: table.getState().density === 'sm' ? '6px' : table.getState().density === 'md' ? '12px' : '16px',
+  paddingBottom: table.getState().density === 'sm' ? '6px' : table.getState().density === 'md' ? '12px' : '16px',
+  paddingLeft: '10px',
+  paddingRight: '10px',
+  textAlign: cell.column.columnDef.meta?.align || 'left',
+  width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+  fontSize: '14px',
+}));    
