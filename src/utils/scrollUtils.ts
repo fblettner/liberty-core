@@ -3,7 +3,7 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
-export const scrollToBottom = (chatContainerRef: React.RefObject<HTMLDivElement>) => {
+export const scrollToBottom = (chatContainerRef: React.RefObject<HTMLDivElement | null >) => {
     if (chatContainerRef.current) {
         chatContainerRef.current.scrollTo({
             top: chatContainerRef.current.scrollHeight,
@@ -19,8 +19,8 @@ export const scrollToFirstItem = (firstItemRef: React.RefObject<HTMLDivElement |
 };
 
 export const handleScroll = (
-    chatContainerRef: React.RefObject<HTMLDivElement>,
-    autoScrollEnabledRef: React.MutableRefObject<boolean>,
+    chatContainerRef: React.RefObject<HTMLDivElement | null>,
+    autoScrollEnabledRef: React.RefObject<boolean>,
     setShowScrollButton: (show: boolean) => void,
     SCROLL_THRESHOLD: number
 ) => {

@@ -9,7 +9,7 @@ import { IRestResult } from "@ly_types/lyQuery";
 import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import * as Sentry from "@sentry/react";
 
-class Logger {
+export class Logger {
     private level: Sentry.SeverityLevel;
     private transactionName: string;
     private method: string | null;

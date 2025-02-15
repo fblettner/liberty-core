@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 NOMANA-IT and/or its affiliates.
+ * Copyright (c) 2022 NOMANA-IT and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  * *
  */
@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { DefaultZIndex } from '@ly_types/common';
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { alpha } from '@ly_types/common';
-import { drawerWidth, headerHeight } from '@ly_utils/commonUtils';
+import { drawerWidth, footerHeight, headerHeight } from '@ly_utils/commonUtils';
 
 // Define elevation shadows similar to Material-UI
 const elevationShadows: string[] = [
@@ -604,6 +604,17 @@ export const Div_FormsToolsCard = styled(Div)(({ theme }) => ({
 
 
 
+export const Div_Login = styled(Div)(({ theme }) => ({
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+//    backgroundImage: `url(${BackgroundLY})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    boxSizing: 'border-box',
+}));
 
 export const Backdrop = styled(Div)(({ theme }) => ({
     position: 'fixed',
@@ -618,6 +629,8 @@ export const Backdrop = styled(Div)(({ theme }) => ({
 interface Div_InlineProps {
     position?: "start" | "end"
 }
+
+
 
 export const Div_Inline = styled.div<Div_InlineProps>(({ theme, position }) => ({
     margin: 0,

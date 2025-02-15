@@ -7,7 +7,7 @@ import React, { ButtonHTMLAttributes, forwardRef, ReactNode } from "react";
 import styled from "@emotion/styled";
 import { LYReactIcon } from "@ly_styles/icons";
 
-interface ListProps {
+export interface ListProps {
     children: ReactNode;
     dense?: boolean;
     padding?: boolean;
@@ -133,7 +133,7 @@ const StyledListItem = styled.li<{ selected?: boolean; disabled?: boolean }>(
 type ButtonVariant = "contained" | "outlined" | "text";
 
 // Props for the ListItemButton
-interface ListItemButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ListItemButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: ButtonVariant;
   fullWidth?: boolean;

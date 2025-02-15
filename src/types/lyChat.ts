@@ -4,6 +4,9 @@
  * *
  */
 
+import { ComponentProperties } from "./lyComponents";
+import { CDialogContent } from "./lyDialogs";
+
 export interface IChatAction {
         id: number;
         componentID: number;
@@ -12,6 +15,8 @@ export interface IChatAction {
         dynamic_params: string;
         fixed_params: string;
         pool_params: string;
+        dialogContent : CDialogContent;
+        component: ComponentProperties;
 }
 
 export interface IChatMessage {

@@ -154,10 +154,15 @@ export const TableImport = (params: ITableImport) => {
         <Fragment>
             <Backdrop />
             <DraggableDialog
-                {...bindDrag()} // Attach drag and resize functionality
-                x={x.get()}
-                y={y.get()}
-                isFullScreen={isFullScreen}
+                {...bindDrag()}
+                style={{
+                    x: isFullScreen ? 0 : x,
+                    y: isFullScreen ? 0 : y,
+                    bottom: isFullScreen ? 0 : 'auto',
+                    right: isFullScreen ? 0 : 'auto',
+                    top: isFullScreen ? 0 : '50%',
+                    left: isFullScreen ? 0 : '50%',
+                }}
             >
                 <Div_DialogWidget fullScreen={isFullScreen} userWidth={isFullScreen ? '100vw' : `${dimensions.width}px`}
                     userHeight={isFullScreen ? '100dvh' : `${dimensions.height}px`}>

@@ -10,7 +10,7 @@ import { LYIconSize } from "@ly_utils/commonUtils";
 import { TextFieldVariants, ThemeMode } from "@ly_types/common";
 import { variantTextColors } from '@ly_utils/commonUtils';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     id: string;
     label?: string;
     variant?: TextFieldVariants;
@@ -241,3 +241,5 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         );
     }
 );
+
+Input.displayName = "Input";

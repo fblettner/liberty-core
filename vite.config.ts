@@ -34,6 +34,8 @@ export default defineConfig({
       "@ly_input": path.resolve(__dirname, 'src/input'),
       "@ly_services": path.resolve(__dirname, 'src/services'),
       "@ly_forms": path.resolve(__dirname, 'src/forms'),
+      "@ly_assets": path.resolve(__dirname, 'src/assets'),
+      "@ly_context": path.resolve(__dirname, 'src/context'),
     },
   },
 });

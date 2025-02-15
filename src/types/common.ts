@@ -67,7 +67,8 @@ export function alpha(color: string, opacity: number): string {
   // If the color format is unsupported, return the color as-is
   return color;
 }
-export const useZIndex = () => useContext(ZIndexContext);export const ZIndexContext = createContext<{
+export const useZIndex = () => useContext(ZIndexContext);
+export const ZIndexContext = createContext<{
   getNextZIndex: () => number;
   resetZIndex: () => void;
 }>({

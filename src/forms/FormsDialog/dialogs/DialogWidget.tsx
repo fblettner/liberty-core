@@ -22,6 +22,7 @@ import { DraggableDialog } from "@ly_common/DragableDialog";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
+import { DefaultZIndex } from "@ly_types/common";
 
 // Custom Import
 interface IDialogWidget {
@@ -72,6 +73,7 @@ export const DialogWidget = (props: IDialogWidget) => {
                 const newHeight = Math.max(200, state.offset[1]); // Minimum height
                 setDimensions({ width: newWidth, height: newHeight });
             } else if (!isFullScreen) {
+
                 if (titleBarRef.current && titleBarRef.current.contains(state.event.target as Node))
                     // Handle dragging
                     api.start({ x: state.offset[0], y: state.offset[1] });
@@ -95,16 +97,21 @@ export const DialogWidget = (props: IDialogWidget) => {
         }
     };
 
-    
+
     if (!open) return null;
     return ReactDOM.createPortal(
         <Fragment>
             <Backdrop />
             <DraggableDialog
-                {...bindDrag()} // Attach drag and resize functionality
-                x={x.get()}
-                y={y.get()}
-                isFullScreen={isFullScreen}
+                {...bindDrag()}
+                style={{
+                    x: isFullScreen ? 0 : x,
+                    y: isFullScreen ? 0 : y,
+                    bottom: isFullScreen ? 0 : 'auto',
+                    right: isFullScreen ? 0 : 'auto',
+                    top: isFullScreen ? 0 : '50%',
+                    left: isFullScreen ? 0 : '50%',
+                }}
             >
                 <Div_DialogWidget fullScreen={isFullScreen} userWidth={isFullScreen ? '100vw' : `${dimensions.width}px`}
                     userHeight={isFullScreen ? '100dvh' : `${dimensions.height}px`}>
@@ -118,7 +125,7 @@ export const DialogWidget = (props: IDialogWidget) => {
                         </span>
                         <Div_DialogWidgetTitleButtons>
                             <IconButton_Contrast aria-label="toggle full screen" onClick={toggleFullScreen}
-                                icon={isFullScreen ? LYFullscreenExitIcon : LYFullscreenIcon}/>
+                                icon={isFullScreen ? LYFullscreenExitIcon : LYFullscreenIcon} />
                         </Div_DialogWidgetTitleButtons>
                     </Div_DialogWidgetTitle>
                     <Div_DialogWidgetContent>
