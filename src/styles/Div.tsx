@@ -668,11 +668,8 @@ export const Div_HeaderToolbar = styled.div(({ theme }) => ({
     },
 }));
 
-interface AppBarProps {
-    open?: boolean;
-}
 
-export const Div_HeaderAppBar = styled.div<AppBarProps>(({ theme, open }) => ({
+export const Div_HeaderAppBar = styled.div(({ theme }) => ({
     position: "sticky",
     top: 0,
     left: 0,

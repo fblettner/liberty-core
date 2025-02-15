@@ -77,11 +77,8 @@ export const openInNewTab = (url: string) => window.open(url, "_blank", "norefer
 
 export const handleMenuAction = (
   value: string,
-  sessionMode: ESessionMode,
   setSelectedIndex: Dispatch<string | null>,
-  dispatch: Dispatch<any>,
   updateActiveComponent: (component: ComponentProperties) => void,
-  auth: AuthContextProps,
   application: IAppsProps,
   userProperties: IUsersProps
 ) => {
@@ -90,14 +87,7 @@ export const handleMenuAction = (
     case "admin":
       break;
     case "signout":
-      if (auth.isAuthenticated) {
-        auth.removeUser().catch(console.error);
-        auth.revokeTokens().catch(console.error);
-      }
-
       setSelectedIndex(null);
-
-      dispatch({ type: 'signout', payload: { user: userProperties[EUsers.id], application: application[EApplications.id] } })
       break;
     case "pgadmin":
       openInNewTab(GlobalSettings.getBackendURL + "pgadmin");

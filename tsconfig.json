@@ -27,6 +27,7 @@
       "@ly_forms/*": ["src/forms/*"],
       "@ly_assets/*": ["src/assets/*"],
       "@ly_context/*": ["src/context/*"],
+      "@ly_apps/*": ["src/apps/*"],
     },
 
   },
