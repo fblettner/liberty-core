@@ -39,6 +39,7 @@ declare module '@emotion/react' {
       background: {
         default: string;
         loginPage: string;
+        loginImage: string;
       };
       backgroundShades: {
         light: {

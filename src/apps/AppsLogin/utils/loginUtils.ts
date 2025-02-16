@@ -12,6 +12,7 @@ import { ResultStatus } from "@ly_types/lyQuery";
 import { IUsersProps, EUsers } from "@ly_types/lyUsers";
 import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
 import { GlobalSettings } from "@ly_utils/GlobalSettings";
+import SocketClient, { socketHandler } from "@ly_utils/socket";
 import { t } from "i18next";
 import Cookies from "js-cookie";
 import { AuthContextProps } from "react-oidc-context";
@@ -75,11 +76,12 @@ export interface IConnectApplicationProps {
     selectedApplication: IAppsProps;
     setAppsProperties: React.Dispatch<React.SetStateAction<IAppsProps>>;
     jwt_token: string;
+    socket?: SocketClient;
 }
 
 // Simplified connectApplication without additional arguments
 export const connectApplication = (props: IConnectApplicationProps) => {
-    const { userProperties, setUserProperties, selectedApplication, setAppsProperties, jwt_token } = props;
+    const { userProperties, setUserProperties, selectedApplication, setAppsProperties, jwt_token, socket } = props;
 
     const user: IUsersProps =  {
             [EUsers.status]: true,
@@ -114,8 +116,11 @@ export const connectApplication = (props: IConnectApplicationProps) => {
 
     });
     setUserProperties(user);
-    //dispatch({ type: 'connect', payload: {user: userProperties[EUsers.id], application: application[EApplications.id]} })
-    //dispatch(onDarkModeChanged(userProperties[EUsers.darkMode] ?? true));
-    //i18next.changeLanguage(userProperties[EUsers.language]);
+
+    if (socket) {
+      const socketFunctions = socketHandler(socket);
+      socketFunctions.connect({user: userProperties[EUsers.id], application: selectedApplication[EApplications.id]});
+    }
+
 };
 

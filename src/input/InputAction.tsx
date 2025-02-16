@@ -49,6 +49,7 @@ import { Input } from '@ly_common/Input';
 import { DefaultZIndex } from '@ly_types/common';
 import { GridContainer, GridItem } from '@ly_common/Grid';
 import { DraggableDialog } from '@ly_common/DragableDialog';
+import SocketClient from '@ly_utils/socket';
 
 export interface InputActionProps {
     id: number;
@@ -65,10 +66,11 @@ export interface InputActionProps {
     appsProperties: IAppsProps;
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
+    socket?: SocketClient;
 };
 
 export const InputAction = (props: InputActionProps) => {
-    const { appsProperties, userProperties, modulesProperties } = props;
+    const { appsProperties, userProperties, modulesProperties, socket } = props;
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
     const [isFullScreen, setIsFullScreen] = useState(() => isSmallScreen || isMobile); // Set fullscreen initially if small screen
@@ -806,14 +808,7 @@ export const InputAction = (props: InputActionProps) => {
                         appsProperties={appsProperties}
                         userProperties={userProperties}
                         modulesProperties={modulesProperties}
-                        reserveStatus={
-                            {
-                                record: "",
-                                user: "",
-                                status: false
-                            }
-                        }
-                        onReserveRecord={() => { }}
+                        socket={socket}
                     />
                 );
             case LYComponentType.FormsUpload:

@@ -86,9 +86,6 @@ export const handleMenuAction = (
   switch (value) {
     case "admin":
       break;
-    case "signout":
-      setSelectedIndex(null);
-      break;
     case "pgadmin":
       openInNewTab(GlobalSettings.getBackendURL + "pgadmin");
       break;

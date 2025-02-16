@@ -15,6 +15,8 @@ import { Fragment, useEffect, useState } from 'react';
 import { TabContainer } from './TabContainer';
 import { TabPanel } from './TabPanel';
 import { useTabs } from './useTabs';
+import { IReserveStatus } from '@ly_utils/commonUtils';
+import SocketClient from '@ly_utils/socket';
 
 
 export interface IAppsContentProps {
@@ -23,15 +25,17 @@ export interface IAppsContentProps {
   userProperties: IUsersProps;
   appsProperties: IAppsProps;
   modulesProperties: IModulesProps;
+  socket?: SocketClient;
 }
 
 export function AppsContent(props: IAppsContentProps) {
-  const { isMenuOpen, onToggleMenusDrawer, appsProperties, userProperties, modulesProperties } = props;
+  const { isMenuOpen, onToggleMenusDrawer, appsProperties, userProperties, modulesProperties, socket} = props;
 
   const { tabs, activeTab, addTab, closeTab, setActiveTab, memoizedContent, clearTabs } = useTabs({
     appsProperties,
     userProperties,
     modulesProperties,
+    socket
   });
   const [tabsCleared, setTabsCleared] = useState(false);
 

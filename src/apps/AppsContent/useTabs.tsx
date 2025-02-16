@@ -16,7 +16,8 @@ import { ComponentProperties, LYComponentViewMode, LYComponentDisplayMode, LYCom
 import { EDialogTabs } from '@ly_types/lyDialogs';
 import { IModulesProps } from '@ly_types/lyModules';
 import { IUsersProps } from '@ly_types/lyUsers';
-import { IDialogAction } from '@ly_utils/commonUtils';
+import { IDialogAction, IReserveStatus } from '@ly_utils/commonUtils';
+import SocketClient from '@ly_utils/socket';
 import { useState, useMemo } from 'react';
 
 const TAB_PREFIX = 'tab-id-';
@@ -28,10 +29,11 @@ export interface IUseTabsProps {
   userProperties: IUsersProps;
   modulesProperties: IModulesProps;
   initialTab?: ComponentProperties
+  socket?: SocketClient;
 }
 
 export const useTabs = (props: IUseTabsProps) => {
-  const { appsProperties, userProperties, modulesProperties, initialTab } = props
+  const { appsProperties, userProperties, modulesProperties, initialTab, socket } = props
   const [tabs, setTabs] = useState<{ [EDialogTabs.sequence]: string;[EDialogTabs.component]: ComponentProperties }[]>([]);
   const [activeTab, setActiveTab] = useState<string>(initialTab ? `${TAB_PREFIX}${initialTab.type}-${initialTab.id}` : '');
 
@@ -79,7 +81,13 @@ export const useTabs = (props: IUseTabsProps) => {
   const memoizedContent = useMemo(() => {
     return tabs.map(tab => ({
       ...tab,
-      content: getPageContent({component : tab[EDialogTabs.component], appsProperties: appsProperties, userProperties: userProperties, modulesProperties: modulesProperties})
+      content: getPageContent({
+          component : tab[EDialogTabs.component], 
+          appsProperties: appsProperties,
+          userProperties: userProperties, 
+          modulesProperties: modulesProperties,
+          socket
+      })
     }));
   }, [tabs]);
 
@@ -101,10 +109,11 @@ interface IRenderFormsTableProps {
   appsProperties: IAppsProps;
   userProperties: IUsersProps;
   modulesProperties: IModulesProps;
+  socket?: SocketClient;
 }
 
 const renderFormsTable = (props: IRenderFormsTableProps) => {
-  const { component, viewMode, appsProperties, userProperties, modulesProperties } = props;
+  const { component, viewMode, appsProperties, userProperties, modulesProperties, socket } = props;
   return (
     <Paper_Table elevation={0} key={component.id + TAB_TABLE_SUFFIX}>
       <FormsTable
@@ -117,6 +126,7 @@ const renderFormsTable = (props: IRenderFormsTableProps) => {
         appsProperties={appsProperties}
         userProperties={userProperties}
         modulesProperties={modulesProperties}
+        socket={socket}
       />
     </Paper_Table>
   )
@@ -130,12 +140,12 @@ interface IGetPageContentProps {
   appsProperties: IAppsProps;
   userProperties: IUsersProps;
   modulesProperties: IModulesProps;
-
+  socket?: SocketClient;
 }
 
 // Utility function for content rendering based on the component type
 const getPageContent = (props: IGetPageContentProps) => {
-  const { component, appsProperties, userProperties, modulesProperties } = props;
+  const { component, appsProperties, userProperties, modulesProperties, socket } = props;
 
   
 
@@ -147,6 +157,7 @@ const getPageContent = (props: IGetPageContentProps) => {
         appsProperties,
         userProperties,
         modulesProperties,
+        socket
       }
       return renderFormsTable(paramsTable);
     case LYComponentType.FormsTree:
@@ -156,6 +167,7 @@ const getPageContent = (props: IGetPageContentProps) => {
         appsProperties,
         userProperties,
         modulesProperties,
+        socket
       }
       return renderFormsTable(paramsTree);
     case LYComponentType.FormsList:
@@ -165,6 +177,7 @@ const getPageContent = (props: IGetPageContentProps) => {
         appsProperties,
         userProperties,
         modulesProperties,
+        socket
       }
       return renderFormsTable(paramsList);
     case LYComponentType.FormsDialog:
@@ -174,14 +187,7 @@ const getPageContent = (props: IGetPageContentProps) => {
         appsProperties={appsProperties}
         userProperties={userProperties}
         modulesProperties={modulesProperties}
-        reserveStatus={
-          {
-              record: "",
-              user: "",
-              status: false
-          }
-      }
-      onReserveRecord={() => { }}
+        socket={socket}
         />;
     case LYComponentType.FormsUpload:
       return <FormsUpload 

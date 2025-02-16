@@ -26,6 +26,7 @@ import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
 import { t } from "i18next";
 import { getApplications, validateLogin, connectApplication } from "./utils/loginUtils";
 import { AuthContextProps } from "react-oidc-context";
+import SocketClient from "@ly_utils/socket";
 
 
 export interface IAppsLoginProps {
@@ -33,10 +34,11 @@ export interface IAppsLoginProps {
   setUserProperties?: React.Dispatch<React.SetStateAction<IUsersProps>>;
   setAppsProperties?: React.Dispatch<React.SetStateAction<IAppsProps>>;
   useAuth: () => AuthContextProps;
+  socket?: SocketClient;
 }
 
 export const AppsLogin = (props: IAppsLoginProps) => {
-  const { modulesProperties, setUserProperties, setAppsProperties, useAuth} = props;
+  const { modulesProperties, setUserProperties, setAppsProperties, useAuth, socket} = props;
   const auth = useAuth();
 
   // State variables
@@ -124,7 +126,8 @@ export const AppsLogin = (props: IAppsLoginProps) => {
               setUserProperties: setUserProperties,
               selectedApplication: application,
               setAppsProperties: setAppsProperties,
-              jwt_token: token.access_token
+              jwt_token: token.access_token,
+              socket: socket
             }
             connectApplication(params);
           } else {

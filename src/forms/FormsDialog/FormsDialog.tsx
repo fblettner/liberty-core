@@ -35,6 +35,7 @@ import { EEventComponent, IEventComponent, IEventComponentsProps } from "@ly_typ
 import { ResultStatus } from "@ly_types/lyQuery";
 import { Paper_Dialogs } from "@ly_styles/Paper";
 import { Stack_Dialogs } from "@ly_styles/Stack";
+import SocketClient, { socketHandler } from "@ly_utils/socket";
 
 
 type Props = Readonly<{
@@ -43,12 +44,12 @@ type Props = Readonly<{
     appsProperties: IAppsProps;
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
-    reserveStatus: IReserveStatus;
-    onReserveRecord: (type: string, payload: string) => void;
+    socket?: SocketClient;
 }>;
 
 export function FormsDialog(props: Props) {
-    const { componentProperties, onClose, appsProperties, userProperties,modulesProperties, reserveStatus, onReserveRecord } = props;
+    const { componentProperties, onClose, appsProperties, userProperties,modulesProperties, socket } = props;
+    const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });
 
     // Declare variables
     const [activeTab, setActiveTab] = useState(componentProperties.id + '-tab-id-1');
@@ -96,24 +97,30 @@ export function FormsDialog(props: Props) {
     }, [dialogContent, dialogDetailsRef, dialogHeaderRef, appsProperties])
 
     const reserveRecord = useCallback(() => {
+        if (socket) {
+            const socketFunctions = socketHandler(socket);
+            socketFunctions.reserve(getRecord(), setReserveStatus);
+        }
         const logger = new Logger({
             transactionName: "FormsDialog.reserveRecord",
             data: getRecord(),
             modulesProperties: modulesProperties
         });
         logger.logMessage("Socket: Reserve Record");
-        onReserveRecord("reserve", getRecord())
-    }, [onReserveRecord, getRecord]);
+    }, [getRecord, setReserveStatus, socket, modulesProperties, socketHandler, Logger]);
 
     const releaseRecord = useCallback(() => {
+        if (socket) {
+            const socketFunctions = socketHandler(socket);
+            socketFunctions.release(getRecord());
+        }
         const logger = new Logger({
             transactionName: "FormsDialog.releaseRecord",
             data: getRecord(),
             modulesProperties: modulesProperties
         });
         logger.logMessage("Socket: Release Record");
-        onReserveRecord("release", getRecord())
-    }, [onReserveRecord, getRecord]);
+    }, [getRecord, setReserveStatus, socket, modulesProperties, socketHandler, Logger]);
 
     const fetchData = useCallback(async () => {
         const params = {
@@ -470,7 +477,6 @@ export function FormsDialog(props: Props) {
                         componentProperties={componentRef.current}
                         dialogContent={dialogContent}
                         dialogComponent={dialogComponent}
-                        reserveStatus={reserveStatus}
                         onActionEnd={onActionEnd}
                         onInputChange={onChange}
                         onAutocompleteChange={onAutoCompleteChange}
@@ -484,7 +490,8 @@ export function FormsDialog(props: Props) {
                         appsProperties={appsProperties}
                         userProperties={userProperties}
                         modulesProperties={modulesProperties}
-                        onReserveRecord={onReserveRecord}
+                        reserveStatus={reserveStatus}
+                        socket={socket}
                     />
                 </Paper_Dialogs>
             </Stack_Dialogs>

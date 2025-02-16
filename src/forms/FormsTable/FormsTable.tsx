@@ -17,7 +17,7 @@ import { CColumnsFilter } from "@ly_types/lyFilters";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { getActionsForGrid, getActionsForTable } from "@ly_forms/FormsTable/features/TableActions";
 import { ITableDisplayView, setFilters } from "@ly_forms/FormsTable/utils/commonUtils"
-import { IDialogAction } from "@ly_utils/commonUtils";
+import { IDialogAction, IReserveStatus } from "@ly_utils/commonUtils";
 import { fetchDataHandler, FetchDataParams } from "@ly_forms/FormsTable/utils/fetchDataUtils";
 import { TableFilters } from "@ly_forms/FormsTable/dialogs/TableFilters";
 import { AlertMessage } from "@ly_common/AlertMessage";
@@ -50,6 +50,7 @@ import { LYAddIcon, LYCopyIcon, LYDeleteIcon, LYEditIcon } from "@ly_styles/icon
 import { Stack_FormsTable } from "@ly_styles/Stack";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { AnchorPosition } from "@ly_types/common";
+import SocketClient from "@ly_utils/socket";
 
 interface IFormsTable {
     componentProperties: ComponentProperties;
@@ -61,10 +62,11 @@ interface IFormsTable {
     appsProperties: IAppsProps;
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
+    socket?: SocketClient;
 }
 
 export function FormsTable(params: IFormsTable) {
-    const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly, appsProperties, userProperties, modulesProperties } = params;
+    const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly, appsProperties, userProperties, modulesProperties, socket } = params;
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const longPressTimeout = useRef<number | null>(null);
@@ -815,14 +817,7 @@ export function FormsTable(params: IFormsTable) {
                         appsProperties={appsProperties}
                         userProperties={userProperties}
                         modulesProperties={modulesProperties}
-                        reserveStatus={
-                            {
-                                record: "",
-                                user: "",
-                                status: false
-                            }
-                        }
-                        onReserveRecord={() => { }}
+                        socket={socket}
                     />
                 }
                 <TableDialog

@@ -291,14 +291,6 @@ export const EnumInput = (props: IEnumInput) => {
                 open={openDialog}
                 componentProperties={dialogRef.current}
                 onClose={onDialogClose}
-                reserveStatus={
-                    {
-                        record: "",
-                        user: "",
-                        status: false
-                    }
-                }
-                onReserveRecord={() => { }}
                 appsProperties={appsProperties}
                 userProperties={userProperties}
                 modulesProperties={modulesProperties}

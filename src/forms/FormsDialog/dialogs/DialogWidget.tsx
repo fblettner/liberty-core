@@ -23,6 +23,7 @@ import { IAppsProps } from "@ly_types/lyApplications";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
 import { DefaultZIndex } from "@ly_types/common";
+import SocketClient from "@ly_utils/socket";
 
 // Custom Import
 interface IDialogWidget {
@@ -33,13 +34,12 @@ interface IDialogWidget {
     appsProperties: IAppsProps;
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
-    reserveStatus: IReserveStatus;
-    onReserveRecord: (type: string, payload: string) => void;
+    socket?: SocketClient;
 }
 
 
 export const DialogWidget = (props: IDialogWidget) => {
-    const { open, componentProperties, onClose, appsProperties, userProperties, modulesProperties, reserveStatus, onReserveRecord } = props;
+    const { open, componentProperties, onClose, appsProperties, userProperties, modulesProperties, socket } = props;
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
@@ -135,8 +135,7 @@ export const DialogWidget = (props: IDialogWidget) => {
                             appsProperties={appsProperties}
                             userProperties={userProperties}
                             modulesProperties={modulesProperties}
-                            reserveStatus={reserveStatus}
-                            onReserveRecord={onReserveRecord}
+                            socket={socket}
                         />
                     </Div_DialogWidgetContent>
                     {/* Resize handles */}

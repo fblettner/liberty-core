@@ -610,7 +610,7 @@ export const Div_Login = styled(Div)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-//    backgroundImage: `url(${BackgroundLY})`,
+    backgroundImage: theme.background.loginImage ?? 'transparent',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     boxSizing: 'border-box',

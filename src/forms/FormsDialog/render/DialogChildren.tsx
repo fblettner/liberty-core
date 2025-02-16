@@ -26,6 +26,7 @@ import { IModulesProps } from "@ly_types/lyModules";
 import { ResultStatus } from "@ly_types/lyQuery";
 import { Paper_Dialogs } from "@ly_styles/Paper";
 import { Stack_Dialogs } from "@ly_styles/Stack";
+import SocketClient, { socketHandler } from "@ly_utils/socket";
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
@@ -39,16 +40,16 @@ type Props = Readonly<{
     appsProperties: IAppsProps;
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
-    reserveStatus: IReserveStatus;
-    onReserveRecord: (type: string, payload: string) => void;
+    socket?: SocketClient;
 }>;
 
 export function DialogChildren(props: Props) {
     const { componentProperties, sendAction, setSendAction, isModified, setIsModified, setErrorState, parentActiveTab, parentTabIndex,
-        appsProperties, userProperties,modulesProperties, reserveStatus, onReserveRecord
+        appsProperties, userProperties,modulesProperties, socket
      } = props;
 
     // Declare variables
+    const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });
     const [activeTab, setActiveTab] = useState(componentProperties.id + '-tab-id-1');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [tabs, setTabs] = useState<IDialogsTab[]>([]);
@@ -87,24 +88,30 @@ export function DialogChildren(props: Props) {
     }, [dialogContent, dialogDetailsRef, dialogHeaderRef, appsProperties])
 
     const reserveRecord = useCallback(() => {
+        if (socket) {
+            const socketFunctions = socketHandler(socket);
+            socketFunctions.reserve(getRecord(), setReserveStatus);
+        }
         const logger = new Logger({
-            transactionName: "DialogChildren.reserveRecord",
+            transactionName: "FormsDialog.reserveRecord",
             data: getRecord(),
             modulesProperties: modulesProperties
         });
         logger.logMessage("Socket: Reserve Record");
-        onReserveRecord("reserve", getRecord())
-    }, [onReserveRecord, getRecord]);
+    }, [getRecord, setReserveStatus, socket, modulesProperties, socketHandler, Logger]);
 
-    const releaseRecord = useCallback( () => {
+    const releaseRecord = useCallback(() => {
+        if (socket) {
+            const socketFunctions = socketHandler(socket);
+            socketFunctions.release(getRecord());
+        }
         const logger = new Logger({
-            transactionName: "DialogChildren.releaseRecord",
+            transactionName: "FormsDialog.releaseRecord",
             data: getRecord(),
             modulesProperties: modulesProperties
         });
         logger.logMessage("Socket: Release Record");
-        onReserveRecord("release", getRecord())
-    }, [onReserveRecord, getRecord]);
+    }, [getRecord, setReserveStatus, socket, modulesProperties, socketHandler, Logger]);
 
     const fetchData = useCallback(async () => {
         const params = {
@@ -291,7 +298,6 @@ export function DialogChildren(props: Props) {
                         componentProperties={componentRef.current}
                         dialogContent={dialogContent}
                         dialogComponent={dialogComponent}
-                        reserveStatus={reserveStatus}
                         onActionEnd={onActionEnd}
                         onInputChange={onChange}
                         onAutocompleteChange={onAutoCompleteChange}
@@ -307,7 +313,8 @@ export function DialogChildren(props: Props) {
                         appsProperties={appsProperties}
                         userProperties={userProperties}
                         modulesProperties={modulesProperties}
-                        onReserveRecord={onReserveRecord}
+                        reserveStatus={reserveStatus}
+                        socket={socket}
                     />
                 </Paper_Dialogs>
             </Stack_Dialogs>

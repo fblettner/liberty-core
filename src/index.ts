@@ -109,3 +109,4 @@ export { default as i18n, t} from "@ly_translations/i18n";
 
 export * from "@ly_context/ZIndex"
 export * from "@ly_context/ClickContext"
+export { default as SocketClient, socketHandler } from "@ly_utils/socket"

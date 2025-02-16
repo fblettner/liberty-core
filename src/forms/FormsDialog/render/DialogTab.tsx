@@ -19,6 +19,7 @@ import { GridItem } from '@ly_common/Grid';
 import { IAppsProps } from '@ly_types/lyApplications';
 import { IUsersProps } from '@ly_types/lyUsers';
 import { IModulesProps } from '@ly_types/lyModules';
+import SocketClient from '@ly_utils/socket';
 
 interface IDialogTab {
     item: IDialogDetails;
@@ -44,15 +45,15 @@ interface IDialogTab {
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
     reserveStatus: IReserveStatus;
-    onReserveRecord: (type: string, payload: string) => void;
+    socket?: SocketClient;
 }
 
 export const DialogTab = (props: IDialogTab) => {
     const {
-        item, tab, dialogContent, dialogComponent, componentProperties, reserveStatus, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange, onActionEnd, 
+        item, tab, dialogContent, dialogComponent, componentProperties, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange, onActionEnd, 
         dialogsMode, isModified, setIsModified, sendAction, setSendAction, setErrorState, activeTab, parentActiveTab, parentTabIndex, 
-        appsProperties, userProperties, modulesProperties, onReserveRecord
-    } = props;
+        appsProperties, userProperties, modulesProperties, reserveStatus, socket
+        } = props;
     switch (item[EDialogDetails.component]) {
         case LYComponentType.Dictionary:
             if (dialogContent.fields[item[EDialogDetails.target] ?? item[EDialogDetails.dictionaryID]][EDialogDetails.visible])
@@ -192,6 +193,7 @@ export const DialogTab = (props: IDialogTab) => {
                         appsProperties={appsProperties}
                         userProperties={userProperties}
                         modulesProperties={modulesProperties}
+                        socket={socket}
                     />
                 </GridItem>
             );
@@ -285,8 +287,8 @@ export const DialogTab = (props: IDialogTab) => {
                         appsProperties={appsProperties}
                         userProperties={userProperties}
                         modulesProperties={modulesProperties}
-                        reserveStatus={reserveStatus}
-                        onReserveRecord={onReserveRecord}
+                        socket={socket}
+
                     />
                 </GridItem>
             );

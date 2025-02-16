@@ -11,6 +11,9 @@ import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { LYMenuIcon, LYLogoIcon } from "@ly_styles/icons";
 import { Typo_AppsName } from "@ly_styles/Typography";
 import { HeaderIcons } from "@ly_apps/AppsHeader/HeaderIcons";
+import SocketClient, { socketHandler } from "@ly_utils/socket";
+import { IUsersProps } from "@ly_types/lyUsers";
+import { IAppsProps } from "@ly_types/lyApplications";
 
 
 export interface IAppsHeaderProps {
@@ -22,12 +25,21 @@ export interface IAppsHeaderProps {
   onSignout: () => void;
   onToggleUserSettings: () => void;
   onToggleChat: () => void;
+  socket?: SocketClient;
 }
 
 export function AppsHeader(props: IAppsHeaderProps) {
-  const { darkMode, isUserLoggedIn, appsName, onToggleMenusDrawer, onToggleDarkMode, onToggleUserSettings, onToggleChat, onSignout } = props;
+  const { darkMode, isUserLoggedIn, appsName, onToggleMenusDrawer, onToggleDarkMode, onToggleUserSettings, onToggleChat, onSignout, socket} = props;
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const isMobile = useDeviceDetection();
+
+  const handleSignout = () => {
+    if (socket) {
+      const socketFunctions = socketHandler(socket);
+      socketFunctions.signout();
+    }
+    onSignout();
+  }
 
   return (
     <Div_HeaderAppBar>
@@ -59,7 +71,7 @@ export function AppsHeader(props: IAppsHeaderProps) {
           darkMode={darkMode}
           isUserLoggedIn={isUserLoggedIn}
           onToggleUserSettings={onToggleUserSettings}
-          onSignout={onSignout}
+          onSignout={handleSignout}
         />
       </Div_HeaderToolbar>
 

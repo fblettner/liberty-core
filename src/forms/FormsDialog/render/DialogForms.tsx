@@ -20,6 +20,7 @@ import { GridFlexContainer } from '@ly_common/Grid';
 import { IAppsProps } from '@ly_types/lyApplications';
 import { IUsersProps } from '@ly_types/lyUsers';
 import { IModulesProps } from '@ly_types/lyModules';
+import SocketClient from '@ly_utils/socket';
 
 interface IDialogForms {
     tabs: IDialogsTab[];
@@ -46,7 +47,8 @@ interface IDialogForms {
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
     reserveStatus: IReserveStatus;
-    onReserveRecord: (type: string, payload: string) => void;
+    socket?: SocketClient;
+
 }
 
 export const DialogForms = (props: IDialogForms) => {
@@ -58,7 +60,6 @@ export const DialogForms = (props: IDialogForms) => {
         dialogContent,
         dialogComponent,
         componentProperties,
-        reserveStatus,
         maxRows,
         onAutocompleteChange,
         onInputChange,
@@ -75,7 +76,8 @@ export const DialogForms = (props: IDialogForms) => {
         appsProperties,
         userProperties,
         modulesProperties,
-        onReserveRecord
+        reserveStatus,
+        socket
     } = props;
 
     const renderTab = (item: IDialogDetails, tab: IDialogsTab) => {
@@ -86,7 +88,6 @@ export const DialogForms = (props: IDialogForms) => {
                 componentProperties={componentProperties}
                 dialogContent={dialogContent}
                 dialogComponent={dialogComponent}
-                reserveStatus={reserveStatus}
                 onActionEnd={onActionEnd}
                 onInputChange={onInputChange}
                 onAutocompleteChange={onAutocompleteChange}
@@ -104,7 +105,8 @@ export const DialogForms = (props: IDialogForms) => {
                 appsProperties={appsProperties}
                 userProperties={userProperties}
                 modulesProperties={modulesProperties}
-                onReserveRecord={onReserveRecord}
+                reserveStatus={reserveStatus}
+                socket={socket}
             />
         )
     }
