@@ -22,7 +22,7 @@ import { InputLookup } from "@ly_input/InputLookup/InputLookup";
 import { EDictionaryRules, EDictionaryType } from "@ly_types/lyDictionary";
 import { ComponentProperties } from "@ly_types/lyComponents";
 import { IContentValue } from "@ly_utils/commonUtils";
-import { LYAddIcon, LYCancelIcon, LYFullscreenExitIcon, LYFullscreenIcon, LYPlayCircleOutlineIcon, LYReactIcon, LYResetIcon, LYThumbDownOffIcon, LYThumbUpIcon } from "@ly_styles/icons";
+import { LYAddIcon, LYCancelIcon, LYFullscreenExitIcon, LYFullscreenIcon, LYPlayCircleOutlineIcon, LYResetIcon, LYThumbDownOffIcon, LYThumbUpIcon } from "@ly_styles/icons";
 import { Paper_Dialogs, Paper_Popup } from "@ly_styles/Paper";
 import { Dialog_Actions, Dialog_Content, Dialog_Title } from "@ly_styles/Dialog";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
@@ -30,13 +30,9 @@ import { Dialog } from "@ly_common/Dialog";
 import { Button } from "@ly_common/Button";
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { Input } from "@ly_common/Input";
-import { DefaultZIndex } from "@ly_types/common";
 import { DatePicker } from "@ly_input/InputDate";
 import { GridFlexContainer, GridItem } from "@ly_common/Grid";
 import { Select } from "@ly_common/Select";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 import { DraggableDialog } from "@ly_common/DragableDialog";
 
 export interface ITableFilters {
@@ -48,9 +44,6 @@ export interface ITableFilters {
     setColumnsFilters: React.Dispatch<React.SetStateAction<CColumnsFilter>>;
     handleCancel: () => void;
     handleApply: () => void;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 type FilterValue = IContentValue;
@@ -78,7 +71,7 @@ const numberOperators = [
 ];
 
 export const TableFilters = (params: ITableFilters) => {
-    const { componentProperties, open, tableProperties, columnsFilter, setColumnsFilters, handleCancel, handleApply, tableColumns, appsProperties, userProperties, modulesProperties } = params;
+    const { componentProperties, open, tableProperties, columnsFilter, setColumnsFilters, handleCancel, handleApply, tableColumns } = params;
     const [openFilter, setOpenFilter] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState("");
     const unfilteredColumns = useMemo(() => tableColumns.filter((col) => !(col.accessorKey in columnsFilter.fields)), [tableColumns, columnsFilter]);
@@ -191,9 +184,6 @@ export const TableFilters = (params: ITableFilters) => {
                     onChange={onFiltersAutoCompleteChanged}
                     freeSolo={false}
                     searchByLabel={false}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             );
         }
@@ -211,9 +201,6 @@ export const TableFilters = (params: ITableFilters) => {
                     defaultValue={filterProperties.value?.toString() as string ?? null}
                     dynamic_params={filterProperties.dynamic_params}
                     fixed_params={filterProperties.fixed_params}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             );
         }

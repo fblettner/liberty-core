@@ -9,11 +9,9 @@ import { useState, useRef, useEffect } from "react";
 import { t } from "i18next";
 
 // Custom Import
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentEvent, LYComponentMode, LYComponentType } from "@ly_types/lyComponents";
 import { CDialogContent, EDialogDetails, EDialogTabs, EDialogHeader, IDialogDetails, IDialogHeader } from "@ly_types/lyDialogs";
 import { IFiltersProperties } from "@ly_types/lyFilters";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { ConfirmationDialog } from "@ly_common/ConfirmationDialog";
 import { DialogHelp } from "@ly_forms/FormsDialog/dialogs/DialogHelp";
 import { DialogToolbar } from "@ly_forms/FormsDialog/toolbar/DialogToolbar";
@@ -28,27 +26,24 @@ import { getRecordHandler } from "@ly_forms/FormsDialog/utils/recordUtils";
 import { IActionsStatus } from "@ly_types/lyActions";
 import { OnCloseFunction } from "@ly_forms/FormsDialog/utils/commonUtils";
 import Logger from "@ly_services/lyLogging";
-import { IModulesProps } from "@ly_types/lyModules";
 import { lyGetEventsComponent } from "@ly_services/lyEvents";
 import { InputAction, InputActionProps } from "@ly_input/InputAction";
-import { EEventComponent, IEventComponent, IEventComponentsProps } from "@ly_types/lyEvents";
+import { EEventComponent, IEventComponent } from "@ly_types/lyEvents";
 import { ResultStatus } from "@ly_types/lyQuery";
 import { Paper_Dialogs } from "@ly_styles/Paper";
 import { Stack_Dialogs } from "@ly_styles/Stack";
-import SocketClient, { socketHandler } from "@ly_utils/socket";
+import { socketHandler } from "@ly_utils/socket";
+import { useAppContext } from "@ly_context/AppProvider";
 
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
     onClose: OnCloseFunction;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
-    socket?: SocketClient;
 }>;
 
 export function FormsDialog(props: Props) {
-    const { componentProperties, onClose, appsProperties, userProperties,modulesProperties, socket } = props;
+    const { componentProperties, onClose } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });
 
     // Declare variables
@@ -379,9 +374,6 @@ export function FormsDialog(props: Props) {
                         status: onEventEnd,
                         disabled: false,
                         component: componentRef.current,
-                        appsProperties: appsProperties,
-                        userProperties: userProperties,
-                        modulesProperties: modulesProperties
                     });
                 });
                 setEventState( eventComponent);
@@ -463,9 +455,6 @@ export function FormsDialog(props: Props) {
                                 status={item.status}
                                 disabled={item.disabled}
                                 component={item.component}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         ))
                     }
@@ -487,11 +476,7 @@ export function FormsDialog(props: Props) {
                         setIsModified={setIsModified}
                         sendAction={sendAction}
                         setErrorState={setErrorState}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                         reserveStatus={reserveStatus}
-                        socket={socket}
                     />
                 </Paper_Dialogs>
             </Stack_Dialogs>

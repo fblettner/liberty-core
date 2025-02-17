@@ -13,14 +13,11 @@ import { Div_FormsToolsCard } from "@ly_styles/Div";
 import { GridContainer, GridItem } from "@ly_common/Grid";
 import { Card, CardContent } from "@ly_common/Card";
 import { CardActionArea_FormsTools } from "@ly_styles/Card";
-
-export interface IFormsTools {
-    modulesProperties: IModulesProps;
-}
+import { useAppContext } from "@ly_context/AppProvider";
 
 
-export function FormsTools(props: IFormsTools) {
-    const { modulesProperties } = props;
+export function FormsTools() {
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     const tools = [
         {

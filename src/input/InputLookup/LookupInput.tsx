@@ -31,6 +31,7 @@ import { Select } from "@ly_common/Select";
 import { ITransformedObject, TextFieldVariants } from "@ly_types/common";
 import { useDeviceDetection, useMediaQuery } from "@ly_common/UseMediaQuery";
 import { ISelectedRow } from "@ly_types/lyTables";
+import { useAppContext } from "@ly_context/AppProvider";
 
 export interface ILookupInput {
     id: string;
@@ -50,15 +51,13 @@ export interface ILookupInput {
     callFromTable?: boolean;
     onChange: OnChangeFunction;
     setErrorState: React.Dispatch<React.SetStateAction<IErrorState>>;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 
 export const LookupInput = (props: ILookupInput) => {
     const { id, label, lookupID, lookupLabel, onChange, disabled, displayWhite, variant, defaultValue, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool,
-         callFromTable, setErrorState, appsProperties, userProperties,modulesProperties } = props;
+         callFromTable, setErrorState } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();     
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [searchValue, setSearchValue] = useState("");
     const [filteredData, setFilteredData] = useState<ILookupOption[]>([]);
@@ -367,18 +366,12 @@ export const LookupInput = (props: ILookupInput) => {
                 open={openDialog}
                 componentProperties={dialogRef.current}
                 onClose={onDialogClose}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />
             <LookupSearch
                 open={openSearch}
                 componentProperties={searchRef.current}
                 onChange={onSearchChange}
                 onClose={onSearchClose}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />
             <Div_AutoComplete>
                 <Select

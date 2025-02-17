@@ -11,7 +11,6 @@ import { t } from 'i18next';
 
 // Custom Import
 import { lyGetDashboard } from '@ly_services/lyDashboard';
-import { IAppsProps } from '@ly_types/lyApplications';
 import { ComponentProperties } from '@ly_types/lyComponents';
 import { EDahsboardHeader, IDashboardState } from '@ly_types/lyDashboard';
 import { LoadingIndicator } from '@ly_common/LoadingIndicator';
@@ -19,22 +18,20 @@ import { DashboardGrid } from '@ly_forms/FormsDashboard/DashboardGrid';
 import { ResultStatus } from '@ly_types/lyQuery';
 import { AlertMessage } from '@ly_common/AlertMessage';
 import { ESeverity, IErrorState } from '@ly_utils/commonUtils';
-import { IModulesProps } from '@ly_types/lyModules';
 import Logger from '@ly_services/lyLogging';
 import { Paper_Dashboard } from '@ly_styles/Paper';
 import { EUsers, IUsersProps } from '@ly_types/lyUsers';
+import { useAppContext } from '@ly_context/AppProvider';
 
 
 export interface IFormsDashboard {
     componentProperties: ComponentProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 
 export function FormsDashboard(props: IFormsDashboard) {  
-    const { componentProperties, appsProperties, userProperties, modulesProperties } = props;
+    const { componentProperties } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
 
@@ -116,9 +113,6 @@ export function FormsDashboard(props: IFormsDashboard) {
                 gridSize={gridSize}
                 dashboardData={dashboardData}
                 component={componentProperties}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />
         </Paper_Dashboard>
 

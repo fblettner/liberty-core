@@ -16,6 +16,7 @@ import { IContentValue, IErrorState } from "@ly_utils/commonUtils";
 import { ITransformedObject, TextFieldVariants } from '@ly_types/common';
 import { IUsersProps } from '@ly_types/lyUsers';
 import { IModulesProps } from '@ly_types/lyModules';
+import { useAppContext } from '@ly_context/AppProvider';
 
 export interface IInputLookupProps {
     id: string;
@@ -33,14 +34,12 @@ export interface IInputLookupProps {
     searchByLabel?: boolean;
     callFromTable?: boolean;
     onChange: OnChangeFunction;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const InputLookup = (props: IInputLookupProps) => {
     const { id, lookupID, label, defaultValue, disabled, displayWhite, variant, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool, searchByLabel, onChange, 
-        callFromTable, appsProperties, userProperties,modulesProperties } = props;
+        callFromTable } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
     const inputRef = useRef<HTMLInputElement>(null);
  
@@ -82,9 +81,6 @@ export const InputLookup = (props: IInputLookupProps) => {
                 callFromTable={callFromTable}
                 setErrorState={setErrorState}
                 variant={variant ?? "standard"}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />
         </Fragment>
     );

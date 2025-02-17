@@ -14,9 +14,7 @@ import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { Fragment } from 'react/jsx-runtime';
 import { AdvancedFlexPanels } from '@ly_common/FlexAdvanced';
 import { useEffect, useMemo, useState } from 'react';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
+import { useAppContext } from '@ly_context/AppProvider';
 
 export interface IDashboardGrid {
     rows: number[];
@@ -24,14 +22,11 @@ export interface IDashboardGrid {
     gridSize: number;
     dashboardData: IDashboardState;
     component: ComponentProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const DashboardGrid = (props: IDashboardGrid) => {
-    const { rows, columns, dashboardData, appsProperties, userProperties, modulesProperties } = props;
-
+    const { rows, columns, dashboardData } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext(); 
     const isSmallScreen = useMediaQuery("(max-width:600px)");
     const isMobile = useDeviceDetection();
     const [isFullScreen, setIsFullScreen] = useState(() => isSmallScreen || isMobile); // Set fullscreen initially if small screen

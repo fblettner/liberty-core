@@ -19,26 +19,22 @@ import { LYLogoIcon } from "@ly_styles/icons";
 import { Input_White } from "@ly_styles/Input";
 import { Paper_Login } from "@ly_styles/Paper";
 import { IAppsProps, EApplications, ESessionMode } from "@ly_types/lyApplications";
-import { IModulesProps } from "@ly_types/lyModules";
 import { ResultStatus } from "@ly_types/lyQuery";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
 import { t } from "i18next";
 import { getApplications, validateLogin, connectApplication } from "./utils/loginUtils";
 import { AuthContextProps } from "react-oidc-context";
-import SocketClient from "@ly_utils/socket";
+import { useAppContext } from "@ly_context/AppProvider";
 
 
 export interface IAppsLoginProps {
-  modulesProperties: IModulesProps;
-  setUserProperties?: React.Dispatch<React.SetStateAction<IUsersProps>>;
-  setAppsProperties?: React.Dispatch<React.SetStateAction<IAppsProps>>;
   useAuth: () => AuthContextProps;
-  socket?: SocketClient;
 }
 
 export const AppsLogin = (props: IAppsLoginProps) => {
-  const { modulesProperties, setUserProperties, setAppsProperties, useAuth, socket} = props;
+  const { useAuth } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+  
   const auth = useAuth();
 
   // State variables

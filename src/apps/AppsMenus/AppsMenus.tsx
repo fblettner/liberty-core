@@ -2,27 +2,24 @@ import { Typography } from "@ly_common/Typography";
 import { Div_ContentWrapper, Div_DrawerContainer, Div_DrawerContent, Div_DrawerHeader, Div_DrawerOverlay, Div_DrawerPanel, Div_DrawerPanelDynamic } from "@ly_styles/Div";
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { LYMenuOpenIcon } from "@ly_styles/icons";
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties } from "@ly_types/lyComponents";
-import { IModulesProps } from "@ly_types/lyModules";
-import { EUsers, IUsersProps } from "@ly_types/lyUsers";
+import { EUsers } from "@ly_types/lyUsers";
 import { useCallback, useEffect, useState } from "react";
 import { DashboardMenu } from "./DashboardMenu";
 import { DynamicMenus } from "./DynamicMenus";
 import { StaticMenus } from "./StaticMenus";
+import { useAppContext } from "@ly_context/AppProvider";
 
 interface IAppsMenus {
   isOpen: boolean;
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
   onMenuSelect: (component: ComponentProperties) => void;
   onToggleMenusDrawer: () => void;
 }
 
 // Component Implementation
 export function AppsMenus(props: IAppsMenus) {
-  const { isOpen, appsProperties, userProperties, modulesProperties, onMenuSelect, onToggleMenusDrawer } = props;
+  const { isOpen, onMenuSelect, onToggleMenusDrawer } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
 
   const [openMenus, setOpenMenus] = useState<string[]>([]);
@@ -57,9 +54,6 @@ export function AppsMenus(props: IAppsMenus) {
                 setSelectedIndex={setSelectedIndex}
                 onMenuSelect={onMenuSelect}
                 onToggleMenusDrawer={onToggleMenusDrawer}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
               />
             </Div_DrawerPanel>
             <Div_DrawerPanelDynamic>
@@ -69,9 +63,6 @@ export function AppsMenus(props: IAppsMenus) {
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
                 onMenuSelect={onMenuSelect}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
                 onToggleMenusDrawer={onToggleMenusDrawer}
               />
             </Div_DrawerPanelDynamic>
@@ -82,9 +73,6 @@ export function AppsMenus(props: IAppsMenus) {
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
                 onMenuSelect={onMenuSelect}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
                 onToggleMenusDrawer={onToggleMenusDrawer}
               />
             </Div_DrawerPanel>

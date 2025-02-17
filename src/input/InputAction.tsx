@@ -6,17 +6,17 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { t } from 'i18next';
-import { animated, useSpring } from "@react-spring/web";
+import { useSpring } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 import ReactDOM from "react-dom";
 
 // Custom Import
 import { ToolsDictionary } from '@ly_services/lyDictionary';
-import { EUsers, IUsersProps } from '@ly_types/lyUsers';
+import { EUsers } from '@ly_types/lyUsers';
 import { EActionsHeader, EActionsDirection, EActionsTasks, EActionsParams, EActionsType, IActionsData, IActionsStatus, IActionsHeader, IActionsParams, IActionsTasks, IActionsTasksParams, EActionsTasksParams } from '@ly_types/lyActions';
 import { ComponentProperties, LYComponentDisplayMode, LYComponentEvent, LYComponentMode, LYComponentType, LYComponentViewMode } from '@ly_types/lyComponents';
 import { ActionsType, IContentValue, IDialogAction, IRestData, OnChangeParams } from "@ly_utils/commonUtils";
-import { EApplications, IAppsProps } from '@ly_types/lyApplications';
+import { EApplications } from '@ly_types/lyApplications';
 import { EDictionaryRules } from '@ly_types/lyDictionary';
 import { lyGetActionsHeader, lyGetActionsParams, lyGetActionsTasks, lyGetActionsTasksParams } from '@ly_services/lyActions';
 import { IFiltersProperties } from '@ly_types/lyFilters';
@@ -35,7 +35,6 @@ import { FormsUpload } from '@ly_forms/FormsUpload/FormsUpload';
 import { FormsChart } from '@ly_forms/FormsChart/FormsChart';
 import { FormsDashboard } from '@ly_forms/FormsDashboard/FormsDashboard';
 import { CDialogContent, EDialogDetails, IDialogContent } from '@ly_types/lyDialogs';
-import { IModulesProps } from '@ly_types/lyModules';
 import { EConditions } from '@ly_types/lyConditions';
 import { ENextNumber } from '@ly_types/lyNextNum';
 import { ESequence } from '@ly_types/lySequence';
@@ -46,10 +45,9 @@ import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { Button } from "@ly_common/Button";
 import { IconButton_Contrast } from '@ly_styles/IconButton';
 import { Input } from '@ly_common/Input';
-import { DefaultZIndex } from '@ly_types/common';
 import { GridContainer, GridItem } from '@ly_common/Grid';
 import { DraggableDialog } from '@ly_common/DragableDialog';
-import SocketClient from '@ly_utils/socket';
+import { useAppContext } from '@ly_context/AppProvider';
 
 export interface InputActionProps {
     id: number;
@@ -63,14 +61,10 @@ export interface InputActionProps {
     overrideQueryPool?: string
     disabled: boolean;
     component: ComponentProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
-    socket?: SocketClient;
 };
 
 export const InputAction = (props: InputActionProps) => {
-    const { appsProperties, userProperties, modulesProperties, socket } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
     const [isFullScreen, setIsFullScreen] = useState(() => isSmallScreen || isMobile); // Set fullscreen initially if small screen
@@ -636,9 +630,6 @@ export const InputAction = (props: InputActionProps) => {
                         freeSolo={false}
                         disabled={false}
                         searchByLabel={false}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 )
             case EDictionaryRules.lookup:
@@ -660,9 +651,6 @@ export const InputAction = (props: InputActionProps) => {
                                 ? paramsDP.fields[item[EActionsParams.pool_params]].value as string
                                 : item[EActionsParams.pool_params] as string
                         }
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 )
 
@@ -752,9 +740,6 @@ export const InputAction = (props: InputActionProps) => {
                                     viewGrid={true}
                                     componentProperties={component}
                                     readonly={false}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             </Paper_Table>
                         }
@@ -772,9 +757,6 @@ export const InputAction = (props: InputActionProps) => {
                                     viewGrid={true}
                                     componentProperties={component}
                                     readonly={false}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             </Paper_Table>
                         }
@@ -792,9 +774,6 @@ export const InputAction = (props: InputActionProps) => {
                                     viewGrid={false}
                                     componentProperties={component}
                                     readonly={false}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             </Paper_Table>
                         }
@@ -805,19 +784,12 @@ export const InputAction = (props: InputActionProps) => {
                     <FormsDialog
                         componentProperties={component}
                         onClose={onDialogClose}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
-                        socket={socket}
                     />
                 );
             case LYComponentType.FormsUpload:
                 return (
                     <FormsUpload
                         componentProperties={component}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 );
             case LYComponentType.FormsChart:
@@ -827,9 +799,6 @@ export const InputAction = (props: InputActionProps) => {
                             <Paper_Table elevation={0} key={component.id + "-table"}>
                                 <FormsChart
                                     componentProperties={component}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             </Paper_Table>
                         }
@@ -842,9 +811,6 @@ export const InputAction = (props: InputActionProps) => {
                             <Paper_Table elevation={0} key={component.id + "-table"}>
                                 <FormsDashboard
                                     componentProperties={component}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             </Paper_Table>
                         }
@@ -862,9 +828,6 @@ export const InputAction = (props: InputActionProps) => {
                                     viewGrid={true}
                                     componentProperties={component}
                                     readonly={false}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             </Paper_Table>
                         }

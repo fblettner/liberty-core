@@ -27,6 +27,7 @@ import { Excel } from "@ly_utils/JSExcelUtils";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { IModulesProps } from "@ly_types/lyModules";
 import { useSnackMessage } from "@ly_context/SnackMessageProvider";
+import { useAppContext } from "@ly_context/AppProvider";
 
 export interface ITableToolbar {
     displayView: {
@@ -47,9 +48,6 @@ export interface ITableToolbar {
     handleDelete: () => void;
     uploadComponent: React.MutableRefObject<ComponentProperties>;
     setOpenUpload: React.Dispatch<React.SetStateAction<boolean>>;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const TableToolbar = ({
@@ -67,11 +65,9 @@ export const TableToolbar = ({
     handleDelete,
     uploadComponent,
     setOpenUpload,
-    appsProperties,
-    userProperties,
-    modulesProperties
 
 }: ITableToolbar) => {
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const [openExport, setOpenExport] = useState<{

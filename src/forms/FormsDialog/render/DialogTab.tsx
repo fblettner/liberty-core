@@ -20,6 +20,7 @@ import { IAppsProps } from '@ly_types/lyApplications';
 import { IUsersProps } from '@ly_types/lyUsers';
 import { IModulesProps } from '@ly_types/lyModules';
 import SocketClient from '@ly_utils/socket';
+import { useAppContext } from '@ly_context/AppProvider';
 
 interface IDialogTab {
     item: IDialogDetails;
@@ -41,19 +42,16 @@ interface IDialogTab {
     activeTab: string;
     parentActiveTab?: string;
     parentTabIndex?: string;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
     reserveStatus: IReserveStatus;
-    socket?: SocketClient;
 }
 
 export const DialogTab = (props: IDialogTab) => {
     const {
         item, tab, dialogContent, dialogComponent, componentProperties, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange, onActionEnd, 
         dialogsMode, isModified, setIsModified, sendAction, setSendAction, setErrorState, activeTab, parentActiveTab, parentTabIndex, 
-        appsProperties, userProperties, modulesProperties, reserveStatus, socket
+        reserveStatus
         } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();    
     switch (item[EDialogDetails.component]) {
         case LYComponentType.Dictionary:
             if (dialogContent.fields[item[EDialogDetails.target] ?? item[EDialogDetails.dictionaryID]][EDialogDetails.visible])
@@ -76,9 +74,6 @@ export const DialogTab = (props: IDialogTab) => {
                                 onAutocompleteChange={onAutocompleteChange}
                                 onCheckboxChange={onCheckboxChange}
                                 onInputChange={onInputChange}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         </form>
                     </GridItem>
@@ -98,9 +93,6 @@ export const DialogTab = (props: IDialogTab) => {
                         reserveStatus={reserveStatus}
                         onActionEnd={onActionEnd}
                         component={componentProperties}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 </GridItem>
             );
@@ -190,10 +182,6 @@ export const DialogTab = (props: IDialogTab) => {
                         displayMode={LYComponentDisplayMode.component}
                         viewGrid={true}
                         readonly={isModified || reserveStatus.status}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
-                        socket={socket}
                     />
                 </GridItem>
             );
@@ -284,10 +272,6 @@ export const DialogTab = (props: IDialogTab) => {
                         setErrorState={setErrorState}
                         parentActiveTab={activeTab}
                         parentTabIndex={tab[EDialogTabs.sequence]}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
-                        socket={socket}
 
                     />
                 </GridItem>

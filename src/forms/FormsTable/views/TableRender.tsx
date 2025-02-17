@@ -18,9 +18,6 @@ import { ITableState, LYTableInstance } from "@ly_forms/FormsTable/utils/tanstac
 import { Stack_Table } from "@ly_styles/Stack";
 import { ChangeEvent } from "react";
 import { FlexPanels } from "@ly_common/Flex";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 
 
 interface ITableRender {
@@ -54,9 +51,6 @@ interface ITableRender {
     uploadComponent: React.RefObject<ComponentProperties>
     setOpenUpload: React.Dispatch<React.SetStateAction<boolean>>
     rowCount: number,
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const TableRender = (params: ITableRender) => {
@@ -91,9 +85,6 @@ export const TableRender = (params: ITableRender) => {
         uploadComponent,
         setOpenUpload,
         rowCount,
-        appsProperties,
-        userProperties,
-        modulesProperties
     } = params
 
     return (
@@ -116,9 +107,6 @@ export const TableRender = (params: ITableRender) => {
                     table={table}
                     uploadComponent={uploadComponent}
                     setOpenUpload={setOpenUpload}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             }
             <FlexPanels panels={[1, 5]} direction="horizontal">
@@ -132,9 +120,6 @@ export const TableRender = (params: ITableRender) => {
                         onMouseDown={onMouseDown}
                         onTouchStart={onTouchStart}
                         onTouchEnd={onTouchEnd} 
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 }
                 {displayView.table &&
@@ -155,9 +140,6 @@ export const TableRender = (params: ITableRender) => {
                         onDiscard={onDiscard}
                         onImport={onImport}
                         rowCount={rowCount}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 }
 

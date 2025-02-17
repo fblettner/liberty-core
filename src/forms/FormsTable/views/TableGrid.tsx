@@ -44,9 +44,6 @@ import { ColumnHelp } from "@ly_forms/FormsTable/dialogs/ColumnHelp";
 import { DatePicker } from "@ly_input/InputDate";
 import { Select } from "@ly_common/Select";
 import { Skeleton } from "@ly_common/Skeleton";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 
 // Custom Import
 interface ITableGrid {
@@ -65,9 +62,6 @@ interface ITableGrid {
     onDiscard: () => void;
     onImport: () => void;
     rowCount: number;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export interface TableGridRef {
@@ -100,9 +94,6 @@ export const TableGrid = forwardRef(function TableGrid(
         onDiscard,
         onImport,
         rowCount,
-        appsProperties,
-        userProperties,
-        modulesProperties
     } = params;
 
     const tableRef = useRef<HTMLDivElement>(null);
@@ -346,9 +337,6 @@ export const TableGrid = forwardRef(function TableGrid(
                         freeSolo={false}
                         searchByLabel={false}
                         hideButton={true}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
 
             ) : column?.columnDef && column.columnDef.type === EDictionaryType.boolean ? (
@@ -492,9 +480,6 @@ export const TableGrid = forwardRef(function TableGrid(
                     openColumns={openColumns}
                     setOpenColumns={setOpenColumns}
                     onImport={onImport}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             </Div_TableToolbarButtons>
             {/* Main grid/table */}

@@ -18,6 +18,7 @@ import { IColumnsFilter } from "@ly_types/lyFilters";
 import { ITransformedObject, TextFieldVariants } from '@ly_types/common';
 import { IUsersProps } from '@ly_types/lyUsers';
 import { IModulesProps } from '@ly_types/lyModules';
+import { useAppContext } from '@ly_context/AppProvider';
 
 
 export interface IInputEnumProps {
@@ -37,14 +38,12 @@ export interface IInputEnumProps {
     callFromTable?: boolean;
     hideButton?: boolean;
     onChange: OnChangeFunction;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const InputEnum = (props: IInputEnumProps) => {
     const { id, enumID, label, defaultValue, onChange, disabled, variant, freeSolo, searchByLabel,data, dynamic_params, fixed_params, sessionMode, overrideQueryPool, 
-        callFromTable, hideButton, appsProperties, userProperties,modulesProperties} = props;
+        callFromTable, hideButton } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();        
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
 
     const onCloseError = () => {
@@ -79,9 +78,6 @@ export const InputEnum = (props: IInputEnumProps) => {
                 callFromTable={callFromTable}
                 hideButton={hideButton}
                 setErrorState={setErrorState}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />
         </Fragment>
     );

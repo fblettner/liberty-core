@@ -17,24 +17,17 @@ import { ComponentProperties, LYComponentEvent } from "@ly_types/lyComponents";
 import { LYFullscreenExitIcon, LYFullscreenIcon, LYReactIcon } from "@ly_styles/icons";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { IconButton_Contrast } from "@ly_styles/IconButton";
-import { DefaultZIndex } from "@ly_types/common";
 import { DraggableDialog } from "@ly_common/DragableDialog";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 
 export interface ITableUpload {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     componentProperties: ComponentProperties;
     handleRefresh: () => void
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const TableUpload = (params: ITableUpload) => {
-    const { open, setOpen, componentProperties, handleRefresh, appsProperties, userProperties, modulesProperties } = params;
+    const { open, setOpen, componentProperties, handleRefresh } = params;
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
     const [isFullScreen, setIsFullScreen] = useState(() => isSmallScreen || isMobile); // Set fullscreen initially if small screen
@@ -135,9 +128,6 @@ export const TableUpload = (params: ITableUpload) => {
                         <FormsUpload
                             componentProperties={componentProperties}
                             onClose={onUpload}
-                            appsProperties={appsProperties}
-                            userProperties={userProperties}
-                            modulesProperties={modulesProperties}
                         />
                     </Div_DialogWidgetContent>
                     {/* Resize handles */}

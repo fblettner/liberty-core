@@ -24,9 +24,6 @@ import { Checkbox } from "@ly_common/Checkbox";
 import { Menu, MenuItem } from "@ly_common/Menus";
 import { Input } from "@ly_common/Input";
 import { Popper } from "@ly_common/Popper";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 
 export interface ITableToolbar {
     isLoading: boolean;
@@ -44,15 +41,11 @@ export interface ITableToolbar {
     openColumns: boolean;
     setOpenColumns: React.Dispatch<React.SetStateAction<boolean>>;
     onImport: () => void;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const TableToolbar = (props: ITableToolbar) => {
     const { isLoading, table, tableState, tableRef, handleCancelQuery, addBlankRow, copyToClipboard, pasteFromClipboard, saveChanges, discardChanges, openFilters, setOpenFilters,
-        openColumns, setOpenColumns, onImport, appsProperties, userProperties, modulesProperties
-    } = props;
+        openColumns, setOpenColumns, onImport } = props;
     const [filterInput, setFilterInput] = useState('');
     const [searchColumn, setSearchColumn] = useState("");
     const toolbarRef = useRef<HTMLDivElement | null>(null); // Ref for the toolbar
@@ -259,9 +252,6 @@ export const TableToolbar = (props: ITableToolbar) => {
                                     anchorEl={toolbarRef.current}
                                     onClose={handleCloseFilters}
                                     openFilters={openFilters}
-                                    appsProperties={appsProperties}
-                                    userProperties={userProperties}
-                                    modulesProperties={modulesProperties}
                                 />
                             )}
                             <Button

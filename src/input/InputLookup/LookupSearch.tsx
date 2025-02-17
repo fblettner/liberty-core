@@ -23,18 +23,17 @@ import { DraggableDialog } from "@ly_common/DragableDialog";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
+import { useAppContext } from "@ly_context/AppProvider";
 
 export interface ILookupSearch {
     componentProperties: ComponentProperties;
     open: boolean;
     onChange: onSelectRowFunction;
     onClose: onButtonCloseFunction
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
-export const LookupSearch = ({ componentProperties, open, onChange, onClose, appsProperties, userProperties, modulesProperties }: ILookupSearch) => {
+export const LookupSearch = ({ componentProperties, open, onChange, onClose }: ILookupSearch) => {
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
     const [isFullScreen, setIsFullScreen] = useState(() => isSmallScreen || isMobile); // Set fullscreen initially if small screen
@@ -136,9 +135,6 @@ export const LookupSearch = ({ componentProperties, open, onChange, onClose, app
                                 displayMode={LYComponentDisplayMode.component}
                                 viewGrid={true}
                                 readonly={false}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         </Paper_Table>
                     </Div_DialogWidgetContent>

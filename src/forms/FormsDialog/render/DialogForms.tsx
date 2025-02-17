@@ -43,11 +43,7 @@ interface IDialogForms {
     onActionEnd: OnActionEndFunction;
     parentActiveTab?: string
     parentTabIndex?: string;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
     reserveStatus: IReserveStatus;
-    socket?: SocketClient;
 
 }
 
@@ -73,11 +69,7 @@ export const DialogForms = (props: IDialogForms) => {
         onActionEnd,
         parentActiveTab,
         parentTabIndex,
-        appsProperties,
-        userProperties,
-        modulesProperties,
         reserveStatus,
-        socket
     } = props;
 
     const renderTab = (item: IDialogDetails, tab: IDialogsTab) => {
@@ -102,11 +94,7 @@ export const DialogForms = (props: IDialogForms) => {
                 activeTab={activeTab}
                 parentActiveTab={parentActiveTab}
                 parentTabIndex={parentTabIndex}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
                 reserveStatus={reserveStatus}
-                socket={socket}
             />
         )
     }

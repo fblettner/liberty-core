@@ -17,26 +17,19 @@ import { TabPanel } from './TabPanel';
 import { useTabs } from './useTabs';
 import { IReserveStatus } from '@ly_utils/commonUtils';
 import SocketClient from '@ly_utils/socket';
+import { useAppContext } from '@ly_context/AppProvider';
 
 
 export interface IAppsContentProps {
   isMenuOpen: boolean;
   onToggleMenusDrawer: () => void;
-  userProperties: IUsersProps;
-  appsProperties: IAppsProps;
-  modulesProperties: IModulesProps;
-  socket?: SocketClient;
 }
 
 export function AppsContent(props: IAppsContentProps) {
-  const { isMenuOpen, onToggleMenusDrawer, appsProperties, userProperties, modulesProperties, socket} = props;
+  const { isMenuOpen, onToggleMenusDrawer } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
-  const { tabs, activeTab, addTab, closeTab, setActiveTab, memoizedContent, clearTabs } = useTabs({
-    appsProperties,
-    userProperties,
-    modulesProperties,
-    socket
-  });
+  const { tabs, activeTab, addTab, closeTab, setActiveTab, memoizedContent, clearTabs } = useTabs({});
   const [tabsCleared, setTabsCleared] = useState(false);
 
   // Helper function to add the default dashboard tab
@@ -82,9 +75,6 @@ export function AppsContent(props: IAppsContentProps) {
         <Main_Content>
           <AppsMenus 
             onMenuSelect={handleMenuClick} 
-            appsProperties={appsProperties}
-            userProperties={userProperties}
-            modulesProperties={modulesProperties}
             onToggleMenusDrawer={onToggleMenusDrawer}
             isOpen={isMenuOpen}
           />

@@ -5,7 +5,7 @@
 // React Import
 import { Fragment, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import { animated, useSpring } from "@react-spring/web";
+import { useSpring } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 
 // Custom Import
@@ -18,11 +18,7 @@ import { LYCloseIcon, LYFullscreenExitIcon, LYFullscreenIcon, LYReactIcon } from
 import { Paper_TableDialog } from "@ly_styles/Paper";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { IconButton_Contrast } from "@ly_styles/IconButton";
-import { DefaultZIndex } from "@ly_types/common";
 import { DraggableDialog } from "@ly_common/DragableDialog";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 
 // Custom Import
 interface ITableDialog {
@@ -30,13 +26,10 @@ interface ITableDialog {
     componentProperties: ComponentProperties;
     onClose: () => void
     onSelectRow: (action: ISelectedRow) => void,
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const TableDialog = (params: ITableDialog) => {
-    const { open, componentProperties, onClose, onSelectRow, appsProperties, userProperties, modulesProperties} = params;
+    const { open, componentProperties, onClose, onSelectRow } = params;
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
 
@@ -141,9 +134,6 @@ export const TableDialog = (params: ITableDialog) => {
                                 displayMode={LYComponentDisplayMode.component}
                                 onSelectRow={onSelectRow}
                                 readonly={false}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         </Paper_TableDialog>
                     </Div_DialogWidgetContent>

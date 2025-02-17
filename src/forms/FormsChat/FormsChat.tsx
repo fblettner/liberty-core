@@ -15,20 +15,14 @@ import { IActionsStatus } from '@ly_types/lyActions';
 import { Typography } from '@ly_common/Typography';
 import { Div_ChatActions, Div, DivFormsChat } from '@ly_styles/Div';
 import { Paper_FormsChat } from '@ly_styles/Paper';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
 
 interface IFormsChatProps {
   chat: IChatMessage;
   addMessageToHistory: (message: IChatMessage) => void;
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
 };
 
 export const FormsChat = (props: IFormsChatProps) => {
-  const { chat, addMessageToHistory, appsProperties, userProperties, modulesProperties } = props;
+  const { chat, addMessageToHistory } = props;
 
   const onActionEnd = useCallback((event: IActionsStatus) => {
     addMessageToHistory({
@@ -60,9 +54,6 @@ export const FormsChat = (props: IFormsChatProps) => {
                   status={onActionEnd}
                   disabled={false}
                   component={action.component}
-                  appsProperties={appsProperties}
-                  userProperties={userProperties}
-                  modulesProperties={modulesProperties}
                 />
               </Div_ChatActions>
             ))}

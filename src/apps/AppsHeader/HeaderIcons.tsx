@@ -7,10 +7,11 @@ import { memo } from "react";
 import { Div_HeaderIcons } from "@ly_styles/Div";
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { LYLightModeIcon, LYDarkModeIcon, LYSmartToyIcon, LYNotificationsIcon, LYAccountCircleIcon, LYLogoutIcon } from "@ly_styles/icons";
+import { useAppContext } from "@ly_context/AppProvider";
+import { EUsers } from "@ly_types/lyUsers";
 
 interface IHeaderIcons {
   darkMode: boolean;
-  isUserLoggedIn: boolean;
   onToggleChat: () => void;
   onToggleDarkMode: () => void;
   onToggleUserSettings:  () => void;
@@ -18,8 +19,10 @@ interface IHeaderIcons {
 }
 
 export const HeaderIcons = memo((props: IHeaderIcons) => {
-  const { darkMode, isUserLoggedIn, onToggleChat, onToggleDarkMode, onToggleUserSettings, onSignout } = props;
-
+  const { darkMode, onToggleChat, onToggleDarkMode, onToggleUserSettings, onSignout } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+  const isUserLoggedIn = userProperties[EUsers.status] === true;
+  
   return (
     <Div_HeaderIcons>
       <IconButton_Contrast

@@ -14,12 +14,12 @@ import { Button } from "@ly_common/Button";
 import { ToolsDictionary } from "@ly_services/lyDictionary";
 import { ToolsQuery } from "@ly_services/lyQuery";
 import { lyGetTableProperties } from "@ly_services/lyTables";
-import { EApplications, IAppsProps } from "@ly_types/lyApplications";
+import { EApplications, } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentEvent } from "@ly_types/lyComponents";
 import { EDictionaryType, EDictionaryRules } from "@ly_types/lyDictionary";
 import { QuerySource, ResultStatus } from "@ly_types/lyQuery";
 import { ETableHeader, IColumnsProperties, ITableRow, TablesGridHardCoded } from "@ly_types/lyTables";
-import { EUsers, IUsersProps } from "@ly_types/lyUsers";
+import { EUsers } from "@ly_types/lyUsers";
 import { EStandardColor, ESeverity, IContentValue, IErrorState, IRestData } from "@ly_utils/commonUtils";
 import { AlertMessage } from "@ly_common/AlertMessage";
 import { LoadingIndicator } from "@ly_common/LoadingIndicator";
@@ -31,7 +31,6 @@ import { GlobalFilterFeature } from "@ly_forms/FormsTable/features/GlobalFilter"
 import { ITableState, LYTableInstance } from "@ly_forms/FormsTable/utils/tanstackUtils";
 import { TableGrid, TableGridRef } from "@ly_forms/FormsTable/views/TableGrid";
 import { IFiltersProperties } from "@ly_types/lyFilters";
-import { IModulesProps } from "@ly_types/lyModules";
 import { importExcelFiles } from "@ly_forms/FormsTable/utils/importUtils";
 import { LYCancelIcon, LYCheckIcon, LYCloseIcon, LYCloudUploadIcon, LYReactIcon, LYSaveIcon } from "@ly_styles/icons";
 import { LYIconSize } from "@ly_utils/commonUtils";
@@ -40,17 +39,16 @@ import { Div_DialogToolbarButtons } from "@ly_styles/Div";
 import { Paper_Dialogs, Paper_DialogToolbar, Paper_UploadFile } from "@ly_styles/Paper";
 import { Stack_Dialogs, Stack_Table } from "@ly_styles/Stack";
 import { useSnackMessage } from "@ly_context/SnackMessageProvider";
+import { useAppContext } from "@ly_context/AppProvider";
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
     onClose?: (action: { event: LYComponentEvent }) => void;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }>;
 
 export function FormsUpload(props: Props) {
-    const { componentProperties, onClose, appsProperties, userProperties, modulesProperties } = props;
+    const { componentProperties, onClose } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     const component = useRef<ComponentProperties>(componentProperties);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -536,9 +534,6 @@ export function FormsUpload(props: Props) {
                         onDiscard={handleDiscard}
                         onImport={() => { }}
                         rowCount={rowCount}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                     />
                 </Stack_Table>
             </Paper_Dialogs>

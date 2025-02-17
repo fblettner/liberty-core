@@ -8,11 +8,8 @@ import { useEffect, useRef, useState } from 'react';
 
 // Custom Import
 import { lyGetCharts } from '@ly_services/lyCharts';
-import { IAppsProps } from '@ly_types/lyApplications';
 import { AxisData, EChartHeader, EChartType, IChartHeader, LYChartPalette, PieData } from '@ly_types/lyCharts';
 import { ComponentProperties } from '@ly_types/lyComponents';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
 import { IColumnsProperties, TablesGridHardCoded } from '@ly_types/lyTables';
 import { Paper_FormsChart } from '@ly_styles/Paper';
 import { Stack_FormsChart } from '@ly_styles/Stack';
@@ -20,12 +17,10 @@ import { BarChart } from '@ly_charts/BarChart';
 import { PieChart } from '@ly_charts/PieChart';
 import { LineChart } from '@ly_charts/LineChart';
 import { useTheme } from '@emotion/react';
+import { useAppContext } from '@ly_context/AppProvider';
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }>;
 
 const useChartPalette = () => {
@@ -35,7 +30,8 @@ const useChartPalette = () => {
   };
   
 export function FormsChart(props: Props) {
-    const { componentProperties, appsProperties, userProperties, modulesProperties } = props;
+    const { componentProperties } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const component = useRef(componentProperties);
     const [chartHeader, setChartHeader] = useState<IChartHeader>({

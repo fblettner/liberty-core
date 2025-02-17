@@ -12,9 +12,7 @@ import { InputAction } from '@ly_input/InputAction';
 import { ActionsType, IReserveStatus } from "@ly_utils/commonUtils";
 import { ComponentProperties } from '@ly_types/lyComponents';
 import { OnActionEndFunction } from '@ly_forms/FormsDialog/utils/commonUtils';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
+import { useAppContext } from '@ly_context/AppProvider';
 
 interface IDialogActions {
     item: IDialogDetails;
@@ -23,14 +21,13 @@ interface IDialogActions {
     reserveStatus: IReserveStatus;
     component: ComponentProperties
     onActionEnd: OnActionEndFunction;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 
 export const DialogActions = (props: IDialogActions) => {
-    const { item, dialogContent, componentContent, reserveStatus, component, onActionEnd, appsProperties, userProperties, modulesProperties } = props;
+    const { item, dialogContent, componentContent, reserveStatus, component, onActionEnd } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    
     return (
         <InputAction
             id={item[EDialogDetails.componentID]}
@@ -48,9 +45,6 @@ export const DialogActions = (props: IDialogActions) => {
                     ? dialogContent.fields[item[EDialogDetails.pool_params]].value as string
                     : item[EDialogDetails.pool_params]}
             component={component}
-            appsProperties={appsProperties}
-            userProperties={userProperties}
-            modulesProperties={modulesProperties}
         />
     )
 

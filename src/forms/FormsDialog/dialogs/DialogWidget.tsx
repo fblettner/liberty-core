@@ -10,7 +10,7 @@ import ReactDOM from "react-dom";
 
 // Custom Import
 import { Div_DialogWidgetContent, Div_DialogWidgetTitleButtons, Div_ResizeBox, Div_DialogWidget, Div_DialogWidgetTitle, Backdrop } from '@ly_styles/Div';
-import { DIALOG_WIDGET_DIMENSION, IReserveStatus } from '@ly_utils/commonUtils';
+import { DIALOG_WIDGET_DIMENSION } from '@ly_utils/commonUtils';
 import { FormsDialog } from "@ly_forms/FormsDialog/FormsDialog";
 import { ComponentProperties } from "@ly_types/lyComponents";
 import { OnCloseFunction } from "@ly_forms/FormsDialog/utils/commonUtils";
@@ -19,11 +19,7 @@ import { LYFullscreenExitIcon, LYFullscreenIcon } from "@ly_styles/icons";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { DraggableDialog } from "@ly_common/DragableDialog";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
-import { DefaultZIndex } from "@ly_types/common";
-import SocketClient from "@ly_utils/socket";
+import { useAppContext } from "@ly_context/AppProvider";
 
 // Custom Import
 interface IDialogWidget {
@@ -31,15 +27,12 @@ interface IDialogWidget {
     componentProperties: ComponentProperties;
     onClose: OnCloseFunction
     sendAction?: IDialogAction
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
-    socket?: SocketClient;
 }
 
 
 export const DialogWidget = (props: IDialogWidget) => {
-    const { open, componentProperties, onClose, appsProperties, userProperties, modulesProperties, socket } = props;
+    const { open, componentProperties, onClose } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
@@ -132,10 +125,6 @@ export const DialogWidget = (props: IDialogWidget) => {
                         <FormsDialog
                             componentProperties={componentProperties}
                             onClose={onClose}
-                            appsProperties={appsProperties}
-                            userProperties={userProperties}
-                            modulesProperties={modulesProperties}
-                            socket={socket}
                         />
                     </Div_DialogWidgetContent>
                     {/* Resize handles */}

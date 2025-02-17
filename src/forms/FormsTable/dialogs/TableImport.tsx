@@ -6,7 +6,7 @@
 // React Import
 import { t } from "i18next";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { animated, useSpring } from "@react-spring/web";
+import { useSpring } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 import ReactDOM from "react-dom";
 import { useDropzone } from "react-dropzone";
@@ -15,9 +15,6 @@ import { useDropzone } from "react-dropzone";
 import { Div_DialogWidgetContent, Div_DialogWidgetTitleButtons, Div_ResizeBox, Div_DialogWidget, Div_DialogWidgetTitle, Backdrop } from '@ly_styles/Div';
 import { DIALOG_WIDGET_DIMENSION } from '@ly_utils/commonUtils';
 import { ITableState, LYTableInstance } from "@ly_forms/FormsTable/utils/tanstackUtils";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IModulesProps } from "@ly_types/lyModules";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { importExcelFiles } from "@ly_forms/FormsTable/utils/importUtils";
 import { AlertMessage } from "@ly_common/AlertMessage";
 import { IErrorState } from "@ly_utils/commonUtils";
@@ -31,8 +28,8 @@ import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { Button_TableImport } from "@ly_styles/Button";
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { CircularProgress } from "@ly_common/CircularProgress";
-import { DefaultZIndex } from "@ly_types/common";
 import { DraggableDialog } from "@ly_common/DragableDialog";
+import { useAppContext } from "@ly_context/AppProvider";
 
 export interface ITableImport{
     open: boolean;
@@ -41,13 +38,11 @@ export interface ITableImport{
     tableState: ITableState;
     updateTableState: <K extends keyof ITableState>(key: K, value: ITableState[K]) => void;
     componentProperties: ComponentProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const TableImport = (params: ITableImport) => {
-    const { open, onClose, table, tableState, updateTableState, componentProperties, appsProperties, userProperties, modulesProperties } = params;
+    const { open, onClose, table, tableState, updateTableState, componentProperties } = params;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

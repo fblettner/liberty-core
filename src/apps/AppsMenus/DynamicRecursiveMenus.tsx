@@ -6,15 +6,13 @@
 
 import { Collapse } from "@ly_common/Collapse";
 import { List, ListItem, ListItemButton } from "@ly_common/List";
+import { useAppContext } from "@ly_context/AppProvider";
 import { LYMenusExpandLessIcon, LYMenusExpandMoreIcon } from "@ly_styles/icons";
 import { ListItemButton_DynamicMenus } from "@ly_styles/List";
 import { Typo_ListItemText } from "@ly_styles/Typography";
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentMode } from "@ly_types/lyComponents";
 import { IFiltersProperties } from "@ly_types/lyFilters";
 import { EMenus, IMenusItem } from "@ly_types/lyMenus";
-import { IModulesProps } from "@ly_types/lyModules";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { Fragment, useCallback, useMemo, useState } from "react";
 
 // Define type for menu items
@@ -26,13 +24,11 @@ interface IDynamicRecursiveMenus {
   setSelectedIndex: (index: string | null) => void;
   onMenuSelect: (component: ComponentProperties) => void;
   onToggleMenusDrawer: () => void;
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
 }
 
 export function DynamicRecursiveMenus(props: IDynamicRecursiveMenus) {
-  const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer, appsProperties, userProperties, modulesProperties } = props;
+  const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
   // Destructure item properties for cleaner code 
   const {
@@ -155,9 +151,6 @@ export function DynamicRecursiveMenus(props: IDynamicRecursiveMenus) {
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
                 onMenuSelect={onMenuSelect}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
                 onToggleMenusDrawer={onToggleMenusDrawer}
               />
             ))}

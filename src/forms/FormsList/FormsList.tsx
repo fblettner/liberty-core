@@ -6,20 +6,14 @@
 
 // Custom Import
 import { FormsTable } from "@ly_forms/FormsTable/FormsTable";
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentDisplayMode, LYComponentViewMode } from "@ly_types/lyComponents";
-import { IModulesProps } from "@ly_types/lyModules";
-import { IUsersProps } from "@ly_types/lyUsers";
 
 export interface IFormsList {
     componentProperties: ComponentProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export function FormsList(props: IFormsList) {
-    const { componentProperties, appsProperties, userProperties, modulesProperties } = props;
+    const { componentProperties } = props;
     return (
         <FormsTable
             componentProperties={componentProperties}
@@ -27,9 +21,6 @@ export function FormsList(props: IFormsList) {
             viewMode={LYComponentViewMode.list}
             viewGrid={false}
             readonly={false}
-            appsProperties={appsProperties}
-            userProperties={userProperties}
-            modulesProperties={modulesProperties}
         />
     )
 }

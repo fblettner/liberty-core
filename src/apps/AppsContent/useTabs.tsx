@@ -3,6 +3,7 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
+import { useAppContext } from '@ly_context/AppProvider';
 import { FormsAI } from '@ly_forms/FormsAI/FormsAI';
 import { FormsChart } from '@ly_forms/FormsChart/FormsChart';
 import { FormsDashboard } from '@ly_forms/FormsDashboard/FormsDashboard';
@@ -25,15 +26,12 @@ const TAB_TABLE_SUFFIX = '-table';
 const TAB_COMPONENT_SUFFIX = '-component';
 
 export interface IUseTabsProps {
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
   initialTab?: ComponentProperties
-  socket?: SocketClient;
 }
 
 export const useTabs = (props: IUseTabsProps) => {
-  const { appsProperties, userProperties, modulesProperties, initialTab, socket } = props
+  const { initialTab } = props
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
   const [tabs, setTabs] = useState<{ [EDialogTabs.sequence]: string;[EDialogTabs.component]: ComponentProperties }[]>([]);
   const [activeTab, setActiveTab] = useState<string>(initialTab ? `${TAB_PREFIX}${initialTab.type}-${initialTab.id}` : '');
 
@@ -123,10 +121,6 @@ const renderFormsTable = (props: IRenderFormsTableProps) => {
         viewGrid={viewMode === LYComponentViewMode.list ? false : true}
         componentProperties={component}
         readonly={false}
-        appsProperties={appsProperties}
-        userProperties={userProperties}
-        modulesProperties={modulesProperties}
-        socket={socket}
       />
     </Paper_Table>
   )
@@ -184,43 +178,25 @@ const getPageContent = (props: IGetPageContentProps) => {
       return <FormsDialog 
         componentProperties={component} 
         onClose={onDialogClose} 
-        appsProperties={appsProperties}
-        userProperties={userProperties}
-        modulesProperties={modulesProperties}
-        socket={socket}
         />;
     case LYComponentType.FormsUpload:
       return <FormsUpload 
-        componentProperties={component} 
-        appsProperties={appsProperties}
-        userProperties={userProperties}
-        modulesProperties={modulesProperties}        
+        componentProperties={component}      
       />;
     case LYComponentType.FormsChart:
       return <FormsChart 
-        componentProperties={component} 
-        appsProperties={appsProperties}
-        userProperties={userProperties}
-        modulesProperties={modulesProperties}        
+        componentProperties={component}    
       />;
     case LYComponentType.FormsDashboard:
       return <FormsDashboard 
-        componentProperties={component} 
-        appsProperties={appsProperties}
-        userProperties={userProperties}
-        modulesProperties={modulesProperties}       
+        componentProperties={component}        
     />;
     case LYComponentType.FormsAI:
       return <FormsAI
         componentProperties={component}
-        appsProperties={appsProperties}
-        userProperties={userProperties}
-        modulesProperties={modulesProperties}
       />;
     case LYComponentType.FormsTools:
-      return <FormsTools 
-        modulesProperties={modulesProperties}
-      />;
+      return <FormsTools />;
     default:
       return null;
   }

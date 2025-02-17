@@ -6,14 +6,12 @@
 
 import { Collapse } from "@ly_common/Collapse";
 import { ListItem, ListItemButton, List } from "@ly_common/List";
+import { useAppContext } from "@ly_context/AppProvider";
 import { handleMenuAction } from "@ly_services/lyMenus";
 import { LYMenusExpandLessIcon, LYMenusExpandMoreIcon } from "@ly_styles/icons";
 import { Typo_ListItemText } from "@ly_styles/Typography";
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties } from "@ly_types/lyComponents";
 import { EMenus } from "@ly_types/lyMenus";
-import { IModulesProps } from "@ly_types/lyModules";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { IconType } from "react-icons/lib";
 
@@ -32,13 +30,11 @@ interface IStaticRecursiveMenus {
   selectedIndex: string | null;
   setSelectedIndex: (index: string | null) => void;
   onMenuSelect: (component: ComponentProperties) => void;
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
 }
 
 export function StaticRecursiveMenus(props: IStaticRecursiveMenus) {
-  const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, appsProperties, userProperties, modulesProperties } = props;
+  const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
   const [openChildren, setOpenChildren] = useState(openMenus.includes(item[EMenus.key]));
 
@@ -114,9 +110,6 @@ export function StaticRecursiveMenus(props: IStaticRecursiveMenus) {
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
                 onMenuSelect={onMenuSelect}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
               />
             ))}
           </List>

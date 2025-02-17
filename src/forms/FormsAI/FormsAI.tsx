@@ -10,14 +10,11 @@ import { t } from 'i18next';
 // Custom Import
 import { InputChat } from '@ly_input/InputChat/InputChat';
 import { handleSendMessage } from '@ly_services/lyChat';
-import { IAppsProps } from '@ly_types/lyApplications';
 import { IChatMessage } from '@ly_types/lyChat';
-import { ComponentProperties, LYComponentMode } from '@ly_types/lyComponents';
+import { ComponentProperties } from '@ly_types/lyComponents';
 import { handleScroll, scrollToBottom } from '@ly_utils/scrollUtils';
 import { FormsChat } from '@ly_forms/FormsChat/FormsChat';
 import Logger from '@ly_services/lyLogging';
-import { IModulesProps } from '@ly_types/lyModules';
-import { IUsersProps } from '@ly_types/lyUsers';
 import { EStandardColor } from '@ly_utils/commonUtils';
 import { Div_AIError, Div_AIProgress } from '@ly_styles/Div';
 import { Paper_FormsAI } from '@ly_styles/Paper';
@@ -26,38 +23,32 @@ import { CircularProgress } from "@ly_common/CircularProgress";
 import { Button } from '@ly_common/Button';
 import { QueryRoute } from '@ly_types/lyQuery';
 import { send_to_ai } from '@ly_utils/openai';
+import { useAppContext } from '@ly_context/AppProvider';
 
 interface IMemoizedFormsChatProps {
   chat: IChatMessage;
   addMessageToHistory: (message: IChatMessage) => void;
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
 }
 
 const MemoizedFormsChat = memo((props: IMemoizedFormsChatProps) => {
-  const { chat, addMessageToHistory, appsProperties, userProperties, modulesProperties } = props;
+  const { chat, addMessageToHistory } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
   return (
     <FormsChat
       chat={chat}
       addMessageToHistory={addMessageToHistory}
-      appsProperties={appsProperties}
-      userProperties={userProperties}
-      modulesProperties={modulesProperties}
     />
   )
 })
 
 interface IFormsAIProps {
   componentProperties: ComponentProperties
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
 }
 
 export function FormsAI(props: IFormsAIProps) {
-  const { componentProperties, appsProperties, userProperties, modulesProperties} = props;
+  const { componentProperties } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
   const [userInput, setUserInput] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<IChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -170,9 +161,6 @@ export function FormsAI(props: IFormsAIProps) {
             key={index} 
             chat={chat} 
             addMessageToHistory={addMessageToHistory}
-            appsProperties={appsProperties}
-            userProperties={userProperties}
-            modulesProperties={modulesProperties}  
           />
         ))}
 

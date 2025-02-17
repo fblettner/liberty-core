@@ -1,4 +1,5 @@
 import { ISnackMessage } from "@ly_types/lySnackMessages";
+import { ESeverity } from "@ly_utils/commonUtils";
 import { createContext, useContext, useState, ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -6,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 // Define context type
 interface SnackMessageContextType {
   snackMessages: ISnackMessage[];
-  addSnackMessage: (message: string, severity: "success" | "error" | "warning" | "info") => void;
+  addSnackMessage: (message: string, severity: ESeverity) => void;
   removeSnackMessage: (id: string) => void;
 }
 
@@ -43,7 +44,6 @@ export const SnackMessageProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// ✅ Custom Hook with a Fallback (Handles Missing Provider)
 export const useSnackMessage = () => {
   const context = useContext(SnackMessageContext);
 

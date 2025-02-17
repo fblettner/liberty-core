@@ -19,6 +19,7 @@ import { Div } from "@ly_styles/Div";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
+import { useAppContext } from "@ly_context/AppProvider";
 
 export interface IDashboardCard {
     dashboardData: IDashboardState;
@@ -35,14 +36,12 @@ interface IRenderFormsTableProps  {
     viewMode: LYComponentViewMode,
     content: IDashboardContent,
     viewGrid: boolean;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 const renderFormsTable = (props: IRenderFormsTableProps) => {
 
-    const { component, viewMode, content, viewGrid, appsProperties, userProperties, modulesProperties } = props;
+    const { component, viewMode, content, viewGrid } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     return (
         <FormsTable
@@ -52,9 +51,6 @@ const renderFormsTable = (props: IRenderFormsTableProps) => {
             viewGrid={viewGrid}
             componentProperties={component}
             readonly={false}
-            appsProperties={appsProperties}
-            userProperties={userProperties}
-            modulesProperties={modulesProperties}
         />
     );
 }
@@ -83,9 +79,6 @@ export const DashboardCard = (props: IDashboardCard) => {
             displayComponent = <FormsChart
                 key={`${content[EDahsboardContent.component]}-${content[EDahsboardContent.componentID]}`} 
                 componentProperties={targetComponent} 
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />;
             break;
         case LYComponentType.FormsTree:
@@ -125,9 +118,7 @@ export const DashboardCard = (props: IDashboardCard) => {
             displayComponent = renderFormsTable(paramsList);
             break;
         case LYComponentType.FormsTools:
-            displayComponent = <FormsTools 
-                modulesProperties={props.modulesProperties}
-            />;
+            displayComponent = <FormsTools />;
             break;            
     }
     return (

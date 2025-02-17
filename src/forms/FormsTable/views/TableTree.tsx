@@ -24,6 +24,7 @@ import Logger from "@ly_services/lyLogging";
 import { Paper_TableTree } from "@ly_styles/Paper";
 import { Tree } from "@ly_common/Tree";
 import { IUsersProps } from "@ly_types/lyUsers";
+import { useAppContext } from "@ly_context/AppProvider";
 
 interface ITableTree {
     displayView: ITableDisplayView;
@@ -34,9 +35,6 @@ interface ITableTree {
     onMouseDown: (event: React.MouseEvent<Element>, node: ITableRow) => void
     onTouchStart: (event: React.TouchEvent<Element>, row: ITableRow) => void
     onTouchEnd: () => void
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 // Define the type for the tree node
@@ -47,7 +45,8 @@ interface TreeNode {
 }
 
 export const TableTree = (params: ITableTree) => {
-    const { displayView, displayMode, table, tableState, onDoubleClick, onMouseDown, onTouchStart, onTouchEnd, appsProperties, userProperties, modulesProperties} = params;
+    const { displayView, displayMode, table, tableState, onDoubleClick, onMouseDown, onTouchStart, onTouchEnd } = params;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [tree, setTree] = useState<IGetTreeProperties | null>(null); // Track tree data
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });

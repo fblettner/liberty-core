@@ -22,6 +22,7 @@ import { DatePicker } from "@ly_input/InputDate";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IModulesProps } from "@ly_types/lyModules";
+import { useAppContext } from "@ly_context/AppProvider";
 
 interface IDialogFields {
     item: IDialogDetails;
@@ -31,12 +32,10 @@ interface IDialogFields {
     onAutocompleteChange: OnAutocompleteChangeFunction;
     onInputChange: OnInputChangeFunction;
     onCheckboxChange: OnCheckboxChangeFunction;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
-export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange, appsProperties, userProperties,modulesProperties }: IDialogFields) => {
+export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange }: IDialogFields) => {
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     let field = item[EDialogDetails.target] ?? item[EDialogDetails.dictionaryID];
 
     switch (item[EDialogDetails.rules]) {
@@ -64,9 +63,6 @@ export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAu
                     onChange={onAutocompleteChange}
                     freeSolo={false}
                     searchByLabel={false}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             )
         case EDictionaryRules.lookup:
@@ -87,9 +83,6 @@ export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAu
                         : (dialogContent.fields[item[EDialogDetails.pool_params]] !== undefined)
                             ? dialogContent.fields[item[EDialogDetails.pool_params]].value as string
                             : item[EDialogDetails.pool_params]}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             )
         case EDictionaryRules.password:

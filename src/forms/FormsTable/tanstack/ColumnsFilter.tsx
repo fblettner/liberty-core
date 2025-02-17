@@ -26,7 +26,7 @@ import { Popper } from '@ly_common/Popper';
 import { Paper_Popup } from '@ly_styles/Paper';
 import { DatePicker } from '@ly_input/InputDate';
 import { IconButton } from '@ly_common/IconButton';
-import { GridContainer, GridFlexContainer, GridItem } from '@ly_common/Grid';
+import { GridFlexContainer, GridItem } from '@ly_common/Grid';
 import { IAppsProps } from '@ly_types/lyApplications';
 import { IUsersProps } from '@ly_types/lyUsers';
 import { IModulesProps } from '@ly_types/lyModules';
@@ -73,13 +73,10 @@ interface IColumnsFilter {
     anchorEl: HTMLElement | null;
     onClose: () => void;
     openFilters: IFilterState;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const ColumnsFilter = (params: IColumnsFilter) => {
-    const { table, anchorEl, onClose, openFilters, appsProperties, userProperties, modulesProperties } = params;
+    const { table, anchorEl, onClose, openFilters } = params;
     interface IFilter {
         column: Column<ITableRow, IContentValue> | null;
         operator: string;
@@ -389,9 +386,6 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
                                             freeSolo={false}
                                             searchByLabel={false}
                                             hideButton={true}
-                                            appsProperties={appsProperties}
-                                            userProperties={userProperties}
-                                            modulesProperties={modulesProperties}
                                         />
                                     ) : filter.column?.columnDef && filter.column.columnDef.type === EDictionaryType.boolean ? (
                                         <Select

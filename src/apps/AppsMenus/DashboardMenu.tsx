@@ -5,11 +5,11 @@
  */
 // React Import
 import { ListItemButton } from "@ly_common/List";
+import { useAppContext } from "@ly_context/AppProvider";
 import { LYDashboardIcon } from "@ly_styles/icons";
-import { EApplications, IAppsProps } from "@ly_types/lyApplications";
+import { EApplications } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentMode, LYComponentType } from "@ly_types/lyComponents";
-import { IModulesProps } from "@ly_types/lyModules";
-import { EUsers, IUsersProps } from "@ly_types/lyUsers";
+import { EUsers } from "@ly_types/lyUsers";
 import { t } from "i18next";
 import { useMemo } from "react";
 
@@ -20,13 +20,11 @@ interface DashboardMenuProps {
     setSelectedIndex: (index: string) => void;
     onMenuSelect: (component: ComponentProperties) => void;
     onToggleMenusDrawer: () => void;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export function DashboardMenu(props: DashboardMenuProps) {
-    const { selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer, appsProperties, userProperties } = props;
+    const { selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
 
     // Determine the target dashboard ID

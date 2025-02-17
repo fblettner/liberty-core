@@ -31,6 +31,7 @@ import { NotificationSettings } from './NotificationSettings';
 import { UISettings } from './UISettings';
 import { UserSettings } from './UserSettings';
 import { getRestData } from './utils/userUtils';
+import { useAppContext } from '@ly_context/AppProvider';
 
 
 interface ITabPanelProps {
@@ -58,17 +59,14 @@ export const TabPanel = ({ children, value, index, ...other }: ITabPanelProps) =
 );
 
 export interface IAppsUserProps {
-    userProperties: IUsersProps;
-    setUserProperties: React.Dispatch<React.SetStateAction<IUsersProps>>;
-    appsProperties: IAppsProps;
-    modulesProperties: IModulesProps;
     openDialog: boolean;
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
     onToggleDarkMode: () => void;
 }
 
 export const AppsUser = (props: IAppsUserProps) => {
-    const { userProperties, setUserProperties, appsProperties, modulesProperties, openDialog, setOpenDialog, onToggleDarkMode } = props;
+    const {  openDialog, setOpenDialog, onToggleDarkMode } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();

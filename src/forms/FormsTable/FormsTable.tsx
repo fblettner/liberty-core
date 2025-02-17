@@ -9,15 +9,13 @@ import { t } from "i18next";
 import { functionalUpdate, getCoreRowModel, getSortedRowModel, SortingState, useReactTable, getGroupedRowModel, getExpandedRowModel, getFilteredRowModel, ColumnFiltersState } from "@tanstack/react-table";
 
 // Custom Import
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentDisplayMode, LYComponentViewMode, LYComponentType, LYComponentMode, LYComponentEvent } from "@ly_types/lyComponents";
 import { IFiltersProperties } from "@ly_types/lyFilters";
 import { ITableRow, ITableHeader, TablesGridHardCoded, ETableHeader } from "@ly_types/lyTables";
 import { CColumnsFilter } from "@ly_types/lyFilters";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { getActionsForGrid, getActionsForTable } from "@ly_forms/FormsTable/features/TableActions";
 import { ITableDisplayView, setFilters } from "@ly_forms/FormsTable/utils/commonUtils"
-import { IDialogAction, IReserveStatus } from "@ly_utils/commonUtils";
+import { IDialogAction, } from "@ly_utils/commonUtils";
 import { fetchDataHandler, FetchDataParams } from "@ly_forms/FormsTable/utils/fetchDataUtils";
 import { TableFilters } from "@ly_forms/FormsTable/dialogs/TableFilters";
 import { AlertMessage } from "@ly_common/AlertMessage";
@@ -41,7 +39,6 @@ import { RowSelectionFeature } from "@ly_forms/FormsTable/features/RowSelection"
 import { TableEditFeature } from "@ly_forms/FormsTable/features/TableEdit";
 import { GlobalFilterFeature } from "@ly_forms/FormsTable/features/GlobalFilter";
 import { ITableState } from "@ly_forms/FormsTable/utils/tanstackUtils";
-import { IModulesProps } from "@ly_types/lyModules";
 import { TableImport } from "@ly_forms/FormsTable/dialogs/TableImport";
 import { TableUpload } from "@ly_forms/FormsTable/dialogs/TableUpload";
 import { TableGridRef } from "@ly_forms/FormsTable/views/TableGrid";
@@ -50,7 +47,7 @@ import { LYAddIcon, LYCopyIcon, LYDeleteIcon, LYEditIcon } from "@ly_styles/icon
 import { Stack_FormsTable } from "@ly_styles/Stack";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { AnchorPosition } from "@ly_types/common";
-import SocketClient from "@ly_utils/socket";
+import { useAppContext } from "@ly_context/AppProvider";
 
 interface IFormsTable {
     componentProperties: ComponentProperties;
@@ -59,14 +56,11 @@ interface IFormsTable {
     viewMode: LYComponentViewMode;
     onSelectRow?: onSelectRowFunction,
     readonly: boolean;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
-    socket?: SocketClient;
 }
 
 export function FormsTable(params: IFormsTable) {
-    const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly, appsProperties, userProperties, modulesProperties, socket } = params;
+    const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly } = params;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const longPressTimeout = useRef<number | null>(null);
@@ -804,9 +798,6 @@ export function FormsTable(params: IFormsTable) {
                     setColumnsFilters={setColumnsFilter}
                     handleCancel={handleCancelFilters}
                     handleApply={handleApplyFilters}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
                 {openDialog &&
                     <DialogWidget
@@ -814,10 +805,6 @@ export function FormsTable(params: IFormsTable) {
                         componentProperties={dialogProperties.current}
                         onClose={onEditDialogClose}
                         sendAction={sendAction}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
-                        socket={socket}
                     />
                 }
                 <TableDialog
@@ -825,9 +812,6 @@ export function FormsTable(params: IFormsTable) {
                     componentProperties={dialogProperties.current}
                     onClose={handleCloseTableDialog}
                     onSelectRow={onTableDialogClose}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
                 <TableImport
                     open={openImport}
@@ -836,18 +820,12 @@ export function FormsTable(params: IFormsTable) {
                     tableState={tableState}
                     updateTableState={updateTableState}
                     componentProperties={dialogProperties.current}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
                 <TableUpload
                     open={openUpload}
                     setOpen={setOpenUpload}
                     componentProperties={uploadComponent.current}
                     handleRefresh={handleRefresh}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
                 <TableRender
                     isLoading={isLoading}
@@ -880,9 +858,6 @@ export function FormsTable(params: IFormsTable) {
                     uploadComponent={uploadComponent}
                     setOpenUpload={setOpenUpload}
                     rowCount={rowCount}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
                 {contextMenuState.open &&
                     <TableContextMenus

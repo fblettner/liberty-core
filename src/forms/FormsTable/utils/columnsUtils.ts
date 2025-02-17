@@ -69,9 +69,6 @@ export const setColumnProperties = (params: ISetColumnProperties ) => {
         const params = {
             columnProperties, 
             componentProperties,
-            appsProperties,
-            userProperties,
-            modulesProperties
         }
         const columnProps = getColumnProperties(params);
         columnsProperties.push(...columnProps);

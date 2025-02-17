@@ -7,11 +7,10 @@
 import { IUsersProps } from "@ly_types/lyUsers";
 
 interface INotificationSettings {
-    userProperties: IUsersProps;
     onFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const NotificationSettings = ({ userProperties, onFieldChange }: INotificationSettings) => {
+export const NotificationSettings = ({ onFieldChange }: INotificationSettings) => {
     return (
         <form>
             {/* Add your Notifications settings form fields here */}

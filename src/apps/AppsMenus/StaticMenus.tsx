@@ -4,16 +4,16 @@
  * *
  */
 
-import { LYSmartToyIcon, LYLocalLibraryIcon, LYLinkIcon, LYSettingsIcon, LYLogoutIcon } from "@ly_styles/icons";
+import { LYSmartToyIcon, LYLocalLibraryIcon, LYLinkIcon, LYSettingsIcon } from "@ly_styles/icons";
 import { List_StaticMenus } from "@ly_styles/List";
-import { IAppsProps, EApplications } from "@ly_types/lyApplications";
+import { EApplications } from "@ly_types/lyApplications";
 import { ComponentProperties } from "@ly_types/lyComponents";
 import { EMenus } from "@ly_types/lyMenus";
-import { IModulesProps } from "@ly_types/lyModules";
-import { IUsersProps, EUsers } from "@ly_types/lyUsers";
+import { EUsers } from "@ly_types/lyUsers";
 import { t } from "i18next";
 import { useMemo } from "react";
 import { StaticRecursiveMenus } from "./StaticRecursiveMenus";
+import { useAppContext } from "@ly_context/AppProvider";
 
 // Define the types for the props
 interface IStaticMenusProps {
@@ -23,14 +23,11 @@ interface IStaticMenusProps {
   setSelectedIndex: (index: string | null) => void;
   onMenuSelect: (component: ComponentProperties) => void;
   onToggleMenusDrawer: () => void;
-  appsProperties: IAppsProps;
-  userProperties: IUsersProps;
-  modulesProperties: IModulesProps;
 }
 
 export function StaticMenus(props: IStaticMenusProps) {
-  const { openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, appsProperties, userProperties, modulesProperties } = props;
-
+  const { openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect } = props;
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
   // Fixed data for the menu bottom
   const memoizedData = useMemo(
@@ -54,9 +51,6 @@ export function StaticMenus(props: IStaticMenusProps) {
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
           onMenuSelect={onMenuSelect}
-          appsProperties={appsProperties}
-          userProperties={userProperties}
-          modulesProperties={modulesProperties}
         />
       ))}
     </List_StaticMenus>

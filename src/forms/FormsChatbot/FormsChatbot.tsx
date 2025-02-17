@@ -20,17 +20,16 @@ import { DraggableDialog } from '@ly_common/DragableDialog';
 import { IAppsProps } from '@ly_types/lyApplications';
 import { IModulesProps } from '@ly_types/lyModules';
 import { IUsersProps } from '@ly_types/lyUsers';
+import { useAppContext } from '@ly_context/AppProvider';
 
 interface IFormsChatbotProps {
     isChatOpen: boolean;
     handleCloseChat: () => void;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export function FormsChatbot(props: IFormsChatbotProps) {
-    const { isChatOpen, handleCloseChat, appsProperties, userProperties, modulesProperties } = props;
+    const { isChatOpen, handleCloseChat } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [isMinimized, setIsMinimized] = useState(false);
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
@@ -158,9 +157,6 @@ export function FormsChatbot(props: IFormsChatbotProps) {
                                     showPreviousButton: false,
                                     isChildren: false
                                 }}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         </Div_ChatContent>
 

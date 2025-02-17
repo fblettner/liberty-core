@@ -3,6 +3,7 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
+import { useAppContext } from "@ly_context/AppProvider";
 import { InputEnum } from "@ly_input/InputEnum/InputEnum";
 import { InputLookup } from "@ly_input/InputLookup/InputLookup";
 import { OnChangeFunction } from "@ly_input/InputLookup/utils/commonUtils";
@@ -23,13 +24,11 @@ interface IUISettings {
     inputDashboard: string | null;
     inputTheme: string | null;
     handleButtonClick: (value: UIDisplayMode) => void;
-    userProperties: IUsersProps;
-    appsProperties: IAppsProps;
-    modulesProperties: IModulesProps;
 }
 
 export const UISettings = (props: IUISettings) => {
-    const { onAutocompleteChanged, darkMode, inputLanguage, inputDashboard, inputTheme, handleButtonClick, appsProperties, userProperties, modulesProperties } = props;
+    const { onAutocompleteChanged, darkMode, inputLanguage, inputDashboard, inputTheme, handleButtonClick } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     const generalData = useMemo(() => [
         { id: UIDisplayMode.dark, name: darkMode ? "Mode: Dark" : "Mode: Light", icon: darkMode ? LYDarkModeIcon : LYLightModeIcon }], [darkMode]);
@@ -60,9 +59,6 @@ export const UISettings = (props: IUISettings) => {
                     onChange={onAutocompleteChanged}
                     displayWhite={true}
                     sessionMode={ESessionMode.framework}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             </Div_UISettings>
             <Div_UISettings>
@@ -77,9 +73,6 @@ export const UISettings = (props: IUISettings) => {
                     displayWhite={true}
                     fixed_params='COL_COMPONENT=FormsDashboard'
                     sessionMode={ESessionMode.framework}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             </Div_UISettings>
             <Div_UISettings>
@@ -96,9 +89,6 @@ export const UISettings = (props: IUISettings) => {
                     searchByLabel={false}
                     sessionMode={ESessionMode.framework}
                     overrideQueryPool={GlobalSettings.getDefaultPool}
-                    appsProperties={appsProperties}
-                    userProperties={userProperties}
-                    modulesProperties={modulesProperties}
                 />
             </Div_UISettings>
         </Fragment>

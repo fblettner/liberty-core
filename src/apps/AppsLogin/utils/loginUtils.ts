@@ -15,7 +15,6 @@ import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import SocketClient, { socketHandler } from "@ly_utils/socket";
 import { t } from "i18next";
 import Cookies from "js-cookie";
-import { AuthContextProps } from "react-oidc-context";
 
 export const validateLogin = (
     token: any,

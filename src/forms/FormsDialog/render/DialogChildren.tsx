@@ -10,10 +10,8 @@ import { useState, useRef, useEffect } from "react";
 // MUI Import
 
 // Custom Import
-import { IAppsProps } from "@ly_types/lyApplications";
 import { ComponentProperties, LYComponentEvent, LYComponentMode } from "@ly_types/lyComponents";
 import { CDialogContent, EDialogTabs, EDialogHeader, IDialogDetails, IDialogHeader, IDialogsTab } from "@ly_types/lyDialogs";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { LoadingIndicator } from "@ly_common/LoadingIndicator";
 import { DialogForms } from "@ly_forms/FormsDialog/render/DialogForms";
 import { initDialog, ISaveDataAPIParams, saveDataAPI } from "@ly_forms/FormsDialog/utils/apiUtils";
@@ -22,11 +20,11 @@ import { ESeverity, IContentValue, IDialogAction, IErrorState, IReserveStatus, O
 import { getRecordHandler } from "@ly_forms/FormsDialog/utils/recordUtils";
 import { IActionsStatus } from "@ly_types/lyActions";
 import Logger from "@ly_services/lyLogging";
-import { IModulesProps } from "@ly_types/lyModules";
 import { ResultStatus } from "@ly_types/lyQuery";
 import { Paper_Dialogs } from "@ly_styles/Paper";
 import { Stack_Dialogs } from "@ly_styles/Stack";
-import SocketClient, { socketHandler } from "@ly_utils/socket";
+import { socketHandler } from "@ly_utils/socket";
+import { useAppContext } from "@ly_context/AppProvider";
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
@@ -37,16 +35,11 @@ type Props = Readonly<{
     setErrorState: React.Dispatch<React.SetStateAction<IErrorState>>;
     parentActiveTab: string;
     parentTabIndex: string;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
-    socket?: SocketClient;
 }>;
 
 export function DialogChildren(props: Props) {
-    const { componentProperties, sendAction, setSendAction, isModified, setIsModified, setErrorState, parentActiveTab, parentTabIndex,
-        appsProperties, userProperties,modulesProperties, socket
-     } = props;
+    const { componentProperties, sendAction, setSendAction, isModified, setIsModified, setErrorState, parentActiveTab, parentTabIndex } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
 
     // Declare variables
     const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });
@@ -310,11 +303,7 @@ export function DialogChildren(props: Props) {
                         setErrorState={setErrorState}
                         parentActiveTab={parentActiveTab}
                         parentTabIndex={parentTabIndex}
-                        appsProperties={appsProperties}
-                        userProperties={userProperties}
-                        modulesProperties={modulesProperties}
                         reserveStatus={reserveStatus}
-                        socket={socket}
                     />
                 </Paper_Dialogs>
             </Stack_Dialogs>

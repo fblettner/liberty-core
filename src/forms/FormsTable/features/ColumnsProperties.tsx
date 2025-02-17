@@ -24,16 +24,10 @@ import { Div_CellColor, Div_CellText } from "@ly_styles/Div";
 import { Input } from "@ly_common/Input";
 import dayjs from "dayjs";
 import { DatePicker } from "@ly_input/InputDate";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 
 export interface IGetColumnPropertiesParams {
     columnProperties: IColumnsProperties,
     componentProperties: ComponentProperties,
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 type TAddMeta = (meta: FilterMeta) => void;
@@ -146,7 +140,7 @@ const getDynamicFilterFn = (operator: string, type: EDictionaryType) => {
 
 // Utility function to get column properties based on rules
 export const getColumnProperties = (params: IGetColumnPropertiesParams): IColumnsProperties[] => {
-    const { columnProperties, componentProperties, appsProperties, userProperties, modulesProperties} = params;
+    const { columnProperties, componentProperties } = params;
     switch (columnProperties.rules) {
         case EDictionaryRules.color:
             return [{
@@ -308,9 +302,6 @@ export const getColumnProperties = (params: IGetColumnPropertiesParams): IColumn
                                 searchByLabel={true}
                                 hideButton={true}
                                 callFromTable={true}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         )
                     },
@@ -419,9 +410,6 @@ export const getColumnProperties = (params: IGetColumnPropertiesParams): IColumn
                                         : columnProperties.pool_params}
                                 searchByLabel={true}
                                 callFromTable={true}
-                                appsProperties={appsProperties}
-                                userProperties={userProperties}
-                                modulesProperties={modulesProperties}
                             />
                         )
                     },

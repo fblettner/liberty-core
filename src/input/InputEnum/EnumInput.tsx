@@ -14,7 +14,7 @@ import { EnumPopper } from "@ly_input/InputEnum/EnumPopper";
 import { OnChangeFunction } from "@ly_input/InputEnum/utils/commonUtils";
 import { IEnumsResult } from "@ly_types/lyEnums";
 import { ToolsDictionary } from "@ly_services/lyDictionary";
-import { ESessionMode, EApplications, IAppsProps } from "@ly_types/lyApplications";
+import { ESessionMode, EApplications } from "@ly_types/lyApplications";
 import { IFiltersProperties } from "@ly_types/lyFilters";
 import { ResultStatus } from "@ly_types/lyQuery";
 import { GlobalSettings } from "@ly_utils/GlobalSettings";
@@ -28,9 +28,8 @@ import { IconButton } from "@ly_common/IconButton";
 import { Select } from "@ly_common/Select";
 import { ITransformedObject, TextFieldVariants } from "@ly_types/common";
 import { useDeviceDetection, useMediaQuery } from "@ly_common/UseMediaQuery";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 import { DialogWidget } from "@ly_forms/FormsDialog/dialogs/DialogWidget";
+import { useAppContext } from "@ly_context/AppProvider";
 
 export interface IEnumInput {
     id: string;
@@ -50,14 +49,12 @@ export interface IEnumInput {
     hideButton?: boolean;
     onChange: OnChangeFunction;
     setErrorState: React.Dispatch<React.SetStateAction<IErrorState>>;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 export const EnumInput = (props: IEnumInput) => {
     const { id, label, enumID, defaultValue, disabled, variant, freeSolo, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool,
-        callFromTable, onChange, setErrorState, hideButton, appsProperties, userProperties, modulesProperties } = props;
+        callFromTable, onChange, setErrorState, hideButton } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
 
@@ -291,9 +288,6 @@ export const EnumInput = (props: IEnumInput) => {
                 open={openDialog}
                 componentProperties={dialogRef.current}
                 onClose={onDialogClose}
-                appsProperties={appsProperties}
-                userProperties={userProperties}
-                modulesProperties={modulesProperties}
             />
             <Div_AutoComplete>
                 <Select
