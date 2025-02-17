@@ -1,11 +1,11 @@
-import { useSnackMessage } from "@ly_context/SnackMessageProvider";
 import { Stack_SnackMessage } from "@ly_styles/Stack";
 import { useEffect } from "react";
 import { Alert } from "./Alert";
+import { useAppContext } from "@ly_context/AppProvider";
 
 
 export const SnackMessage = () => {
-  const { snackMessages, removeSnackMessage } = useSnackMessage();
+  const { snackMessages, removeSnackMessage } = useAppContext();
 
   useEffect(() => {
     snackMessages.forEach((snack) => {

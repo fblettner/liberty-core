@@ -24,7 +24,6 @@ import { DialogExport } from "@ly_common/DialogExport";
 import { PDF } from "@ly_utils/pdfUtils";
 import { EExportType, ESeverity, IExportOptions } from "@ly_utils/commonUtils";
 import { Excel } from "@ly_utils/JSExcelUtils";
-import { useSnackMessage } from "@ly_context/SnackMessageProvider";
 import { useAppContext } from "@ly_context/AppProvider";
 
 export interface ITableToolbar {
@@ -65,7 +64,7 @@ export const TableToolbar = ({
     setOpenUpload,
 
 }: ITableToolbar) => {
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket, addSnackMessage } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const [openExport, setOpenExport] = useState<{
@@ -264,10 +263,7 @@ export const TableToolbar = ({
             open: false
         });
     }, [setOpenExport]);
-
-
-    const { addSnackMessage } = useSnackMessage();
-    
+   
     const exportExcel = useCallback(async () => {
         addSnackMessage("Export of table has started", ESeverity.warning)
         let columnsOptions = (exportOptions.columns === "allColumns") ? table.getAllColumns() : table.getVisibleLeafColumns();

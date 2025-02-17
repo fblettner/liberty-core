@@ -6,11 +6,11 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "@emotion/styled";
-import { useZIndex } from "@ly_types/common";
 import { useDeviceDetection, useMediaQuery } from "@ly_common/UseMediaQuery";
 import { LYCloseIcon } from "@ly_styles/icons";
 import { t } from "i18next";
 import { Button_Popper } from "@ly_styles/Button";
+import { useAppContext } from "@ly_context/AppProvider";
 
 // Supported placements
 type Placement = "top" | "bottom" | "left" | "right" | "bottom-start" | "bottom-end";
@@ -146,7 +146,7 @@ export const Popper = ({
   }, [open, anchorEl, placement, modal, isSmallScreen, isMobile]);
 
 
-  const { getNextZIndex, resetZIndex } = useZIndex();
+  const { getNextZIndex, resetZIndex } = useAppContext();;
   const zIndex = useRef<number>(0);
 
   useEffect(() => {

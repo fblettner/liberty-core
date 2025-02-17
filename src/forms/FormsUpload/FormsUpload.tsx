@@ -38,7 +38,6 @@ import { Typography } from "@ly_common/Typography";
 import { Div_DialogToolbarButtons } from "@ly_styles/Div";
 import { Paper_Dialogs, Paper_DialogToolbar, Paper_UploadFile } from "@ly_styles/Paper";
 import { Stack_Dialogs, Stack_Table } from "@ly_styles/Stack";
-import { useSnackMessage } from "@ly_context/SnackMessageProvider";
 import { useAppContext } from "@ly_context/AppProvider";
 
 type Props = Readonly<{
@@ -48,7 +47,7 @@ type Props = Readonly<{
 
 export function FormsUpload(props: Props) {
     const { componentProperties, onClose } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket, addSnackMessage } = useAppContext();
 
     const component = useRef<ComponentProperties>(componentProperties);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -254,9 +253,7 @@ export function FormsUpload(props: Props) {
         if (onClose)
             onClose({ event: LYComponentEvent.Cancel})
     }
-
-    const { addSnackMessage } = useSnackMessage();
-    
+   
     const handleSaveDialog = async () => {
         let result = await saveDataAPI()
         if (result === ResultStatus.success) {

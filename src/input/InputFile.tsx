@@ -11,7 +11,7 @@ import { EStandardColor, ESeverity } from '@ly_utils/commonUtils';
 import { LYAttachFileIcon } from '@ly_styles/icons';
 import { Div } from '@ly_styles/Div';
 import { IconButton } from '@ly_common/IconButton';
-import { useSnackMessage } from '@ly_context/SnackMessageProvider';
+import { useAppContext } from '@ly_context/AppProvider';
 
 
 interface InputFileProps {
@@ -27,8 +27,7 @@ export const InputFile = ({
     disabled,
     accept,
 }: InputFileProps) => {
-    const { addSnackMessage } = useSnackMessage();
-    
+    const {  addSnackMessage } = useAppContext();
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
