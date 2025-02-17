@@ -3,7 +3,6 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
-export * from "@ly_styles/theme";
 export * from "@ly_styles/icons";
 export * from "@ly_utils/commonUtils";
 export * from "@ly_utils/GlobalSettings";
@@ -108,5 +107,9 @@ export * from "@ly_apps/AppsContent/AppsContent";
 
 export { default as i18n, t} from "@ly_translations/i18n";
 export * from "@ly_context/AppProvider"
+export * from "@ly_context/ErrorBoundary"
+export * from "@ly_context/I18nextProvider"
+export * from "@ly_context/AuthProviderWrapper"
+export * from "@ly_context/ThemeProvider";
 
 export { default as SocketClient, socketHandler } from "@ly_utils/socket"

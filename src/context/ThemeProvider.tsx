@@ -8,7 +8,7 @@ import { createContext, useContext } from "react";
 
 import '@ly_styles/custom.css';
 import { ThemeProvider } from '@emotion/react';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from '../styles/GlobalStyles';
 
 declare module '@emotion/react' {
   export interface Theme {
