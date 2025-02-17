@@ -9,13 +9,15 @@ import { ToolsQuery } from "@ly_services/lyQuery";
 import { IModulesProps } from "@ly_types/lyModules";
 
 export interface IGetApplicationsProps {
-  pool: string
   modulesProperties: IModulesProps
-  jwt_token: string
 }
 
+export type LyGetApplicationsFunction = () => Promise<any>;
+
+
+
 export const lyGetApplications = async (props: IGetApplicationsProps) => {
-    const { pool, modulesProperties, jwt_token } = props
+    const { modulesProperties } = props
     const results = await ToolsQuery.applications(modulesProperties)
     return results
   }

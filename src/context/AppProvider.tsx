@@ -10,6 +10,7 @@ import { ISnackMessage } from "@ly_types/lySnackMessages";
 import { ESeverity } from "@ly_utils/commonUtils";
 import { v4 as uuidv4 } from "uuid";
 import { lyGetModules, LyGetModulesFunction } from "@ly_services/lyModules";
+import { LyGetApplicationsFunction } from "@ly_services/lyApplications";
 
 // Define Context Type
 interface AppContextType {
@@ -24,6 +25,7 @@ interface AppContextType {
     removeSnackMessage: (id: string) => void;
     getNextZIndex: () => number;
     resetZIndex: () => void;
+    getApplications?: LyGetApplicationsFunction;
 }
 
 // Create Context
@@ -32,10 +34,11 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export interface IAppProviderProps {
     children: ReactNode;
     getModules?: LyGetModulesFunction;
+    getApplications?: LyGetApplicationsFunction;
 }
 
 export const AppProvider = (props: IAppProviderProps) => {
-    const { children, getModules } = props;
+    const { children, getModules, getApplications } = props;
     const socket = useRef(new SocketClient());
 
     const [modulesProperties, setModulesProperties] = useState<IModulesProps>({
@@ -131,6 +134,7 @@ export const AppProvider = (props: IAppProviderProps) => {
     useEffect(() => {
         if (modulesProperties && modulesProperties.sentry.enabled && modulesProperties.sentry.params && !isSentryInitialized.current) {
             try {
+                // Initialize Sentry
                 const parsedData = JSON.parse(modulesProperties.sentry.params);
                 const url = parsedData.url;
                 const replay = parsedData.replay === "true";
@@ -197,6 +201,7 @@ export const AppProvider = (props: IAppProviderProps) => {
                 removeSnackMessage,
                 getNextZIndex, 
                 resetZIndex, 
+                getApplications
             }}
         >
             {children}

@@ -3,7 +3,7 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
-import { lyGetApplications } from "@ly_services/lyApplications";
+import { lyGetApplications, LyGetApplicationsFunction } from "@ly_services/lyApplications";
 import Logger from "@ly_services/lyLogging";
 import { UIDisplayMode } from "@ly_types/common";
 import { IAppsProps, EApplications, ESessionMode } from "@ly_types/lyApplications";
@@ -32,19 +32,18 @@ export const validateLogin = (
 };
 
 
-export const getApplications = async (
+export const getLoginApplications = async (
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setAppsDP: React.Dispatch<React.SetStateAction<IAppsProps[]>>,
     modulesProperties: IModulesProps,
-    jwt_token: string
+    getApplications?: LyGetApplicationsFunction
   ) => {
     try {
       setIsLoading(true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      const results = await lyGetApplications({
-        pool: GlobalSettings.getDefaultPool, 
+
+      const results = getApplications ? await getApplications() : await lyGetApplications({
         modulesProperties: modulesProperties,
-        jwt_token: jwt_token
       });
       if (results.status === ResultStatus.error) {
         const logger = new Logger({

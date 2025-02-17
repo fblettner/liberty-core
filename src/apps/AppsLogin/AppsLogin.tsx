@@ -22,7 +22,7 @@ import { IAppsProps, EApplications, ESessionMode } from "@ly_types/lyApplication
 import { ResultStatus } from "@ly_types/lyQuery";
 import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
 import { t } from "i18next";
-import { getApplications, validateLogin, connectApplication } from "./utils/loginUtils";
+import { validateLogin, connectApplication, getLoginApplications } from "./utils/loginUtils";
 import { useAppContext } from "@ly_context/AppProvider";
 import { useAuth } from "@ly_context/AuthProviderWrapper";
 
@@ -30,7 +30,7 @@ import { useAuth } from "@ly_context/AuthProviderWrapper";
 export interface IAppsLoginProps {
 }
 export const AppsLogin = () => {
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+  const { modulesProperties, setUserProperties, setAppsProperties, socket, getApplications } = useAppContext();
   const auth = useAuth();
 
   // State variables
@@ -45,7 +45,7 @@ export const AppsLogin = () => {
     const initialize = async () => {
       try {
         const savedApplicationId = Cookies.get("applicationId");
-        const apps = await getApplications(setIsLoading, setAppsDP, modulesProperties, "");
+        const apps = await getLoginApplications(setIsLoading, setAppsDP, modulesProperties, getApplications);
 
         if (savedApplicationId) {
           const savedApp = apps.items.find(
