@@ -54,7 +54,7 @@ export interface IEnumInput {
 export const EnumInput = (props: IEnumInput) => {
     const { id, label, enumID, defaultValue, disabled, variant, freeSolo, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool,
         callFromTable, onChange, setErrorState, hideButton } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
 

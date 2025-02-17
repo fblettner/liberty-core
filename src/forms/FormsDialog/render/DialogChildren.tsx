@@ -39,7 +39,7 @@ type Props = Readonly<{
 
 export function DialogChildren(props: Props) {
     const { componentProperties, sendAction, setSendAction, isModified, setIsModified, setErrorState, parentActiveTab, parentTabIndex } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, socket } = useAppContext();
 
     // Declare variables
     const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });
@@ -104,7 +104,7 @@ export function DialogChildren(props: Props) {
             modulesProperties: modulesProperties
         });
         logger.logMessage("Socket: Release Record");
-    }, [getRecord, setReserveStatus, socket, modulesProperties, socketHandler, Logger]);
+    }, [getRecord, socket, modulesProperties, socketHandler, Logger]);
 
     const fetchData = useCallback(async () => {
         const params = {

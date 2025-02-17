@@ -20,7 +20,7 @@ interface IHeaderIcons {
 
 export const HeaderIcons = memo((props: IHeaderIcons) => {
   const { darkMode, onToggleChat, onToggleDarkMode, onToggleUserSettings, onSignout } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+  const { userProperties } = useAppContext();
   const isUserLoggedIn = userProperties[EUsers.status] === true;
   
   return (

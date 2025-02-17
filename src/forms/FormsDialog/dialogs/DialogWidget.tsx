@@ -19,7 +19,6 @@ import { LYFullscreenExitIcon, LYFullscreenIcon } from "@ly_styles/icons";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { DraggableDialog } from "@ly_common/DragableDialog";
-import { useAppContext } from "@ly_context/AppProvider";
 
 // Custom Import
 interface IDialogWidget {
@@ -32,7 +31,6 @@ interface IDialogWidget {
 
 export const DialogWidget = (props: IDialogWidget) => {
     const { open, componentProperties, onClose } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();

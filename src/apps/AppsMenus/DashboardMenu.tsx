@@ -24,7 +24,7 @@ interface DashboardMenuProps {
 
 export function DashboardMenu(props: DashboardMenuProps) {
     const { selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+    const { userProperties, appsProperties } = useAppContext();
 
 
     // Determine the target dashboard ID

@@ -65,7 +65,7 @@ export interface IAppsUserProps {
 
 export const AppsUser = (props: IAppsUserProps) => {
     const {  openDialog, setOpenDialog, onToggleDarkMode } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, login } = useAppContext();
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
@@ -174,7 +174,7 @@ export const AppsUser = (props: IAppsUserProps) => {
                 if (result.status === ResultStatus.success) {
                     setIsModified(false);
 
-                    setUserProperties({
+                    login({
                         [EUsers.status]: true,
                         [EUsers.id]: restData.data[EUsers.id],
                         [EUsers.name]: restData.data[EUsers.name],
@@ -210,7 +210,7 @@ export const AppsUser = (props: IAppsUserProps) => {
 
             setErrorState({ open: true, message: t("unexpectedError"), severity: ESeverity.error });
         }
-    }, [updatedUserData, appsProperties[EApplications.pool], userProperties, setUserProperties, setErrorState, modulesProperties]);
+    }, [updatedUserData, appsProperties[EApplications.pool], userProperties, login, setErrorState, modulesProperties]);
 
     const onFieldChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = event.target;

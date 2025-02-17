@@ -31,7 +31,7 @@ const useChartPalette = () => {
   
 export function FormsChart(props: Props) {
     const { componentProperties } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties } = useAppContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const component = useRef(componentProperties);
     const [chartHeader, setChartHeader] = useState<IChartHeader>({

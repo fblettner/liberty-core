@@ -6,7 +6,6 @@
 
 import { Collapse } from "@ly_common/Collapse";
 import { List, ListItem, ListItemButton } from "@ly_common/List";
-import { useAppContext } from "@ly_context/AppProvider";
 import { LYMenusExpandLessIcon, LYMenusExpandMoreIcon } from "@ly_styles/icons";
 import { ListItemButton_DynamicMenus } from "@ly_styles/List";
 import { Typo_ListItemText } from "@ly_styles/Typography";
@@ -28,7 +27,6 @@ interface IDynamicRecursiveMenus {
 
 export function DynamicRecursiveMenus(props: IDynamicRecursiveMenus) {
   const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
   // Destructure item properties for cleaner code 
   const {

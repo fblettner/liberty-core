@@ -27,7 +27,7 @@ interface IStaticMenusProps {
 
 export function StaticMenus(props: IStaticMenusProps) {
   const { openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+  const { userProperties, appsProperties } = useAppContext();
 
   // Fixed data for the menu bottom
   const memoizedData = useMemo(

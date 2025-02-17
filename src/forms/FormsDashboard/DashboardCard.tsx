@@ -49,7 +49,7 @@ const renderFormsTable = (props: IRenderFormsTableProps) => {
 
 export const DashboardCard = (props: IDashboardCard) => {
     const { dashboardData, row, column } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties } = useAppContext();
 
     let content = dashboardData.content?.find((item: IDashboardContent) => item[EDahsboardContent.rows] === row && item[EDahsboardContent.columns] === column)
     if (content === undefined)

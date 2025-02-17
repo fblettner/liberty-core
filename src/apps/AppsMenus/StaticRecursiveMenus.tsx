@@ -34,7 +34,7 @@ interface IStaticRecursiveMenus {
 
 export function StaticRecursiveMenus(props: IStaticRecursiveMenus) {
   const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+  const { userProperties, appsProperties } = useAppContext();
 
   const [openChildren, setOpenChildren] = useState(openMenus.includes(item[EMenus.key]));
 

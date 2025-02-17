@@ -24,7 +24,7 @@ export interface IAppsContentProps {
 
 export function AppsContent(props: IAppsContentProps) {
   const { isMenuOpen, onToggleMenusDrawer } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+  const { userProperties, appsProperties } = useAppContext();
 
   const { tabs, activeTab, addTab, closeTab, setActiveTab, memoizedContent, clearTabs } = useTabs({});
   const [tabsCleared, setTabsCleared] = useState(false);

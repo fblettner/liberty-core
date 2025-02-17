@@ -31,7 +31,7 @@ export interface IUseTabsProps {
 
 export const useTabs = (props: IUseTabsProps) => {
   const { initialTab } = props
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
+  const { userProperties, appsProperties, modulesProperties, socket } = useAppContext();
   const [tabs, setTabs] = useState<{ [EDialogTabs.sequence]: string;[EDialogTabs.component]: ComponentProperties }[]>([]);
   const [activeTab, setActiveTab] = useState<string>(initialTab ? `${TAB_PREFIX}${initialTab.type}-${initialTab.id}` : '');
 

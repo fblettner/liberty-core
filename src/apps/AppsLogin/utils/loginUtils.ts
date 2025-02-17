@@ -11,7 +11,6 @@ import { IModulesProps } from "@ly_types/lyModules";
 import { ResultStatus } from "@ly_types/lyQuery";
 import { IUsersProps, EUsers } from "@ly_types/lyUsers";
 import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
-import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import SocketClient, { socketHandler } from "@ly_utils/socket";
 import { t } from "i18next";
 import Cookies from "js-cookie";
@@ -70,16 +69,16 @@ export const getLoginApplications = async (
 
 export interface IConnectApplicationProps {
     userProperties: IUsersProps;
-    setUserProperties: React.Dispatch<React.SetStateAction<IUsersProps>>;
+    login:(user: IUsersProps) => void;
     selectedApplication: IAppsProps;
-    setAppsProperties: React.Dispatch<React.SetStateAction<IAppsProps>>;
+    connect: (apps: IAppsProps) => void;
     jwt_token: string;
     socket?: SocketClient;
 }
 
 // Simplified connectApplication without additional arguments
 export const connectApplication = (props: IConnectApplicationProps) => {
-    const { userProperties, setUserProperties, selectedApplication, setAppsProperties, jwt_token, socket } = props;
+    const { userProperties, login, selectedApplication, connect, jwt_token, socket } = props;
 
     const user: IUsersProps =  {
             [EUsers.status]: true,
@@ -99,7 +98,7 @@ export const connectApplication = (props: IConnectApplicationProps) => {
     // Save the application ID into a cookie
     Cookies.set('applicationId', selectedApplication[EApplications.id].toString(), { expires: 30 });
 
-    setAppsProperties({
+    connect({
         [EApplications.id]: selectedApplication[EApplications.id],
         [EApplications.pool]: selectedApplication[EApplications.pool],
         [EApplications.name]: selectedApplication[EApplications.name],
@@ -113,7 +112,7 @@ export const connectApplication = (props: IConnectApplicationProps) => {
         [EApplications.jwt_token]: jwt_token
 
     });
-    setUserProperties(user);
+    login(user);
 
     if (socket) {
       const socketFunctions = socketHandler(socket);

@@ -47,7 +47,7 @@ type Props = Readonly<{
 
 export function FormsUpload(props: Props) {
     const { componentProperties, onClose } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, addSnackMessage } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, addSnackMessage } = useAppContext();
 
     const component = useRef<ComponentProperties>(componentProperties);
     const [isLoading, setIsLoading] = useState<boolean>(false);

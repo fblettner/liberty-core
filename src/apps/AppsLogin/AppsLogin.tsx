@@ -30,7 +30,7 @@ import { useAuth } from "@ly_context/AuthProviderWrapper";
 export interface IAppsLoginProps {
 }
 export const AppsLogin = () => {
-  const { modulesProperties, setUserProperties, setAppsProperties, socket, getApplications } = useAppContext();
+  const { modulesProperties, login, connect, socket, getApplications } = useAppContext();
   const auth = useAuth();
 
   // State variables
@@ -75,7 +75,7 @@ export const AppsLogin = () => {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
-      const login = formData.get("user") as string;
+      const user_login = formData.get("user") as string;
       const password = formData.get("password") as string;
 
       try {
@@ -91,7 +91,7 @@ export const AppsLogin = () => {
         }
         let password_encrypted = modulesProperties.login.enabled ? await ToolsQuery.encrypt(password, modulesProperties) : "";
         const token = await ToolsQuery.token(
-          modulesProperties.login.enabled ? login : auth.user?.profile.preferred_username!,
+          modulesProperties.login.enabled ? user_login : auth.user?.profile.preferred_username!,
           password_encrypted,
           application[EApplications.pool],
           ESessionMode.session,
@@ -102,7 +102,7 @@ export const AppsLogin = () => {
         if (!validateLogin(token, setErrorState)) return;
         
         const result = await ToolsQuery.user({
-          user: modulesProperties.login.enabled ? login : auth.user?.profile.preferred_username!,
+          user: modulesProperties.login.enabled ? user_login : auth.user?.profile.preferred_username!,
           pool: application[EApplications.pool],
           sessionMode: ESessionMode.session,
           modulesProperties: modulesProperties,
@@ -112,12 +112,12 @@ export const AppsLogin = () => {
 
         if (result.status === ResultStatus.success) {
           let userProperties = result.items[0];
-          if (setUserProperties && setAppsProperties) {
+          if (login && connect) {
             const params = {
               userProperties: userProperties,
-              setUserProperties: setUserProperties,
+              login: login,
               selectedApplication: application,
-              setAppsProperties: setAppsProperties,
+              connect: connect,
               jwt_token: token.access_token,
               socket: socket
             }

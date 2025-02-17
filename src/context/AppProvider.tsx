@@ -5,7 +5,7 @@ import { IUsersProps, EUsers } from "@ly_types/lyUsers";
 import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
 import * as Sentry from "@sentry/react";
-import SocketClient from "@ly_utils/socket";
+import SocketClient, { socketHandler } from "@ly_utils/socket";
 import { ISnackMessage } from "@ly_types/lySnackMessages";
 import { ESeverity } from "@ly_utils/commonUtils";
 import { v4 as uuidv4 } from "uuid";
@@ -15,9 +15,11 @@ import { LyGetApplicationsFunction } from "@ly_services/lyApplications";
 // Define Context Type
 interface AppContextType {
     appsProperties: IAppsProps;
-    setAppsProperties: React.Dispatch<React.SetStateAction<IAppsProps>>;
+    connect: (apps: IAppsProps) => void;
+    disconnect: () => void;
     userProperties: IUsersProps;
-    setUserProperties: React.Dispatch<React.SetStateAction<IUsersProps>>;
+    login: (user: IUsersProps) => void;
+    logout: () => void;
     modulesProperties: IModulesProps;
     socket: SocketClient;
     snackMessages: ISnackMessage[];
@@ -186,14 +188,62 @@ export const AppProvider = (props: IAppProviderProps) => {
         }
       };
       
+    const connect = (apps: IAppsProps) => {
+        setAppsProperties(apps);
+    }
+
+    const disconnect = () => {
+        setAppsProperties({
+            [EApplications.id]: 0,
+            [EApplications.pool]: GlobalSettings.getDefaultPool,
+            [EApplications.name]: "LIBERTY",
+            [EApplications.description]: "Liberty Framework",
+            [EApplications.offset]: 5000,
+            [EApplications.limit]: 5000,
+            [EApplications.version]: GlobalSettings.getVersion,
+            [EApplications.session]: ESessionMode.session,
+            [EApplications.dashboard]: -1,
+            [EApplications.theme]: "liberty",
+            [EApplications.jwt_token]: ""
+        });
+
+        if (socket.current) {
+            const socketFunctions = socketHandler(socket.current);
+            socketFunctions.signout();
+        }
+    }
+
+    const login =(user: IUsersProps) => {
+        setUserProperties(user);
+    }
+
+    const logout = () => {
+        setUserProperties({
+            [EUsers.status]: false,
+            [EUsers.id]: "",
+            [EUsers.name]: "",
+            [EUsers.email]: "",
+            [EUsers.password]: "",
+            [EUsers.admin]: "N",
+            [EUsers.language]: "en",
+            [EUsers.displayMode]: UIDisplayMode.dark,
+            [EUsers.darkMode]: true,
+            [EUsers.theme]: "liberty",
+            [EUsers.dashboard]: -1,
+            [EUsers.readonly]: "Y",
+          });
+    }
+
 
     return (
         <AppContext.Provider
             value={{
                 appsProperties,
-                setAppsProperties,
+                connect,
+                disconnect,
                 userProperties,
-                setUserProperties,
+                login,
+                logout,
                 modulesProperties,
                 socket: socket.current,
                 snackMessages, 
@@ -201,7 +251,8 @@ export const AppProvider = (props: IAppProviderProps) => {
                 removeSnackMessage,
                 getNextZIndex, 
                 resetZIndex, 
-                getApplications
+                getApplications,
+
             }}
         >
             {children}
@@ -215,9 +266,11 @@ export const useAppContext = (): AppContextType => {
     if (!context) {
         return {
             appsProperties: {} as IAppsProps,
-            setAppsProperties: () => { },
+            connect: () => { },
+            disconnect: () => { },
             userProperties: {} as IUsersProps,
-            setUserProperties: () => { },
+            login: () => { },
+            logout: () => { },
             modulesProperties: {
                 "debug": { "enabled": false, "params": null },
                 "sentry": { "enabled": false, "params": "" },
@@ -232,6 +285,7 @@ export const useAppContext = (): AppContextType => {
             removeSnackMessage: () => { },
             getNextZIndex: () => 0,
             resetZIndex: () => { },
+
         };
     }
     return context;
