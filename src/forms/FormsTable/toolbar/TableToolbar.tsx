@@ -22,10 +22,11 @@ import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { IconButton } from "@ly_common/IconButton";
 import { DialogExport } from "@ly_common/DialogExport";
 import { PDF } from "@ly_utils/pdfUtils";
-import { EExportType, IExportOptions } from "@ly_utils/commonUtils";
+import { EExportType, ESeverity, IExportOptions } from "@ly_utils/commonUtils";
 import { Excel } from "@ly_utils/JSExcelUtils";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { IModulesProps } from "@ly_types/lyModules";
+import { useSnackMessage } from "@ly_context/SnackMessageProvider";
 
 export interface ITableToolbar {
     displayView: {
@@ -271,7 +272,10 @@ export const TableToolbar = ({
     }, [setOpenExport]);
 
 
+    const { addSnackMessage } = useSnackMessage();
+    
     const exportExcel = useCallback(async () => {
+        addSnackMessage("Export of table has started", ESeverity.warning)
         let columnsOptions = (exportOptions.columns === "allColumns") ? table.getAllColumns() : table.getVisibleLeafColumns();
 
         let headerOptions = (exportOptions.header === "columnId") ? true : false;
@@ -302,7 +306,7 @@ export const TableToolbar = ({
                 headerOptions
             );
             excel.export();
-
+            addSnackMessage("Table successfully exported", ESeverity.success)
             setOpenExport({
                 anchorEl: null,
                 open: false,
@@ -321,6 +325,7 @@ export const TableToolbar = ({
 
     const exportToCSV = () => {
         // Extract the table headers (column names)
+        addSnackMessage("Export of table has started", ESeverity.warning)
         const headers = table.getFlatHeaders().map((header) => header.column.columnDef.field);
 
         // Extract the row data (the original data used in the table)
@@ -356,11 +361,12 @@ export const TableToolbar = ({
         link.setAttribute('download', 'table_data.csv');
         document.body.appendChild(link);
         link.click();
+        addSnackMessage("Table successfully exported", ESeverity.success)
         document.body.removeChild(link); // Clean up after download
     }
 
     const exportToPDF = () => {
-
+        addSnackMessage("Export of table has started", ESeverity.warning)
         // Use the correct selector to get the column visibility model
         let columnsOptions = (exportOptions.columns === "allColumns") ? true : false;
         const columnVisibilityModel = table.getState().columnVisibility;
@@ -405,7 +411,7 @@ export const TableToolbar = ({
             tableProperties,
         );
         pdf.export();
-
+        addSnackMessage("Table successfully exported", ESeverity.success)
     }
 
 

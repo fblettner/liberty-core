@@ -6,7 +6,7 @@
 // React Import
 import { useEffect, useRef, useState } from 'react';
 import { useDrag } from '@use-gesture/react';
-import { animated, useSpring } from '@react-spring/web';
+import { useSpring } from '@react-spring/web';
 
 // Custom Import
 import { FormsAI } from '@ly_forms/FormsAI/FormsAI';
@@ -14,14 +14,12 @@ import { LYComponentMode, LYComponentType } from '@ly_types/lyComponents';
 import { Div_ChatContent, Div_DialogWidgetTitleButtons, Div, Div_ResizeBox, Div_ChatTitle, Div_DialogWidgetTitle } from '@ly_styles/Div';
 import { LYCloseIcon, LYFullscreenExitIcon, LYFullscreenIcon, LYMaximizeIcon, LYMinimizeIcon } from '@ly_styles/icons';
 import { IconButton_Contrast } from '@ly_styles/IconButton';
-import { DefaultZIndex } from '@ly_types/common';
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { DIALOG_WIDGET_DIMENSION } from '@ly_utils/commonUtils';
 import { DraggableDialog } from '@ly_common/DragableDialog';
 import { IAppsProps } from '@ly_types/lyApplications';
 import { IModulesProps } from '@ly_types/lyModules';
 import { IUsersProps } from '@ly_types/lyUsers';
-import { ISnackMessage } from '@ly_types/lySnackMessages';
 
 interface IFormsChatbotProps {
     isChatOpen: boolean;
@@ -29,11 +27,10 @@ interface IFormsChatbotProps {
     appsProperties: IAppsProps;
     userProperties: IUsersProps;
     modulesProperties: IModulesProps;
-    snackMessage: (message: ISnackMessage) => void;
 }
 
 export function FormsChatbot(props: IFormsChatbotProps) {
-    const { isChatOpen, handleCloseChat, appsProperties, userProperties, modulesProperties, snackMessage } = props;
+    const { isChatOpen, handleCloseChat, appsProperties, userProperties, modulesProperties } = props;
     const [isMinimized, setIsMinimized] = useState(false);
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
@@ -164,7 +161,6 @@ export function FormsChatbot(props: IFormsChatbotProps) {
                                 appsProperties={appsProperties}
                                 userProperties={userProperties}
                                 modulesProperties={modulesProperties}
-                                snackMessage={snackMessage}
                             />
                         </Div_ChatContent>
 

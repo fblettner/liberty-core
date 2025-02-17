@@ -16,7 +16,7 @@ import { ComponentProperties, LYComponentViewMode, LYComponentDisplayMode, LYCom
 import { EDialogTabs } from '@ly_types/lyDialogs';
 import { IModulesProps } from '@ly_types/lyModules';
 import { IUsersProps } from '@ly_types/lyUsers';
-import { IDialogAction, IReserveStatus } from '@ly_utils/commonUtils';
+import { IDialogAction } from '@ly_utils/commonUtils';
 import SocketClient from '@ly_utils/socket';
 import { useState, useMemo } from 'react';
 
@@ -216,7 +216,6 @@ const getPageContent = (props: IGetPageContentProps) => {
         appsProperties={appsProperties}
         userProperties={userProperties}
         modulesProperties={modulesProperties}
-        snackMessage={() => { }}
       />;
     case LYComponentType.FormsTools:
       return <FormsTools 

@@ -26,7 +26,6 @@ import { CircularProgress } from "@ly_common/CircularProgress";
 import { Button } from '@ly_common/Button';
 import { QueryRoute } from '@ly_types/lyQuery';
 import { send_to_ai } from '@ly_utils/openai';
-import { ISnackMessage } from '@ly_types/lySnackMessages';
 
 interface IMemoizedFormsChatProps {
   chat: IChatMessage;
@@ -55,11 +54,10 @@ interface IFormsAIProps {
   appsProperties: IAppsProps;
   userProperties: IUsersProps;
   modulesProperties: IModulesProps;
-  snackMessage: (message: ISnackMessage) => void;
 }
 
 export function FormsAI(props: IFormsAIProps) {
-  const { componentProperties, appsProperties, userProperties, modulesProperties, snackMessage} = props;
+  const { componentProperties, appsProperties, userProperties, modulesProperties} = props;
   const [userInput, setUserInput] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<IChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -234,7 +232,6 @@ export function FormsAI(props: IFormsAIProps) {
             setIsTruncated
           );
         }}
-        snackMessage={snackMessage}
       />
     </Stack_FormsAI>
   );

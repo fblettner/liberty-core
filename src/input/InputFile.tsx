@@ -11,7 +11,7 @@ import { EStandardColor, ESeverity } from '@ly_utils/commonUtils';
 import { LYAttachFileIcon } from '@ly_styles/icons';
 import { Div } from '@ly_styles/Div';
 import { IconButton } from '@ly_common/IconButton';
-import { ISnackMessage } from '@ly_types/lySnackMessages';
+import { useSnackMessage } from '@ly_context/SnackMessageProvider';
 
 
 interface InputFileProps {
@@ -19,7 +19,6 @@ interface InputFileProps {
     fileInputRef: React.RefObject<HTMLInputElement| null> ;
     disabled: boolean;
     accept: string;  
-    snackMessage: (message: ISnackMessage) => void;
 }
 
 export const InputFile = ({
@@ -27,8 +26,9 @@ export const InputFile = ({
     fileInputRef,
     disabled,
     accept,
-    snackMessage,
 }: InputFileProps) => {
+    const { addSnackMessage } = useSnackMessage();
+    
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -37,12 +37,7 @@ export const InputFile = ({
             const validTypes: string[] = accept.split(',').map(type => type.trim());
 
             if (file.size > maxSize) {
-                snackMessage({
-                    message: t("files.size"),
-                    severity: ESeverity.success,
-                    open: true,
-                    id: "import-file-size",
-                });
+                addSnackMessage( t("files.size"), ESeverity.error)
                 return;
             }
             // Check file type
@@ -55,22 +50,12 @@ export const InputFile = ({
             });
 
             if (!isValidType) {
-                snackMessage({
-                    message: t("files.type"),
-                    severity: ESeverity.success,
-                    open: true,
-                    id: "import-file-type",
-                });
+                addSnackMessage(t("files.type"), ESeverity.error)
                 return;
             }
 
             // File is valid, call the onFileChange handler
-            snackMessage({
-                message: t("files.success"),
-                severity: ESeverity.success,
-                open: true,
-                id: "import-file-success",
-            });
+            addSnackMessage(t("files.success"), ESeverity.success)
             onFileChange(e);
         }
 

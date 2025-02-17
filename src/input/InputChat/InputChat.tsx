@@ -17,10 +17,6 @@ import { Div_ChatScrollButtons, Div_InputChat } from '@ly_styles/Div';
 import { IconButton } from '@ly_common/IconButton';
 import { IconButton_Contrast } from '@ly_styles/IconButton';
 import { Input } from '@ly_common/Input';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
-import { ISnackMessage } from '@ly_types/lySnackMessages';
 
 
 interface IChatProps {
@@ -36,7 +32,6 @@ interface IChatProps {
   isTruncated: boolean;
   showScrollButton: boolean;
   scrollBottom: () => void;
-  snackMessage: (message: ISnackMessage) => void;
 }
 
 export const InputChat = forwardRef<HTMLInputElement, IChatProps>(
@@ -54,7 +49,6 @@ export const InputChat = forwardRef<HTMLInputElement, IChatProps>(
       isTruncated,
       showScrollButton,
       scrollBottom,
-      snackMessage
     },
     ref
   ) => {
@@ -85,7 +79,6 @@ export const InputChat = forwardRef<HTMLInputElement, IChatProps>(
           fileInputRef={fileInputRef}
           disabled={disabled}
           accept=".txt,.csv,.json,.md,.xml,.tsx"
-          snackMessage={snackMessage}
         />
 
         {/* Text Field */}

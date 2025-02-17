@@ -39,6 +39,7 @@ import { Typography } from "@ly_common/Typography";
 import { Div_DialogToolbarButtons } from "@ly_styles/Div";
 import { Paper_Dialogs, Paper_DialogToolbar, Paper_UploadFile } from "@ly_styles/Paper";
 import { Stack_Dialogs, Stack_Table } from "@ly_styles/Stack";
+import { useSnackMessage } from "@ly_context/SnackMessageProvider";
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
@@ -256,9 +257,13 @@ export function FormsUpload(props: Props) {
             onClose({ event: LYComponentEvent.Cancel})
     }
 
+    const { addSnackMessage } = useSnackMessage();
+    
     const handleSaveDialog = async () => {
         let result = await saveDataAPI()
         if (result === ResultStatus.success) {
+            addSnackMessage(t("files.success"), ESeverity.success)
+
             if (onClose)
                 onClose({ event: LYComponentEvent.Cancel})
         }
