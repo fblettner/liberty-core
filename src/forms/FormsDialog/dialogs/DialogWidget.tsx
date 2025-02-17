@@ -32,7 +32,7 @@ interface IDialogWidget {
 
 export const DialogWidget = (props: IDialogWidget) => {
     const { open, componentProperties, onClose } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();

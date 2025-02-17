@@ -64,7 +64,7 @@ export const TableToolbar = ({
     setOpenUpload,
 
 }: ITableToolbar) => {
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket, addSnackMessage } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, addSnackMessage } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const [openExport, setOpenExport] = useState<{

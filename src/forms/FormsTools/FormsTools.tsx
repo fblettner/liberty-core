@@ -17,7 +17,7 @@ import { useAppContext } from "@ly_context/AppProvider";
 
 
 export function FormsTools() {
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
     const tools = [
         {

@@ -28,7 +28,7 @@ interface IDynamicMenusProps {
   
   export function DynamicMenus(props: IDynamicMenusProps) {
     const { openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
     const [fetchedMenus, setFetchedMenus] = useState<IMenusItem[]>([]);
 
   

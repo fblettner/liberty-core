@@ -19,7 +19,7 @@ interface IAppsMenus {
 // Component Implementation
 export function AppsMenus(props: IAppsMenus) {
   const { isOpen, onMenuSelect, onToggleMenusDrawer } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
 
   const [openMenus, setOpenMenus] = useState<string[]>([]);

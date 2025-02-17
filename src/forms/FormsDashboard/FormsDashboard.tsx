@@ -31,7 +31,7 @@ export interface IFormsDashboard {
 
 export function FormsDashboard(props: IFormsDashboard) {  
     const { componentProperties } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
 

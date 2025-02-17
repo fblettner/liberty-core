@@ -43,7 +43,7 @@ interface TreeNode {
 
 export const TableTree = (params: ITableTree) => {
     const { displayView, displayMode, table, tableState, onDoubleClick, onMouseDown, onTouchStart, onTouchEnd } = params;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
     const [tree, setTree] = useState<IGetTreeProperties | null>(null); // Track tree data
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });

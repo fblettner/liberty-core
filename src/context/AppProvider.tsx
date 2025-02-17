@@ -1,4 +1,3 @@
-import { lyGetModules } from "@ly_services/lyModules";
 import { DefaultZIndex, UIDisplayMode } from "@ly_types/common";
 import { IAppsProps, EApplications, ESessionMode } from "@ly_types/lyApplications";
 import { EModules, IModulesProps } from "@ly_types/lyModules";
@@ -10,6 +9,7 @@ import SocketClient from "@ly_utils/socket";
 import { ISnackMessage } from "@ly_types/lySnackMessages";
 import { ESeverity } from "@ly_utils/commonUtils";
 import { v4 as uuidv4 } from "uuid";
+import { lyGetModules, LyGetModulesFunction } from "@ly_services/lyModules";
 
 // Define Context Type
 interface AppContextType {
@@ -18,22 +18,25 @@ interface AppContextType {
     userProperties: IUsersProps;
     setUserProperties: React.Dispatch<React.SetStateAction<IUsersProps>>;
     modulesProperties: IModulesProps;
-    setModulesProperties: React.Dispatch<React.SetStateAction<IModulesProps>>;
     socket: SocketClient;
-    setSocket: React.Dispatch<React.SetStateAction<SocketClient>>;
     snackMessages: ISnackMessage[];
     addSnackMessage: (message: string, severity: ESeverity) => void;
     removeSnackMessage: (id: string) => void;
     getNextZIndex: () => number;
     resetZIndex: () => void;
-
 }
 
 // Create Context
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider = ({ children }: { children: ReactNode }) => {
-    const [socket, setSocket] = useState<SocketClient>(new SocketClient());
+export interface IAppProviderProps {
+    children: ReactNode;
+    getModules?: LyGetModulesFunction;
+}
+
+export const AppProvider = (props: IAppProviderProps) => {
+    const { children, getModules } = props;
+    const socket = useRef(new SocketClient());
 
     const [modulesProperties, setModulesProperties] = useState<IModulesProps>({
         "debug": { "enabled": false, "params": null },
@@ -77,7 +80,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchModules = async () => {
             try {
-                const results = await lyGetModules({ pool: GlobalSettings.getDefaultPool });
+                const results = getModules ? await getModules() : await lyGetModules();
                 let modules: IModulesProps = {
                     debug: { enabled: false, params: null },
                     sentry: { enabled: false, params: null },
@@ -179,6 +182,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         }
       };
       
+
     return (
         <AppContext.Provider
             value={{
@@ -187,14 +191,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
                 userProperties,
                 setUserProperties,
                 modulesProperties,
-                setModulesProperties,
-                socket,
-                setSocket,
+                socket: socket.current,
                 snackMessages, 
                 addSnackMessage, 
                 removeSnackMessage,
                 getNextZIndex, 
-                resetZIndex 
+                resetZIndex, 
             }}
         >
             {children}
@@ -219,9 +221,7 @@ export const useAppContext = (): AppContextType => {
                 "grafana": { "enabled": false, "params": null },
                 "dev": { "enabled": true, "params": null }
             },
-            setModulesProperties: () => { },
             socket: new SocketClient(),
-            setSocket: () => { },
             snackMessages: [],
             addSnackMessage: () => { },
             removeSnackMessage: () => { },

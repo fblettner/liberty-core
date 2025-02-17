@@ -60,7 +60,7 @@ interface IFormsTable {
 
 export function FormsTable(params: IFormsTable) {
     const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly } = params;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const longPressTimeout = useRef<number | null>(null);

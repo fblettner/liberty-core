@@ -27,6 +27,3 @@ export type IModulesProps = {
 
 export type IModulesState = Record<string, IModuleConfig>
 
-export interface IGetModulesProps {
-  pool: string;
-}

@@ -43,7 +43,7 @@ type Props = Readonly<{
 
 export function FormsDialog(props: Props) {
     const { componentProperties, onClose } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
     const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });
 
     // Declare variables

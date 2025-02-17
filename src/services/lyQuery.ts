@@ -508,7 +508,6 @@ export class QueryDAO {
         query: this.query.query
       });
       logger.logDatabaseMessage("Framework: Load Modules");
-
       return result;
     } catch (error) {
 
@@ -892,7 +891,7 @@ export class ToolsQuery {
       modulesProperties: modulesProperties,
       source: QuerySource.Framework,
       framework_pool: GlobalSettings.getDefaultPool,
-      query: GlobalSettings.getFramework.openPool,
+      query: GlobalSettings.getFramework.modules,
       sessionMode: ESessionMode.framework,
       jwt_token: ""
     });

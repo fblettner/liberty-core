@@ -46,7 +46,7 @@ interface IFormsAIProps {
 
 export function FormsAI(props: IFormsAIProps) {
   const { componentProperties } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
   const [userInput, setUserInput] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<IChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);

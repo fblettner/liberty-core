@@ -27,7 +27,7 @@ interface IUISettings {
 
 export const UISettings = (props: IUISettings) => {
     const { onAutocompleteChanged, darkMode, inputLanguage, inputDashboard, inputTheme, handleButtonClick } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
     const generalData = useMemo(() => [
         { id: UIDisplayMode.dark, name: darkMode ? "Mode: Dark" : "Mode: Light", icon: darkMode ? LYDarkModeIcon : LYLightModeIcon }], [darkMode]);

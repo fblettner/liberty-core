@@ -65,7 +65,7 @@ export interface IAppsUserProps {
 
 export const AppsUser = (props: IAppsUserProps) => {
     const {  openDialog, setOpenDialog, onToggleDarkMode } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();

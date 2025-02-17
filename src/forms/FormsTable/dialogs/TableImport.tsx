@@ -42,7 +42,7 @@ export interface ITableImport{
 
 export const TableImport = (params: ITableImport) => {
     const { open, onClose, table, tableState, updateTableState, componentProperties } = params;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

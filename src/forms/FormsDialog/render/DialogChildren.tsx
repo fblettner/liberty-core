@@ -39,7 +39,7 @@ type Props = Readonly<{
 
 export function DialogChildren(props: Props) {
     const { componentProperties, sendAction, setSendAction, isModified, setIsModified, setErrorState, parentActiveTab, parentTabIndex } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
     // Declare variables
     const [reserveStatus, setReserveStatus] = useState<IReserveStatus>({ status: false, user: "", record: "" });

@@ -5,9 +5,10 @@
  */
 
 import { ToolsQuery } from "@ly_services/lyQuery";
-import { IGetModulesProps } from "@ly_types/lyModules";
 
-export const lyGetModules = async (props: IGetModulesProps) => {
+export type LyGetModulesFunction = () => Promise<any>;
+
+export const lyGetModules = async () => {
   const results = await ToolsQuery.modules({
       sentry: {enabled: false, params: null}, 
       debug: {enabled: false, params: null},

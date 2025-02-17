@@ -23,18 +23,14 @@ import { ResultStatus } from "@ly_types/lyQuery";
 import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
 import { t } from "i18next";
 import { getApplications, validateLogin, connectApplication } from "./utils/loginUtils";
-import { AuthContextProps } from "react-oidc-context";
 import { useAppContext } from "@ly_context/AppProvider";
+import { useAuth } from "@ly_context/AuthProviderWrapper";
 
 
 export interface IAppsLoginProps {
-  useAuth: () => AuthContextProps;
 }
-
-export const AppsLogin = (props: IAppsLoginProps) => {
-  const { useAuth } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
-  
+export const AppsLogin = () => {
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
   const auth = useAuth();
 
   // State variables

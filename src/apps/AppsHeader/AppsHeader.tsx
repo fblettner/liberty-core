@@ -30,7 +30,7 @@ export interface IAppsHeaderProps {
 
 export function AppsHeader(props: IAppsHeaderProps) {
   const { darkMode, onToggleMenusDrawer, onToggleDarkMode, onToggleUserSettings, onToggleChat, onSignout } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
   const appsName = appsProperties[EApplications.name];
   const isUserLoggedIn = userProperties[EUsers.status] === true;
   const isSmallScreen = useMediaQuery("(max-width: 600px)");

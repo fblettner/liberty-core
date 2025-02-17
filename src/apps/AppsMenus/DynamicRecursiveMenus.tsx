@@ -28,7 +28,7 @@ interface IDynamicRecursiveMenus {
 
 export function DynamicRecursiveMenus(props: IDynamicRecursiveMenus) {
   const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();
 
   // Destructure item properties for cleaner code 
   const {

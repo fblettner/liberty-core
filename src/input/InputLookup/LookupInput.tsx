@@ -55,7 +55,7 @@ export interface ILookupInput {
 export const LookupInput = (props: ILookupInput) => {
     const { id, label, lookupID, lookupLabel, onChange, disabled, displayWhite, variant, defaultValue, searchByLabel, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool,
          callFromTable, setErrorState } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();     
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket } = useAppContext();     
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [searchValue, setSearchValue] = useState("");
     const [filteredData, setFilteredData] = useState<ILookupOption[]>([]);
