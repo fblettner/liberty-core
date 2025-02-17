@@ -11,7 +11,6 @@ import { Div_TableTreeTitle } from '@ly_styles/Div';
 import { LYComponentDisplayMode } from "@ly_types/lyComponents";
 import { ITableDisplayView } from "@ly_forms/FormsTable/utils/commonUtils";
 import { ITableRow, ITableHeader, ETableHeader } from "@ly_types/lyTables";
-import { IAppsProps } from "@ly_types/lyApplications";
 import { getTreeProperties } from "@ly_services/lyTree";
 import { ETreeColumns, IGetTreeProperties } from "@ly_types/lyTree";
 import { LoadingIndicator } from "@ly_common/LoadingIndicator";
@@ -19,11 +18,9 @@ import { AlertMessage } from "@ly_common/AlertMessage";
 import { ResultStatus } from "@ly_types/lyQuery";
 import { ESeverity, IErrorState } from "@ly_utils/commonUtils";
 import { ITableState } from "@ly_forms/FormsTable/utils/tanstackUtils";
-import { IModulesProps } from "@ly_types/lyModules";
 import Logger from "@ly_services/lyLogging";
 import { Paper_TableTree } from "@ly_styles/Paper";
 import { Tree } from "@ly_common/Tree";
-import { IUsersProps } from "@ly_types/lyUsers";
 import { useAppContext } from "@ly_context/AppProvider";
 
 interface ITableTree {

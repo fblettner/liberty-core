@@ -156,8 +156,6 @@ export const handleSendMessage = async (
       const component = parsedIntent.parameters.component;
 
       const params = {
-        appsProperties,
-        userProperties,
         modulesProperties,
         send_to_ai,
         addMessageToHistory,
@@ -165,7 +163,6 @@ export const handleSendMessage = async (
         setError: () => {},
         handleError: () => {},
         content: component,
-        isMarkdown: isMarkdownRequest,
       };
 
       await handleComponentAnalysis(params);

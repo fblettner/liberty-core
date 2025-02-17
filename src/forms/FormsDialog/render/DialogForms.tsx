@@ -17,10 +17,6 @@ import { IDialogsTab } from "@ly_types/lyDialogs";
 import { IDialogAction, IErrorState, IReserveStatus } from '@ly_utils/commonUtils';
 import { OnActionEndFunction, OnAutocompleteChangeFunction, OnCheckboxChangeFunction, OnInputChangeFunction, OnTabChangeFunction } from '@ly_forms/FormsDialog/utils/commonUtils';
 import { GridFlexContainer } from '@ly_common/Grid';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
-import SocketClient from '@ly_utils/socket';
 
 interface IDialogForms {
     tabs: IDialogsTab[];

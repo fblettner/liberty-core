@@ -1,22 +1,19 @@
 /*
- * Copyright (c) 2022 NOMANA-IT and/or its affiliates.
+ * Copyright (c) 2025 NOMANA-IT and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  * *
  */
 import { AppsMenus } from '@ly_apps/AppsMenus/AppsMenus';
 import { Main_Content } from '@ly_styles/Main';
-import { IAppsProps, EApplications } from '@ly_types/lyApplications';
+import { EApplications } from '@ly_types/lyApplications';
 import { ComponentProperties, LYComponentType, LYComponentMode } from '@ly_types/lyComponents';
 import { EDialogTabs } from '@ly_types/lyDialogs';
-import { IModulesProps } from '@ly_types/lyModules';
-import { IUsersProps, EUsers } from '@ly_types/lyUsers';
+import { EUsers } from '@ly_types/lyUsers';
 import { t } from 'i18next';
 import { Fragment, useEffect, useState } from 'react';
 import { TabContainer } from './TabContainer';
 import { TabPanel } from './TabPanel';
 import { useTabs } from './useTabs';
-import { IReserveStatus } from '@ly_utils/commonUtils';
-import SocketClient from '@ly_utils/socket';
 import { useAppContext } from '@ly_context/AppProvider';
 
 

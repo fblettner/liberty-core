@@ -20,7 +20,7 @@ import { AlertMessage } from '@ly_common/AlertMessage';
 import { ESeverity, IErrorState } from '@ly_utils/commonUtils';
 import Logger from '@ly_services/lyLogging';
 import { Paper_Dashboard } from '@ly_styles/Paper';
-import { EUsers, IUsersProps } from '@ly_types/lyUsers';
+import { EUsers } from '@ly_types/lyUsers';
 import { useAppContext } from '@ly_context/AppProvider';
 
 

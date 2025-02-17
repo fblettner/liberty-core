@@ -16,18 +16,12 @@ import { IconButton } from "@ly_common/IconButton";
 import { Card_Dashboard } from "@ly_styles/Card";
 import { CardContent, CardHeader } from "@ly_common/Card";
 import { Div } from "@ly_styles/Div";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
 import { useAppContext } from "@ly_context/AppProvider";
 
 export interface IDashboardCard {
     dashboardData: IDashboardState;
     row: number;
     column: number;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 // Helper function to render FormsTable
@@ -39,10 +33,7 @@ interface IRenderFormsTableProps  {
 }
 
 const renderFormsTable = (props: IRenderFormsTableProps) => {
-
     const { component, viewMode, content, viewGrid } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
-
     return (
         <FormsTable
             key={content[EDahsboardContent.component] + "-" + content[EDahsboardContent.componentID]}
@@ -57,7 +48,9 @@ const renderFormsTable = (props: IRenderFormsTableProps) => {
 
 
 export const DashboardCard = (props: IDashboardCard) => {
-    const { dashboardData, row, column, appsProperties, userProperties, modulesProperties } = props;
+    const { dashboardData, row, column } = props;
+    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
+
     let content = dashboardData.content?.find((item: IDashboardContent) => item[EDahsboardContent.rows] === row && item[EDahsboardContent.columns] === column)
     if (content === undefined)
         return <Div></Div>;

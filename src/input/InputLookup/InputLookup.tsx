@@ -7,16 +7,13 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 
 // Custom Import
-import { ESessionMode, IAppsProps } from '@ly_types/lyApplications';
+import { ESessionMode } from '@ly_types/lyApplications';
 import { LookupInput } from '@ly_input/InputLookup/LookupInput';
 import { AlertMessage } from '@ly_common/AlertMessage';
 import { OnChangeFunction } from '@ly_input/InputLookup/utils/commonUtils';
 import { IColumnsFilter } from "@ly_types/lyFilters";
 import { IContentValue, IErrorState } from "@ly_utils/commonUtils";
 import { ITransformedObject, TextFieldVariants } from '@ly_types/common';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
-import { useAppContext } from '@ly_context/AppProvider';
 
 export interface IInputLookupProps {
     id: string;
@@ -39,7 +36,6 @@ export interface IInputLookupProps {
 export const InputLookup = (props: IInputLookupProps) => {
     const { id, lookupID, label, defaultValue, disabled, displayWhite, variant, data, dynamic_params, fixed_params, sessionMode, overrideQueryPool, searchByLabel, onChange, 
         callFromTable } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
     const inputRef = useRef<HTMLInputElement>(null);
  

@@ -19,10 +19,6 @@ import { ToolsDictionary } from '@ly_services/lyDictionary';
 import { InputColor } from '@ly_input/InputColor';
 import { Input } from '@ly_common/Input';
 import { DatePicker } from "@ly_input/InputDate";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
-import { useAppContext } from "@ly_context/AppProvider";
 
 interface IDialogFields {
     item: IDialogDetails;
@@ -35,7 +31,6 @@ interface IDialogFields {
 }
 
 export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange }: IDialogFields) => {
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     let field = item[EDialogDetails.target] ?? item[EDialogDetails.dictionaryID];
 
     switch (item[EDialogDetails.rules]) {

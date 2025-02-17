@@ -20,10 +20,6 @@ import { Paper_Table } from "@ly_styles/Paper";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { DraggableDialog } from "@ly_common/DragableDialog";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
-import { useAppContext } from "@ly_context/AppProvider";
 
 export interface ILookupSearch {
     componentProperties: ComponentProperties;
@@ -33,7 +29,6 @@ export interface ILookupSearch {
 }
 
 export const LookupSearch = ({ componentProperties, open, onChange, onClose }: ILookupSearch) => {
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();
     const [isFullScreen, setIsFullScreen] = useState(() => isSmallScreen || isMobile); // Set fullscreen initially if small screen

@@ -533,10 +533,6 @@ const getDataFromAPI = (async (params: IGetDataFromAPIParams) => {
             readonly,
             ActionsForGrid,
             ActionsForTable,
-            ActionsNone,
-            appsProperties,
-            userProperties,
-            modulesProperties
         }
         const columnsProperties = setColumnProperties(columnsPropertiesParams);
         const columnsVisibility = setColumnVisibility(tables, getColumnsVisibility);

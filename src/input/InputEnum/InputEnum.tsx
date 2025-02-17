@@ -9,17 +9,13 @@ import { Fragment, useState } from 'react';
 // MUI Import
 
 // Custom Import
-import { ESessionMode, IAppsProps } from '@ly_types/lyApplications';
+import { ESessionMode } from '@ly_types/lyApplications';
 import { EnumInput } from '@ly_input/InputEnum/EnumInput';
 import { AlertMessage } from '@ly_common/AlertMessage';
 import { OnChangeFunction } from '@ly_input/InputEnum/utils/commonUtils';
 import { IErrorState } from "@ly_utils/commonUtils";
 import { IColumnsFilter } from "@ly_types/lyFilters";
 import { ITransformedObject, TextFieldVariants } from '@ly_types/common';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
-import { useAppContext } from '@ly_context/AppProvider';
-
 
 export interface IInputEnumProps {
     id: string;
@@ -42,8 +38,7 @@ export interface IInputEnumProps {
 
 export const InputEnum = (props: IInputEnumProps) => {
     const { id, enumID, label, defaultValue, onChange, disabled, variant, freeSolo, searchByLabel,data, dynamic_params, fixed_params, sessionMode, overrideQueryPool, 
-        callFromTable, hideButton } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();        
+        callFromTable, hideButton } = props; 
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
 
     const onCloseError = () => {

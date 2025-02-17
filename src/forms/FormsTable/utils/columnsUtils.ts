@@ -13,10 +13,6 @@ import { getColumnProperties } from "@ly_forms/FormsTable/features/ColumnsProper
 import { ITablesProperties } from "@ly_types/lyTables";
 import { ITableState } from "@ly_forms/FormsTable/utils/tanstackUtils";
 import { IContentValue } from "@ly_utils/commonUtils";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IUsersProps } from "@ly_types/lyUsers";
-import { IModulesProps } from "@ly_types/lyModules";
-
 
 // Set column properties
 export interface ISetColumnProperties {
@@ -27,10 +23,6 @@ export interface ISetColumnProperties {
     readonly: boolean;
     ActionsForGrid: IColumnsProperties;
     ActionsForTable: IColumnsProperties;
-    ActionsNone: IColumnsProperties;
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
-    modulesProperties: IModulesProps;
 }
 
 // Define the type for the state
@@ -49,10 +41,6 @@ export const setColumnProperties = (params: ISetColumnProperties ) => {
         readonly,
         ActionsForGrid,
         ActionsForTable,
-        ActionsNone,
-        appsProperties,
-        userProperties,
-        modulesProperties,
     } = params;
     let columnsProperties: IColumnsProperties[] = [];
 

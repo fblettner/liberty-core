@@ -27,9 +27,6 @@ import { Paper_Popup } from '@ly_styles/Paper';
 import { DatePicker } from '@ly_input/InputDate';
 import { IconButton } from '@ly_common/IconButton';
 import { GridFlexContainer, GridItem } from '@ly_common/Grid';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
 
 // Define operators
 const stringOperators = [

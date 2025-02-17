@@ -32,8 +32,6 @@ interface IMemoizedFormsChatProps {
 
 const MemoizedFormsChat = memo((props: IMemoizedFormsChatProps) => {
   const { chat, addMessageToHistory } = props;
-  const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
-
   return (
     <FormsChat
       chat={chat}

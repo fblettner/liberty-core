@@ -17,10 +17,6 @@ import { IconButton_Contrast } from '@ly_styles/IconButton';
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { DIALOG_WIDGET_DIMENSION } from '@ly_utils/commonUtils';
 import { DraggableDialog } from '@ly_common/DragableDialog';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IModulesProps } from '@ly_types/lyModules';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { useAppContext } from '@ly_context/AppProvider';
 
 interface IFormsChatbotProps {
     isChatOpen: boolean;
@@ -29,7 +25,6 @@ interface IFormsChatbotProps {
 
 export function FormsChatbot(props: IFormsChatbotProps) {
     const { isChatOpen, handleCloseChat } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     const [isMinimized, setIsMinimized] = useState(false);
     const isSmallScreen = useMediaQuery("(max-width: 600px)");
     const isMobile = useDeviceDetection();

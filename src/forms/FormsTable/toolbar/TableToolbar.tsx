@@ -24,8 +24,6 @@ import { DialogExport } from "@ly_common/DialogExport";
 import { PDF } from "@ly_utils/pdfUtils";
 import { EExportType, ESeverity, IExportOptions } from "@ly_utils/commonUtils";
 import { Excel } from "@ly_utils/JSExcelUtils";
-import { IAppsProps } from "@ly_types/lyApplications";
-import { IModulesProps } from "@ly_types/lyModules";
 import { useSnackMessage } from "@ly_context/SnackMessageProvider";
 import { useAppContext } from "@ly_context/AppProvider";
 
@@ -46,7 +44,7 @@ export interface ITableToolbar {
     readonly: boolean;
     handleOpenDialog: (mode: LYComponentMode, row?: ITableRow) => void;
     handleDelete: () => void;
-    uploadComponent: React.MutableRefObject<ComponentProperties>;
+    uploadComponent: React.RefObject<ComponentProperties>;
     setOpenUpload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

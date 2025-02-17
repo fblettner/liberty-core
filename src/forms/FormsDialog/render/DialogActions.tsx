@@ -12,7 +12,6 @@ import { InputAction } from '@ly_input/InputAction';
 import { ActionsType, IReserveStatus } from "@ly_utils/commonUtils";
 import { ComponentProperties } from '@ly_types/lyComponents';
 import { OnActionEndFunction } from '@ly_forms/FormsDialog/utils/commonUtils';
-import { useAppContext } from '@ly_context/AppProvider';
 
 interface IDialogActions {
     item: IDialogDetails;
@@ -26,7 +25,6 @@ interface IDialogActions {
 
 export const DialogActions = (props: IDialogActions) => {
     const { item, dialogContent, componentContent, reserveStatus, component, onActionEnd } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();
     
     return (
         <InputAction

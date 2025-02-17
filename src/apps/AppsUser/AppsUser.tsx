@@ -21,8 +21,7 @@ import { LYFullscreenExitIcon, LYFullscreenIcon, LYCancelIcon, LYSaveIcon } from
 import { Paper_Dialogs, Paper_DialogToolbar } from '@ly_styles/Paper';
 import { Tabs_Dialogs, Tab_Dialogs } from '@ly_styles/Tabs';
 import { UIDisplayMode } from '@ly_types/common';
-import { IAppsProps, EApplications } from '@ly_types/lyApplications';
-import { IModulesProps } from '@ly_types/lyModules';
+import { EApplications } from '@ly_types/lyApplications';
 import { ResultStatus } from '@ly_types/lyQuery';
 import { IUsersProps, EUsers } from '@ly_types/lyUsers';
 import { DIALOG_WIDGET_DIMENSION, IErrorState, ESeverity, OnChangeParams, EStandardColor } from '@ly_utils/commonUtils';

@@ -4,16 +4,12 @@
  * *
  */
 
-import { IAppsProps } from "@ly_types/lyApplications";
 import { IChatMessage } from "@ly_types/lyChat";
 import { IModulesProps } from "@ly_types/lyModules";
 import { QueryRoute } from "@ly_types/lyQuery";
-import { IUsersProps } from "@ly_types/lyUsers";
 import React from "react";
 
 export interface IComponentAnalysisProps {
-    appsProperties: IAppsProps;
-    userProperties: IUsersProps;
     modulesProperties: IModulesProps;
     send_to_ai:  (query: keyof typeof QueryRoute, conversationHistory: Array<{ role: string; content: string }>, modulesProperties: IModulesProps) => Promise<{ message: string }>;
     addMessageToHistory: (message: IChatMessage) => void;
@@ -21,11 +17,10 @@ export interface IComponentAnalysisProps {
     setError: React.Dispatch<React.SetStateAction<boolean>>;
     handleError: (error: unknown) => void;
     content: string, 
-    isMarkdown: boolean;
     }
 
 export const handleComponentAnalysis = async (params: IComponentAnalysisProps) => {
-    const { appsProperties, userProperties, modulesProperties, send_to_ai, addMessageToHistory, setIsLoading, setError, handleError, content, isMarkdown } = params;
+    const { modulesProperties, send_to_ai, addMessageToHistory, setIsLoading, setError, handleError, content } = params;
     setIsLoading(true);
     setError(false); // Reset error before starting
   

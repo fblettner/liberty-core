@@ -9,9 +9,9 @@ import React from "react";
 
 
 export interface IGetRecord {
-    dialogDetailsRef: React.MutableRefObject<IDialogDetails[]>,
+    dialogDetailsRef: React.RefObject<IDialogDetails[]>,
     dialogContent: CDialogContent,
-    dialogHeaderRef: React.MutableRefObject<IDialogHeader>,
+    dialogHeaderRef: React.RefObject<IDialogHeader>,
     appsProperties: IAppsProps,
 }
 

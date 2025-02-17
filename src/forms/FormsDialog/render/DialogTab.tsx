@@ -16,11 +16,6 @@ import { DialogChildren } from '@ly_forms/FormsDialog/render/DialogChildren';
 import { OnActionEndFunction, OnAutocompleteChangeFunction, OnCheckboxChangeFunction, OnInputChangeFunction } from '@ly_forms/FormsDialog/utils/commonUtils';
 import { IDialogAction, IErrorState, IReserveStatus } from '@ly_utils/commonUtils';
 import { GridItem } from '@ly_common/Grid';
-import { IAppsProps } from '@ly_types/lyApplications';
-import { IUsersProps } from '@ly_types/lyUsers';
-import { IModulesProps } from '@ly_types/lyModules';
-import SocketClient from '@ly_utils/socket';
-import { useAppContext } from '@ly_context/AppProvider';
 
 interface IDialogTab {
     item: IDialogDetails;
@@ -50,8 +45,7 @@ export const DialogTab = (props: IDialogTab) => {
         item, tab, dialogContent, dialogComponent, componentProperties, maxRows, onAutocompleteChange, onInputChange, onCheckboxChange, onActionEnd, 
         dialogsMode, isModified, setIsModified, sendAction, setSendAction, setErrorState, activeTab, parentActiveTab, parentTabIndex, 
         reserveStatus
-        } = props;
-    const { userProperties, appsProperties, modulesProperties, setUserProperties, setAppsProperties, socket, setSocket } = useAppContext();    
+        } = props; 
     switch (item[EDialogDetails.component]) {
         case LYComponentType.Dictionary:
             if (dialogContent.fields[item[EDialogDetails.target] ?? item[EDialogDetails.dictionaryID]][EDialogDetails.visible])
