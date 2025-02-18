@@ -29,7 +29,7 @@ import { t } from 'i18next';
 import { NotificationSettings } from './NotificationSettings';
 import { UISettings } from './UISettings';
 import { UserSettings } from './UserSettings';
-import { getRestData } from './utils/userUtils';
+import { getUserData } from "@ly_services/lyUsers";
 import { useAppContext } from '@ly_context/AppProvider';
 
 
@@ -160,7 +160,7 @@ export const AppsUser = (props: IAppsUserProps) => {
                 userProperties: userProperties,
                 modulesProperties: modulesProperties
             }
-            const restData = await getRestData(getRestDataParams);
+            const restData = await getUserData(getRestDataParams);
             if (restData.status === ResultStatus.error) {
                 setErrorState({ open: true, message: t("login.passwordError"), severity: ESeverity.error });
             }

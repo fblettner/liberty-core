@@ -6,11 +6,7 @@
 /* LY_APPLICATIONS */
 
 import { ToolsQuery } from "@ly_services/lyQuery";
-import { IModulesProps } from "@ly_types/lyModules";
-
-export interface IGetApplicationsProps {
-  modulesProperties: IModulesProps
-}
+import { IConnectApplicationsProps, IGetApplicationsProps } from "@ly_types/lyApplications";
 
 export const lyGetApplications = async (props: IGetApplicationsProps) => {
     const { modulesProperties } = props
@@ -18,11 +14,6 @@ export const lyGetApplications = async (props: IGetApplicationsProps) => {
     return results
   }
   
-export interface IConnectApplicationsProps {
-  pool: string
-  modulesProperties: IModulesProps
-  jwt_token: string
-}
 export const lyConnectApplications = async (props: IConnectApplicationsProps)  => {
     const { pool, modulesProperties, jwt_token } = props
     

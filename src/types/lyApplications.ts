@@ -4,6 +4,8 @@
  * *
  */
 
+import { IModulesProps } from "./lyModules";
+
 export enum EApplications {
   id = "APPS_ID",
   name = "APPS_NAME",
@@ -37,3 +39,13 @@ export interface IAppsProps  {
   [EApplications.jwt_token]: string;
 };
 export type LyGetApplicationsFunction = () => Promise<any>;
+
+export interface IGetApplicationsProps {
+  modulesProperties: IModulesProps;
+}
+export interface IConnectApplicationsProps {
+  pool: string;
+  modulesProperties: IModulesProps;
+  jwt_token: string;
+}
+

@@ -22,6 +22,7 @@ import { LYCopyIcon } from '@ly_styles/icons';
 import { Div, Div_Markdown } from '@ly_styles/Div';
 import { Typography } from '@ly_common//Typography';
 import { IconButton_Contrast } from '@ly_styles/IconButton';
+import { useTheme } from '@ly_context/ThemeProvider';
 
 // Register languages for syntax highlighting
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -41,6 +42,7 @@ interface MarkdownComponentProps {
 
 export const MarkDown= ( {markdown}: Props ) => {
   const syntaxTheme = oneDark;
+  const { theme } = useTheme();
 
   // Function to handle copying text to the clipboard
   const handleCopy = (text: string) => {
@@ -173,7 +175,19 @@ export const MarkDown= ( {markdown}: Props ) => {
             </SyntaxHighlighter>
         </Div>
       ) : (
-        <code className={className} {...props}>{children}</code>
+        <code 
+        className={className} 
+        {...props} 
+        style={{
+          backgroundColor: theme.palette.mode === "dark" ? "#2e2e2e" : "#f5f5f5", 
+          padding: "2px 5px", 
+          borderRadius: "4px", 
+          border: theme.palette.mode === "dark" ? "1px solid #555" : "1px solid #ddd",
+          color: theme.palette.mode === "dark" ? "#e0e0e0" : "#333"
+        }}
+      >
+        {children}
+      </code>
       );
     },
   };

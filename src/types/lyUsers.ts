@@ -51,10 +51,17 @@ export enum EUserReadonly {
     true = "Y",
     false = "N"
 }
-export interface ISaveUserData {
+export interface ISaveUserDataProps {
     restData: IUsersProps;
     appsProperties: IAppsProps;
     modulesProperties: IModulesProps;
 }
 
+export interface IGetUserDataProps {
+    updatedUserData: IUsersProps;
+    userProperties: IUsersProps;
+    modulesProperties: IModulesProps;
+}
+
 export type LyGetUserFunction = (user_id: string) => Promise<any>;
+
