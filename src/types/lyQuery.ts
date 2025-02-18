@@ -112,3 +112,6 @@ export interface IRestMetadata {
   required: boolean;
   visible: boolean;
 }
+
+export type LyGetTokenFunction = (user_id: string, password: string) => Promise<any>;
+export type LyGetEncryptedTextFunction = (plain_text: string) => Promise<any>;

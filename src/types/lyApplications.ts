@@ -36,3 +36,4 @@ export interface IAppsProps  {
   [EApplications.session]: ESessionMode;
   [EApplications.jwt_token]: string;
 };
+export type LyGetApplicationsFunction = () => Promise<any>;

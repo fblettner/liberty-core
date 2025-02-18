@@ -30,7 +30,7 @@ import { useAuth } from "@ly_context/AuthProviderWrapper";
 export interface IAppsLoginProps {
 }
 export const AppsLogin = () => {
-  const { modulesProperties, login, connect, socket, getApplications } = useAppContext();
+  const { modulesProperties, login, connect, socket, getApplications, getToken, getUser, getEncryptedText } = useAppContext();
   const auth = useAuth();
 
   // State variables
@@ -75,7 +75,7 @@ export const AppsLogin = () => {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
-      const user_login = formData.get("user") as string;
+      const user_id = formData.get("user") as string;
       const password = formData.get("password") as string;
 
       try {
@@ -89,26 +89,31 @@ export const AppsLogin = () => {
           setErrorState({ open: true, message: t("login.applicationError"), severity: ESeverity.error });
           return;
         }
-        let password_encrypted = modulesProperties.login.enabled ? await ToolsQuery.encrypt(password, modulesProperties) : "";
-        const token = await ToolsQuery.token(
-          modulesProperties.login.enabled ? user_login : auth.user?.profile.preferred_username!,
-          password_encrypted,
-          application[EApplications.pool],
-          ESessionMode.session,
-          modulesProperties,
-          modulesProperties.login.enabled ? "database" : "oidc"
-        );
+
+        const token = getToken
+          ? await getToken(
+              modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!, 
+              getEncryptedText ? await getEncryptedText(password) : password)
+          : await ToolsQuery.token(
+            modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!,
+            modulesProperties.login.enabled ? await ToolsQuery.encrypt(password, modulesProperties) : "",
+            application[EApplications.pool],
+            ESessionMode.session,
+            modulesProperties,
+            modulesProperties.login.enabled ? "database" : "oidc"
+          );
 
         if (!validateLogin(token, setErrorState)) return;
-        
-        const result = await ToolsQuery.user({
-          user: modulesProperties.login.enabled ? user_login : auth.user?.profile.preferred_username!,
-          pool: application[EApplications.pool],
-          sessionMode: ESessionMode.session,
-          modulesProperties: modulesProperties,
-          jwt_token: token.access_token
-        });
 
+        const result = getUser
+          ? await getUser(modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!)
+          : await ToolsQuery.user({
+            user: modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!,
+            pool: application[EApplications.pool],
+            sessionMode: ESessionMode.session,
+            modulesProperties: modulesProperties,
+            jwt_token: token.access_token
+          });
 
         if (result.status === ResultStatus.success) {
           let userProperties = result.items[0];

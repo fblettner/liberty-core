@@ -56,3 +56,5 @@ export interface ISaveUserData {
     appsProperties: IAppsProps;
     modulesProperties: IModulesProps;
 }
+
+export type LyGetUserFunction = (user_id: string) => Promise<any>;

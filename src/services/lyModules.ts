@@ -6,8 +6,6 @@
 
 import { ToolsQuery } from "@ly_services/lyQuery";
 
-export type LyGetModulesFunction = () => Promise<any>;
-
 export const lyGetModules = async () => {
   const results = await ToolsQuery.modules({
       sentry: {enabled: false, params: null}, 

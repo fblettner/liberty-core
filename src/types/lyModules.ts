@@ -26,4 +26,5 @@ export type IModulesProps = {
 
 
 export type IModulesState = Record<string, IModuleConfig>
+export type LyGetModulesFunction = () => Promise<any>;
 

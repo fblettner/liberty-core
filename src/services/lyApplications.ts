@@ -12,10 +12,6 @@ export interface IGetApplicationsProps {
   modulesProperties: IModulesProps
 }
 
-export type LyGetApplicationsFunction = () => Promise<any>;
-
-
-
 export const lyGetApplications = async (props: IGetApplicationsProps) => {
     const { modulesProperties } = props
     const results = await ToolsQuery.applications(modulesProperties)

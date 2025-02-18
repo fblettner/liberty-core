@@ -3,7 +3,8 @@
  * All rights reserved. Use is subject to license terms.
  * *
  */
-import { lyGetApplications, LyGetApplicationsFunction } from "@ly_services/lyApplications";
+import { lyGetApplications } from "@ly_services/lyApplications";
+import { LyGetApplicationsFunction } from "@ly_types/lyApplications";
 import Logger from "@ly_services/lyLogging";
 import { UIDisplayMode } from "@ly_types/common";
 import { IAppsProps, EApplications, ESessionMode } from "@ly_types/lyApplications";

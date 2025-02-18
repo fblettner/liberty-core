@@ -1,7 +1,7 @@
 import { DefaultZIndex, UIDisplayMode } from "@ly_types/common";
 import { IAppsProps, EApplications, ESessionMode } from "@ly_types/lyApplications";
 import { EModules, IModulesProps } from "@ly_types/lyModules";
-import { IUsersProps, EUsers } from "@ly_types/lyUsers";
+import { IUsersProps, EUsers, LyGetUserFunction } from "@ly_types/lyUsers";
 import { GlobalSettings } from "@ly_utils/GlobalSettings";
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
 import * as Sentry from "@sentry/react";
@@ -9,8 +9,10 @@ import SocketClient, { socketHandler } from "@ly_utils/socket";
 import { ISnackMessage } from "@ly_types/lySnackMessages";
 import { ESeverity } from "@ly_utils/commonUtils";
 import { v4 as uuidv4 } from "uuid";
-import { lyGetModules, LyGetModulesFunction } from "@ly_services/lyModules";
-import { LyGetApplicationsFunction } from "@ly_services/lyApplications";
+import { lyGetModules } from "@ly_services/lyModules";
+import { LyGetModulesFunction } from "@ly_types/lyModules";
+import { LyGetApplicationsFunction } from "@ly_types/lyApplications";
+import { LyGetEncryptedTextFunction, LyGetTokenFunction } from "@ly_types/lyQuery";
 
 // Define Context Type
 interface AppContextType {
@@ -27,7 +29,10 @@ interface AppContextType {
     removeSnackMessage: (id: string) => void;
     getNextZIndex: () => number;
     resetZIndex: () => void;
+    getToken?: LyGetTokenFunction;
     getApplications?: LyGetApplicationsFunction;
+    getUser?: LyGetUserFunction;
+    getEncryptedText?: LyGetEncryptedTextFunction;
 }
 
 // Create Context
@@ -37,10 +42,13 @@ export interface IAppProviderProps {
     children: ReactNode;
     getModules?: LyGetModulesFunction;
     getApplications?: LyGetApplicationsFunction;
+    getToken?: LyGetTokenFunction;
+    getUser?: LyGetUserFunction;
+    getEncryptedText?: LyGetEncryptedTextFunction;
 }
 
 export const AppProvider = (props: IAppProviderProps) => {
-    const { children, getModules, getApplications } = props;
+    const { children, getModules, getApplications, getToken, getUser, getEncryptedText } = props;
     const socket = useRef(new SocketClient());
 
     const [modulesProperties, setModulesProperties] = useState<IModulesProps>({
@@ -252,7 +260,9 @@ export const AppProvider = (props: IAppProviderProps) => {
                 getNextZIndex, 
                 resetZIndex, 
                 getApplications,
-
+                getToken,
+                getUser,
+                getEncryptedText
             }}
         >
             {children}
@@ -285,7 +295,6 @@ export const useAppContext = (): AppContextType => {
             removeSnackMessage: () => { },
             getNextZIndex: () => 0,
             resetZIndex: () => { },
-
         };
     }
     return context;

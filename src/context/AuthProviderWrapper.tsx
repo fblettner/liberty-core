@@ -3,14 +3,15 @@ import { AuthProvider, AuthProviderProps, useAuth as oidcUseAuth } from "react-o
 
 interface AuthProviderWrapperProps {
   children: ReactNode;
-  config: AuthProviderProps;
+  config?: AuthProviderProps;
 }
 
-export const AuthProviderWrapper = ({ children, config }: AuthProviderWrapperProps) => {
+export const AuthProviderWrapper = (props: AuthProviderWrapperProps) => {
+  const { children, config } = props;
   if (!config) {
-    throw new Error("AuthProviderWrapper requires 'oidcConfig' to be provided.");
+    return <AuthProvider>{children}</AuthProvider>;
   }
-  return <AuthProvider {...config}>{children}</AuthProvider>;
+    return <AuthProvider {...config}>{children}</AuthProvider>;
 };
 
 export const useAuth = () => {
