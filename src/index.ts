@@ -31,6 +31,7 @@ export * from "@ly_common/CircularProgress";
 export * from "@ly_common/Collapse";
 export * from "@ly_common/ConfirmationDialog";
 export * from "@ly_common/Dialog";
+export * from "@ly_common/DialogExport";
 export * from "@ly_common/DragableDialog";
 export * from "@ly_common/Divider";
 export * from "@ly_common/Flex";
