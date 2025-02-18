@@ -91,7 +91,7 @@ export const AppsUser = (props: IAppsUserProps) => {
     });
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [selectedSetting, setSelectedSetting] = useState<string>("ui");
+    const [selectedSetting, setSelectedSetting] = useState<string>("user");
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
     const [openSaveDialog, setOpenSaveDialog] = useState(false);
 
@@ -289,8 +289,8 @@ export const AppsUser = (props: IAppsUserProps) => {
     };
 
     const settings = [
-        { id: "ui", label: t("ui_settings"), component: <UISettings {...{ onAutocompleteChanged, darkMode, inputLanguage, inputDashboard, inputTheme, handleButtonClick, appsProperties, userProperties, modulesProperties }} /> },
         { id: "user", label: t("users_settings"), component: <UserSettings {...{ userProperties, onFieldChange }} /> },
+        { id: "ui", label: t("ui_settings"), component: <UISettings {...{ onAutocompleteChanged, darkMode, inputLanguage, inputDashboard, inputTheme, handleButtonClick, appsProperties, userProperties, modulesProperties }} /> },
         { id: "notification", label: t("notifications_settings"), component: <NotificationSettings {...{ userProperties, onFieldChange }} /> },
     ];
 
