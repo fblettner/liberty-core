@@ -19,7 +19,7 @@ import { ComponentProperties, LYComponentType, LYComponentMode } from "@ly_types
 
 
 /* Create a tree array for application navigation, columns are hard coded */
-function getMenusTree(
+export function getMenusTree(
   arr: IMenusItem[],  
   parent: string = "0", 
   key: string = "0" 

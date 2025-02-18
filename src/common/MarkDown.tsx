@@ -15,6 +15,7 @@ import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown
 import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
 import rangeParser from 'parse-numeric-range';
 import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import remarkGfm from "remark-gfm";
 
 // Custom Import
 import { LYCopyIcon } from '@ly_styles/icons';
@@ -87,6 +88,48 @@ export const MarkDown= ( {markdown}: Props ) => {
         </Typography>
       );
     },
+    table({ children }: MarkdownComponentProps) {
+      return (
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              margin: "16px 0",
+              border: "1px solid #ddd",
+            }}
+          >
+            {children}
+          </table>
+        </div>
+      );
+    },
+    th({ children }: MarkdownComponentProps) {
+      return (
+        <th
+          style={{
+            border: "1px solid #ddd",
+            padding: "8px",
+            textAlign: "left",
+          }}
+        >
+          {children}
+        </th>
+      );
+    },
+    td({ children }: MarkdownComponentProps) {
+      return (
+        <td
+          style={{
+            border: "1px solid #ddd",
+            padding: "8px",
+            textAlign: "left",
+          }}
+        >
+          {children}
+        </td>
+      );
+    },
     code: (props: JSX.IntrinsicElements["code"] & ExtraProps) => {
       const {children, className, node, ...rest} = props
       const hasLang = /language-(\w+)/.exec(className || '');
@@ -136,7 +179,7 @@ export const MarkDown= ( {markdown}: Props ) => {
   };
 
   return (
-    <ReactMarkdown components={MarkdownComponents}>
+    <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
       {markdown}
     </ReactMarkdown>
   );

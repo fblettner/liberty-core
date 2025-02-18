@@ -35,6 +35,7 @@ export function DynamicRecursiveMenus(props: IDynamicRecursiveMenus) {
     [EMenus.component]: componentType,
     [EMenus.label]: label,
     [EMenus.fixed_params]: fixedParams,
+    [EMenus.content]: content,
     menuIcon,
   } = item;
   const [openChildren, setOpenChildren] = useState(openMenus.includes(menuKey));
@@ -80,6 +81,7 @@ export function DynamicRecursiveMenus(props: IDynamicRecursiveMenus) {
           showPreviousButton: false,
           componentMode: LYComponentMode.find,
           isChildren: false,
+          content: content
         };
 
         setSelectedIndex(value);

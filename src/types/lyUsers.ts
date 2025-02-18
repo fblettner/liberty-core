@@ -40,7 +40,7 @@ export interface IUsersProps {
     [EUsers.language]: string;
     [EUsers.displayMode]: UIDisplayMode;
     [EUsers.readonly]: string;
-    [EUsers.dashboard]: number;
+    [EUsers.dashboard]?: number;
     [EUsers.theme]: string;
     [EUsers.darkMode]?: boolean;
     [EUsers.audit_user]?: string;

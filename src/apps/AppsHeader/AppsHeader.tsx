@@ -16,7 +16,6 @@ import { EApplications } from "@ly_types/lyApplications";
 import { EUsers } from "@ly_types/lyUsers";
 
 export interface IAppsHeaderProps {
-  darkMode: boolean;
   onToggleMenusDrawer: () => void;
   onToggleDarkMode: () => void;
   onSignout: () => void;
@@ -25,7 +24,7 @@ export interface IAppsHeaderProps {
 }
 
 export function AppsHeader(props: IAppsHeaderProps) {
-  const { darkMode, onToggleMenusDrawer, onToggleDarkMode, onToggleUserSettings, onToggleChat, onSignout } = props;
+  const { onToggleMenusDrawer, onToggleDarkMode, onToggleUserSettings, onToggleChat, onSignout } = props;
   const { userProperties, appsProperties, logout, disconnect, socket } = useAppContext();
   const appsName = appsProperties[EApplications.name];
   const isUserLoggedIn = userProperties[EUsers.status] === true;
@@ -65,7 +64,6 @@ export function AppsHeader(props: IAppsHeaderProps) {
         <HeaderIcons
           onToggleChat={onToggleChat}
           onToggleDarkMode={onToggleDarkMode}
-          darkMode={darkMode}
           onToggleUserSettings={onToggleUserSettings}
           onSignout={handleSignout}
         />

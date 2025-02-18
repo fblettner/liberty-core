@@ -67,7 +67,8 @@ export enum EDialogTabs {
   dynamic_params = "DYNAMIC_PARAMS",
   fixed_params = "FIXED_PARAMS",
   disable_add = "TAB_DISABLE_ADD",
-  disable_edit = "TAB_DISABLE_EDIT"
+  disable_edit = "TAB_DISABLE_EDIT",
+  content = "TAB_CONTENT"
 }
 
 export interface IDialogsHeaderProps {

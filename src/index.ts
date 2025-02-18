@@ -89,6 +89,7 @@ export * from "@ly_types/lyDialogs"
 export * from "@ly_types/lyComponents"
 export * from "@ly_types/lyMenus"
 export * from "@ly_types/lyFilters"
+export * from "@ly_types/lyThemes"
 
 export * from "@ly_services/lyDictionary";
 export * from "@ly_services/lyMenus"
@@ -98,6 +99,7 @@ export * from "@ly_services/lyLogging"
 export * from "@ly_services/lyQuery"
 export * from "@ly_services/lyUsers"
 export * from "@ly_services/lyLookup"
+
 
 export * from "@ly_apps/AppsMenus/AppsMenus";
 export * from "@ly_apps/AppsHeader/AppsHeader";
@@ -109,7 +111,6 @@ export { default as i18n, t} from "@ly_translations/i18n";
 export * from "@ly_context/AppProvider"
 export * from "@ly_context/ErrorBoundary"
 export * from "@ly_context/I18nextProvider"
-export * from "@ly_context/AuthProviderWrapper"
 export * from "@ly_context/ThemeProvider";
 
 export { default as SocketClient, socketHandler } from "@ly_utils/socket"

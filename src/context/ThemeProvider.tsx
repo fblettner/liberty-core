@@ -9,122 +9,8 @@ import { createContext, useContext } from "react";
 import '@ly_styles/custom.css';
 import { ThemeProvider } from '@emotion/react';
 import GlobalStyles from '../styles/GlobalStyles';
-
-declare module '@emotion/react' {
-  export interface Theme {
-    mixins: {
-      toolbar: {
-        minHeight: number;
-      };
-    };
-
-    palette: {
-      primary: { main: string };
-      secondary: { main: string };
-      text: { primary: string; secondary: string; disabled: string };
-      background: { default: string, paper: string };
-      divider: string;
-      mode: string
-      action: {
-        hover: string;
-        selected: string;
-        disabled: string;
-      };
-      grey: {
-        100: string;
-        200: string;
-        300: string;
-        400: string;
-        500: string;
-        600: string;
-        700: string;
-        800: string;
-      };
-    };
-    background: {
-      default: string;
-      loginPage: string;
-      loginImage?: string;
-    };
-    backgroundShades: {
-      light: {
-        start: string;
-        middle: string;
-      },
-      dark: {
-        start: string;
-        middle: string;
-      };
-    };
-    color: {
-      default: string;
-    };
-    shadows: string[];
-    spacing: (factor: number) => string;
-  }
-}
-
-interface Theme {
-  palette: {
-    mode: string;
-    primary: { main: string };
-    secondary: { main: string };
-    text: {
-      primary: string;
-      secondary: string;
-      disabled: string;
-    };
-    background: {
-      default: string;
-      paper: string;
-    };
-    divider: string;
-    action: {
-      hover: string;
-      selected: string;
-      disabled: string;
-    };
-    grey: {
-      100: string;
-      200: string;
-      300: string;
-      400: string;
-      500: string;
-      600: string;
-      700: string;
-      800: string;
-    };
-  };
-  background: {
-    default: string;
-    loginPage: string;
-  };
-  color: {
-    default: string;
-  };
-  spacing: (factor: number) => string;
-  shadows: string[];
-}
-
-export interface ThemeContextType {
-  theme: Theme;
-  setTheme: (update: Partial<Theme> | ((prevTheme: Theme) => Theme)) => void;
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-}
-
-export interface LYThemeProviderProps {
-  children: ReactNode;
-  customTheme?: Partial<Theme>;
-}
-
-// Define types for theme colors
-export type ThemeColors = Record<string, string | Record<string, string>>;
-export interface ThemeColorItem {
-    TCL_KEY: string;
-    TCL_LIGHT: string;
-    TCL_DARK: string;
-}
+import { Theme, ThemeContextType } from '@ly_types/lyThemes';
+import { useMediaQuery } from '@ly_common/UseMediaQuery';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -170,32 +56,24 @@ const defaultTheme = (darkMode: boolean): Theme => ({
 
 
 // Theme Provider Component
-export const LYThemeProvider = ({ children, customTheme }: { children: ReactNode; customTheme?: Partial<Theme> }) => {
-  const [darkMode, setDarkMode] = useState(true);
-  const [theme, setTheme] = useState<Theme>({ ...defaultTheme(true), ...customTheme });
+export const LYThemeProvider = ({ children, customTheme }: { children: ReactNode; customTheme?: ((darkMode: boolean) => Theme)}) => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [darkMode, setDarkMode] = useState(prefersDarkMode);
+
+  const getTheme = (darkMode: boolean) => (customTheme ? customTheme(darkMode) : defaultTheme(darkMode));
+  const [theme, setTheme] = useState<Theme>(getTheme(darkMode));
 
   useEffect(() => {
-      setTheme({ ...defaultTheme(theme.palette.mode === "dark"), ...customTheme }); 
-  }, [customTheme]);
+    setTheme(getTheme(darkMode)); 
+  }, [customTheme, darkMode]);
 
-  const updateTheme = (update: Partial<Theme> | ((prevTheme: Theme) => Theme)) => {
-    setTheme((prevTheme) => {
-      const newTheme = typeof update === "function" ? update(prevTheme) : { ...prevTheme, ...update };
-      return newTheme;
-    });
-  };
-
-  // Function to toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
-    setTheme((prevTheme) => ({
-      ...prevTheme,
-      ...defaultTheme(!darkMode),
-    }));
+    setTheme(getTheme(!darkMode));
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: updateTheme, darkMode, toggleDarkMode }}>
+    <ThemeContext.Provider value={{ theme, darkMode, toggleDarkMode }}>
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         {children}

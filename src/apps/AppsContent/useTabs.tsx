@@ -84,7 +84,8 @@ export const useTabs = (props: IUseTabsProps) => {
           appsProperties: appsProperties,
           userProperties: userProperties, 
           modulesProperties: modulesProperties,
-          socket
+          socket,
+          children: tab[EDialogTabs.component].content, 
       })
     }));
   }, [tabs]);
@@ -135,15 +136,15 @@ interface IGetPageContentProps {
   userProperties: IUsersProps;
   modulesProperties: IModulesProps;
   socket?: SocketClient;
+  children?: React.ReactNode
 }
 
 // Utility function for content rendering based on the component type
 const getPageContent = (props: IGetPageContentProps) => {
-  const { component, appsProperties, userProperties, modulesProperties, socket } = props;
-
-  
-
+  const { component, appsProperties, userProperties, modulesProperties, socket, children } = props;
   switch (component.type) {
+    case LYComponentType.FormsContent:
+      return children;
     case LYComponentType.FormsTable:
       const paramsTable = {
         component,

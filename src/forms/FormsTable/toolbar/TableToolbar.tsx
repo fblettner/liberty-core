@@ -212,7 +212,6 @@ export const TableToolbar = ({
     }, [setOpenHelp]);
 
     const onExportClose = () => {
-        console.log("close")
         setOpenDialog(false);
         setOpenExport({
             anchorEl: null,

@@ -13,9 +13,13 @@ import { lyGetModules } from "@ly_services/lyModules";
 import { LyGetModulesFunction } from "@ly_types/lyModules";
 import { LyGetApplicationsFunction } from "@ly_types/lyApplications";
 import { LyGetEncryptedTextFunction, LyGetTokenFunction } from "@ly_types/lyQuery";
+import { AuthContextProps } from "react-oidc-context";
+import { LyGetMenusFunction } from "@ly_types/lyMenus";
+
 
 // Define Context Type
 interface AppContextType {
+    auth?: AuthContextProps;
     appsProperties: IAppsProps;
     connect: (apps: IAppsProps) => void;
     disconnect: () => void;
@@ -33,6 +37,7 @@ interface AppContextType {
     getApplications?: LyGetApplicationsFunction;
     getUser?: LyGetUserFunction;
     getEncryptedText?: LyGetEncryptedTextFunction;
+    getMenus?: LyGetMenusFunction
 }
 
 // Create Context
@@ -40,16 +45,22 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export interface IAppProviderProps {
     children: ReactNode;
+    useAuth?: () => AuthContextProps;
     getModules?: LyGetModulesFunction;
     getApplications?: LyGetApplicationsFunction;
     getToken?: LyGetTokenFunction;
     getUser?: LyGetUserFunction;
     getEncryptedText?: LyGetEncryptedTextFunction;
+    getMenus?: LyGetMenusFunction
 }
 
 export const AppProvider = (props: IAppProviderProps) => {
-    const { children, getModules, getApplications, getToken, getUser, getEncryptedText } = props;
+    const { children, useAuth, getModules, getApplications, getToken, getUser, getEncryptedText, getMenus } = props;
     const socket = useRef(new SocketClient());
+    const auth = useAuth ? useAuth() : {
+        isAuthenticated: false,
+        user: null,
+    } as AuthContextProps;
 
     const [modulesProperties, setModulesProperties] = useState<IModulesProps>({
         "debug": { "enabled": false, "params": null },
@@ -124,21 +135,21 @@ export const AppProvider = (props: IAppProviderProps) => {
 
     // Function to add a snack message
     const addSnackMessage = (message: string, severity: any) => {
-      const newMessage: ISnackMessage = {
-        id: uuidv4(),
-        message,
-        severity,
-        open: true,
-      };
-      setSnackMessages((prev) => [...prev, newMessage]);
-  
-      // Auto-remove message after 6 seconds
-      setTimeout(() => removeSnackMessage(newMessage.id), 6000);
+        const newMessage: ISnackMessage = {
+            id: uuidv4(),
+            message,
+            severity,
+            open: true,
+        };
+        setSnackMessages((prev) => [...prev, newMessage]);
+
+        // Auto-remove message after 6 seconds
+        setTimeout(() => removeSnackMessage(newMessage.id), 6000);
     };
-  
+
     // Function to remove a snack message
     const removeSnackMessage = (id: string) => {
-      setSnackMessages((prev) => prev.filter((msg) => msg.id !== id));
+        setSnackMessages((prev) => prev.filter((msg) => msg.id !== id));
     };
 
     useEffect(() => {
@@ -182,20 +193,20 @@ export const AppProvider = (props: IAppProviderProps) => {
     const currentZIndex = useRef(DefaultZIndex.Modal);
     const activePopups = useRef(0);
 
-      const getNextZIndex = () => {
+    const getNextZIndex = () => {
         activePopups.current += 1;
         currentZIndex.current += 2;
         return currentZIndex.current;
-      };
-    
-      const resetZIndex = () => {
+    };
+
+    const resetZIndex = () => {
         if (activePopups.current > 0)
-          activePopups.current -= 1;
+            activePopups.current -= 1;
         if (activePopups.current === 0) {
-          currentZIndex.current = DefaultZIndex.Modal;
+            currentZIndex.current = DefaultZIndex.Modal;
         }
-      };
-      
+    };
+
     const connect = (apps: IAppsProps) => {
         setAppsProperties(apps);
     }
@@ -221,7 +232,7 @@ export const AppProvider = (props: IAppProviderProps) => {
         }
     }
 
-    const login =(user: IUsersProps) => {
+    const login = (user: IUsersProps) => {
         setUserProperties(user);
     }
 
@@ -239,13 +250,18 @@ export const AppProvider = (props: IAppProviderProps) => {
             [EUsers.theme]: "liberty",
             [EUsers.dashboard]: -1,
             [EUsers.readonly]: "Y",
-          });
-    }
+        });
 
+        if (auth.isAuthenticated) {
+            auth.removeUser().catch(console.error);
+            auth.revokeTokens().catch(console.error);
+        }
+    }
 
     return (
         <AppContext.Provider
             value={{
+                auth,
                 appsProperties,
                 connect,
                 disconnect,
@@ -254,15 +270,16 @@ export const AppProvider = (props: IAppProviderProps) => {
                 logout,
                 modulesProperties,
                 socket: socket.current,
-                snackMessages, 
-                addSnackMessage, 
+                snackMessages,
+                addSnackMessage,
                 removeSnackMessage,
-                getNextZIndex, 
-                resetZIndex, 
+                getNextZIndex,
+                resetZIndex,
                 getApplications,
                 getToken,
                 getUser,
-                getEncryptedText
+                getEncryptedText,
+                getMenus
             }}
         >
             {children}

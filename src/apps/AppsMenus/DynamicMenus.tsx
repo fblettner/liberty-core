@@ -6,7 +6,7 @@
 // React Import
 import { List } from "@ly_common/List";
 import Logger from "@ly_services/lyLogging";
-import { lyGetMenus } from "@ly_services/lyMenus";
+import { getMenusTree, lyGetMenus } from "@ly_services/lyMenus";
 import { ComponentProperties } from "@ly_types/lyComponents";
 import { EMenus, IMenusItem } from "@ly_types/lyMenus";
 import { ResultStatus } from "@ly_types/lyQuery";
@@ -28,19 +28,22 @@ interface IDynamicMenusProps {
   
   export function DynamicMenus(props: IDynamicMenusProps) {
     const { openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect, onToggleMenusDrawer } = props;
-    const { userProperties, appsProperties, modulesProperties } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, getMenus } = useAppContext();
     const [fetchedMenus, setFetchedMenus] = useState<IMenusItem[]>([]);
 
   
     // Fetch Menus with REST API
-    const getMenus = useCallback(async () => {
+    const getDynamicMenus = useCallback(async () => {
       try {
         const menusParams = {
           appsProperties: appsProperties,
           userProperties: userProperties,
           modulesProperties: modulesProperties,
         }
-        const menus = await lyGetMenus(menusParams);
+
+        const menus = getMenus  
+          ? {results: await getMenus(), tree: getMenusTree((await getMenus()).items)}
+          : await lyGetMenus(menusParams);
 
         if (menus.results.status === ResultStatus.error) {
           const logger = new Logger({
@@ -63,8 +66,8 @@ interface IDynamicMenusProps {
     }, [appsProperties, userProperties]);
   
     useEffect(() => {
-      getMenus();
-    }, [getMenus]);
+      getDynamicMenus();
+    }, [getDynamicMenus]);
   
     return (
       <List padding={false}>

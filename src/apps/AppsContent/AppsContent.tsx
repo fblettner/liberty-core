@@ -4,27 +4,33 @@
  * *
  */
 import { AppsMenus } from '@ly_apps/AppsMenus/AppsMenus';
-import { Main_Content } from '@ly_styles/Main';
+import { Main_Content, Main_Login } from '@ly_styles/Main';
 import { EApplications } from '@ly_types/lyApplications';
 import { ComponentProperties, LYComponentType, LYComponentMode } from '@ly_types/lyComponents';
 import { EDialogTabs } from '@ly_types/lyDialogs';
 import { EUsers } from '@ly_types/lyUsers';
 import { t } from 'i18next';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TabContainer } from './TabContainer';
 import { TabPanel } from './TabPanel';
 import { useTabs } from './useTabs';
 import { useAppContext } from '@ly_context/AppProvider';
+import { AppsHeader } from '@ly_apps/AppsHeader/AppsHeader';
+import { useMediaQuery } from '@ly_common/UseMediaQuery';
+import { useTheme } from '@ly_context/ThemeProvider';
+import { SnackMessage } from '@ly_common/SnackMessage';
+import { FormsChatbot } from '@ly_forms/FormsChatbot/FormsChatbot';
+import { AppsUser } from '@ly_apps/AppsUser/AppsUser';
+import { AppsLogin } from '@ly_apps/AppsLogin/AppsLogin';
+import { Div_AppsLayout } from '@ly_styles/Div';
 
 
-export interface IAppsContentProps {
-  isMenuOpen: boolean;
-  onToggleMenusDrawer: () => void;
-}
-
-export function AppsContent(props: IAppsContentProps) {
-  const { isMenuOpen, onToggleMenusDrawer } = props;
+export function AppsContent() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { userProperties, appsProperties } = useAppContext();
+  const { toggleDarkMode } = useTheme();
+  const [isUserOpen, setIsUserOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const { tabs, activeTab, addTab, closeTab, setActiveTab, memoizedContent, clearTabs } = useTabs({});
   const [tabsCleared, setTabsCleared] = useState(false);
@@ -67,11 +73,36 @@ export function AppsContent(props: IAppsContentProps) {
   const handleMenuClick = (component: ComponentProperties) => addTab(component);
   const handleTabChanged = (event: React.SyntheticEvent, newValue: string) => setActiveTab(newValue);
 
+  const onToggleDarkMode = () => {toggleDarkMode(); }
+  const onToggleMenusDrawer = () => { setIsMenuOpen(!isMenuOpen); }
+  const onToggleUserSettings = () => { setIsUserOpen(!isUserOpen); }
+  const onToggleChat = () => { setIsChatOpen(!isChatOpen); }
+  const onSignout = () => { setIsChatOpen(false) }
+
   return (
-    <Fragment>
+    <Div_AppsLayout>
+      <SnackMessage />
+      <AppsHeader
+        onToggleMenusDrawer={onToggleMenusDrawer}
+        onToggleDarkMode={onToggleDarkMode}
+        onToggleChat={onToggleChat}
+        onToggleUserSettings={onToggleUserSettings}
+        onSignout={onSignout}
+      />
+
+      {userProperties[EUsers.status] &&
         <Main_Content>
-          <AppsMenus 
-            onMenuSelect={handleMenuClick} 
+          <FormsChatbot
+            isChatOpen={isChatOpen}
+            handleCloseChat={onToggleChat}
+          />
+          <AppsUser
+            openDialog={isUserOpen}
+            setOpenDialog={onToggleUserSettings}
+            onToggleDarkMode={onToggleDarkMode}
+          />
+          <AppsMenus
+            onMenuSelect={handleMenuClick}
             onToggleMenusDrawer={onToggleMenusDrawer}
             isOpen={isMenuOpen}
           />
@@ -90,6 +121,12 @@ export function AppsContent(props: IAppsContentProps) {
           ))}
 
         </Main_Content>
-    </Fragment>
+      }
+      {!userProperties[EUsers.status] &&
+        <Main_Login>
+          <AppsLogin />
+        </Main_Login>
+      }
+    </Div_AppsLayout>
   );
 }

@@ -37,6 +37,7 @@ export type ComponentProperties = {
   params?: IComponentParameters[],
   sessionMode?: ESessionMode;
   overrideQueryPool?: string;
+  content?: React.ReactNode;
 }
 
 export enum LYComponentEvent {
@@ -85,7 +86,8 @@ export enum LYComponentType {
   FormsDashboard = "FormsDashboard",
   FormsGrid = "FormsGrid",
   FormsAI = "FormsAI",
-  FormsTools = "FormsTools"
+  FormsTools = "FormsTools",
+  FormsContent = "FormsContent"
 }
 
 export enum LYComponentDisplayMode {

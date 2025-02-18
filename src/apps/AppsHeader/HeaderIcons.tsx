@@ -9,9 +9,9 @@ import { IconButton_Contrast } from "@ly_styles/IconButton";
 import { LYLightModeIcon, LYDarkModeIcon, LYSmartToyIcon, LYNotificationsIcon, LYAccountCircleIcon, LYLogoutIcon } from "@ly_styles/icons";
 import { useAppContext } from "@ly_context/AppProvider";
 import { EUsers } from "@ly_types/lyUsers";
+import { useTheme } from "@ly_context/ThemeProvider";
 
 interface IHeaderIcons {
-  darkMode: boolean;
   onToggleChat: () => void;
   onToggleDarkMode: () => void;
   onToggleUserSettings:  () => void;
@@ -19,8 +19,9 @@ interface IHeaderIcons {
 }
 
 export const HeaderIcons = memo((props: IHeaderIcons) => {
-  const { darkMode, onToggleChat, onToggleDarkMode, onToggleUserSettings, onSignout } = props;
+  const { onToggleChat, onToggleDarkMode, onToggleUserSettings, onSignout } = props;
   const { userProperties } = useAppContext();
+  const theme = useTheme();
   const isUserLoggedIn = userProperties[EUsers.status] === true;
   
   return (
@@ -28,7 +29,7 @@ export const HeaderIcons = memo((props: IHeaderIcons) => {
       <IconButton_Contrast
         aria-label="Toggle Dark Mode"
         onClick={onToggleDarkMode}
-        icon={darkMode ? LYLightModeIcon : LYDarkModeIcon}
+        icon={theme.darkMode ? LYLightModeIcon : LYDarkModeIcon}
       />
       {isUserLoggedIn && (
         <IconButton_Contrast

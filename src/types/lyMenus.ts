@@ -20,7 +20,8 @@ export enum EMenus {
     componentID = "MENU_COMPONENT_ID",
     dynamic_params = "DYNAMIC_PARAMS",
     fixed_params = "FIXED_PARAMS",
-    visible = "AUT_RUN"
+    visible = "AUT_RUN",
+    content = "MENU_CONTENT"
 }
 
 export interface IMenusItem {
@@ -34,6 +35,7 @@ export interface IMenusItem {
   [EMenus.dynamic_params]: string;
   [EMenus.fixed_params]: string;
   [EMenus.visible]: string;
+  [EMenus.content]?: React.ReactNode
   menuIcon?: IconType;
   children?: IMenusItem[];
 }
@@ -50,3 +52,4 @@ export interface IGetMenusFromApiProps {
   modulesProperties: IModulesProps;
 }
 
+export type LyGetMenusFunction = () => Promise<any>;

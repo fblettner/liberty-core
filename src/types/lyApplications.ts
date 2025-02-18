@@ -31,7 +31,7 @@ export interface IAppsProps  {
   [EApplications.offset]: number;
   [EApplications.limit]: number;
   [EApplications.version]: string;
-  [EApplications.dashboard]: number;
+  [EApplications.dashboard]?: number;
   [EApplications.theme]: string;
   [EApplications.session]: ESessionMode;
   [EApplications.jwt_token]: string;

@@ -24,14 +24,12 @@ import { IErrorState, ESeverity } from "@ly_utils/commonUtils";
 import { t } from "i18next";
 import { validateLogin, connectApplication, getLoginApplications } from "./utils/loginUtils";
 import { useAppContext } from "@ly_context/AppProvider";
-import { useAuth } from "@ly_context/AuthProviderWrapper";
 
 
 export interface IAppsLoginProps {
 }
 export const AppsLogin = () => {
-  const { modulesProperties, login, connect, socket, getApplications, getToken, getUser, getEncryptedText } = useAppContext();
-  const auth = useAuth();
+  const { auth, modulesProperties, login, connect, socket, getApplications, getToken, getUser, getEncryptedText } = useAppContext();
 
   // State variables
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -79,7 +77,7 @@ export const AppsLogin = () => {
       const password = formData.get("password") as string;
 
       try {
-        if (!auth.isAuthenticated && !modulesProperties.login.enabled) {
+        if (auth && !auth.isAuthenticated && !modulesProperties.login.enabled) {
           setErrorState({ open: true, message: t("login.authRequired"), severity: ESeverity.error });
           auth.signinPopup();
           return;
@@ -92,10 +90,10 @@ export const AppsLogin = () => {
 
         const token = getToken
           ? await getToken(
-              modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!, 
+              modulesProperties.login.enabled ? user_id : auth?.user?.profile.preferred_username!, 
               getEncryptedText ? await getEncryptedText(password) : password)
           : await ToolsQuery.token(
-            modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!,
+            modulesProperties.login.enabled ? user_id : auth?.user?.profile.preferred_username!,
             modulesProperties.login.enabled ? await ToolsQuery.encrypt(password, modulesProperties) : "",
             application[EApplications.pool],
             ESessionMode.session,
@@ -106,9 +104,9 @@ export const AppsLogin = () => {
         if (!validateLogin(token, setErrorState)) return;
 
         const result = getUser
-          ? await getUser(modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!)
+          ? await getUser(modulesProperties.login.enabled ? user_id : auth?.user?.profile.preferred_username!)
           : await ToolsQuery.user({
-            user: modulesProperties.login.enabled ? user_id : auth.user?.profile.preferred_username!,
+            user: modulesProperties.login.enabled ? user_id : auth?.user?.profile.preferred_username!,
             pool: application[EApplications.pool],
             sessionMode: ESessionMode.session,
             modulesProperties: modulesProperties,
