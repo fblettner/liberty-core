@@ -3,9 +3,11 @@
 ## In progress
 I'm currently migrate components used in Liberty Framework to be standalone component and npm installable. This work is in progress, any contributions is welcome
 Documentation an preview of components are available at : [https://docs.nomana-it.fr/liberty-core/](https://docs.nomana-it.fr/liberty-core/)
+More components will come very soon, they are already in the framework but overridable functions have to be implemented. Liberty Grid and Liberty Dialog will be available soon...
 
 ## **Overview**
 **Liberty Core** is a reusable component library designed for React applications. It provides a collection of UI components, utilities, and styles to streamline development. This package includes pre-styled components, utility functions, and common types, making it an essential part of the Liberty Framework.
+This is not just a component libraray
 
 ## **Features**
 - 🎨 **Theme & Styling**: Centralized theme management.
@@ -14,17 +16,13 @@ Documentation an preview of components are available at : [https://docs.nomana-i
 - 🛠️ **Type Definitions**: Predefined TypeScript types for consistent data handling.
 - 🔌 **Easy Integration**: Works seamlessly with any React project.
 
+This is not just a components library, this is also predefined integration that manage all states between component, implement API for CRUD operations, integrate Sentry for log management, integrate OIDC for authentication...
+
 ## **Installation**
 To install **Liberty Core**, run the following command:
 
 ```sh
-npm install liberty-core
-```
-
-or with Yarn:
-
-```sh
-yarn add liberty-core
+npm install @nomana-it/liberty-core
 ```
 
 ## **Usage**

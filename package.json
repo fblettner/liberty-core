@@ -1,9 +1,12 @@
 {
-  "name": "liberty-core",
+  "name": "@nomana-it/liberty-core",
   "version": "1.0.0",
   "main": "dist/liberty-core.umd.js",
   "module": "dist/liberty-core.es.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
