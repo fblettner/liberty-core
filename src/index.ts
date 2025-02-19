@@ -101,6 +101,7 @@ export * from "@ly_services/lyLogging"
 export * from "@ly_services/lyQuery"
 export * from "@ly_services/lyUsers"
 export * from "@ly_services/lyLookup"
+export * from "@ly_services/lyThemes"
 
 
 export * from "@ly_apps/AppsMenus/AppsMenus";
