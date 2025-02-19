@@ -48,6 +48,7 @@ export * from "@ly_common/Select"
 export * from "@ly_common/Skeleton";
 export * from "@ly_common/SnackMessage";
 export * from "@ly_common/Tab";
+export * from "@ly_common/Tabs";
 export * from "@ly_common/Table";
 export * from "@ly_common/Toggle";
 export * from "@ly_common/Tooltip";
