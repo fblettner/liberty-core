@@ -63,11 +63,17 @@ export const DashboardCard = (props: IDashboardCard) => {
         showPreviousButton: false,
         componentMode: LYComponentMode.find,
         isChildren: false,
+        content: content[EDahsboardContent.content],
+        
     };
 
     let displayComponent;
 
     switch (content[EDahsboardContent.component]) {
+        case LYComponentType.FormsContent:
+            displayComponent =  content[EDahsboardContent.content];
+            break;
+
         case LYComponentType.FormsChart:
             displayComponent = <FormsChart
                 key={`${content[EDahsboardContent.component]}-${content[EDahsboardContent.componentID]}`} 

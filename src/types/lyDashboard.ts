@@ -30,7 +30,8 @@ export enum EDahsboardContent {
     component = "DSH_COMPONENT",
     componentID = "DSH_COMPONENT_ID",
     display_title = "DSH_DISPLAY_TITLE",
-    title = "DSH_TITLE"
+    title = "DSH_TITLE",
+    content = "DSH_CONTENT"
 }
 
 export interface IDashboardContent {
@@ -42,6 +43,7 @@ export interface IDashboardContent {
     [EDahsboardContent.componentID]: number;
     [EDahsboardContent.display_title]: string;
     [EDahsboardContent.title]: string;
+    [EDahsboardContent.content]: string;
 }
 
 export interface IDashboardState {
@@ -55,3 +57,4 @@ export interface IDashboardProps {
     modulesProperties: IModulesProps;
 }
    
+export type LyGetDashboardFunction = (dashboard_id: Number) => Promise<any>;
