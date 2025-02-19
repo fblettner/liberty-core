@@ -7,7 +7,7 @@ More components will come very soon, they are already in the framework but overr
 
 ## **Overview**
 **Liberty Core** is a reusable component library designed for React applications. It provides a collection of UI components, utilities, and styles to streamline development. This package includes pre-styled components, utility functions, and common types, making it an essential part of the Liberty Framework.
-This is not just a component libraray
+This is not just a component library but a package all functionalities to develop a web and responsive application
 
 ## **Features**
 - 🎨 **Theme & Styling**: Centralized theme management.

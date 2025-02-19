@@ -111,7 +111,6 @@ export const LookupInput = (props: ILookupInput) => {
                 value: defaultValue
 
             });
-
             if (results.status === ResultStatus.success) {
 
                 setLookupState({

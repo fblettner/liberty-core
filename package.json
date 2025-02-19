@@ -1,7 +1,7 @@
 {
   "name": "@nomana-it/liberty-core",
   "license": "AGPL-3.0",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/liberty-core.umd.js",
   "module": "dist/liberty-core.es.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/fblettner/liberty-core/issues"
   },
-  "homepage": "https://github.com/fblettner/liberty-core#readme",
+  "homepage": "https://docs.nomana-it.fr/liberty-core/",
   "author": "Franck Blettner <franck.blettner@nomana-it.fr>",
   "keywords": ["react", "components", "liberty-framework", "liberty-core", "library"],
   "publishConfig": {

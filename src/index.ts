@@ -92,6 +92,7 @@ export * from "@ly_types/lyComponents"
 export * from "@ly_types/lyMenus"
 export * from "@ly_types/lyFilters"
 export * from "@ly_types/lyThemes"
+export * from "@ly_types/lyLookup"
 
 export * from "@ly_services/lyDictionary";
 export * from "@ly_services/lyMenus"
