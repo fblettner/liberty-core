@@ -34,9 +34,10 @@ interface IStaticRecursiveMenus {
 
 export function StaticRecursiveMenus(props: IStaticRecursiveMenus) {
   const { item, openMenus, setOpenMenus, selectedIndex, setSelectedIndex, onMenuSelect } = props;
-  const { userProperties, appsProperties } = useAppContext();
+  const { userProperties, appsProperties, session} = useAppContext();
 
   const [openChildren, setOpenChildren] = useState(openMenus.includes(item[EMenus.key]));
+
 
   const toggleMenu = useCallback(
     (value: string) => {
@@ -50,7 +51,7 @@ export function StaticRecursiveMenus(props: IStaticRecursiveMenus) {
 
   const handleMenu = useCallback(
     (value: string) => {
-      handleMenuAction(value, setSelectedIndex, onMenuSelect, appsProperties, userProperties);
+      handleMenuAction(value, setSelectedIndex, onMenuSelect, session);
       if (!["admin", "lyAI", "lyTools"].includes(value)) {
         toggleMenu(value);
       }

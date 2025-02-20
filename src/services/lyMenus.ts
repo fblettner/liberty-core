@@ -79,25 +79,15 @@ export const handleMenuAction = (
   value: string,
   setSelectedIndex: Dispatch<string | null>,
   updateActiveComponent: (component: ComponentProperties) => void,
-  application: IAppsProps,
-  userProperties: IUsersProps
+  session: () => void,
 ) => {
 
   switch (value) {
     case "admin":
-      break;
-    case "pgadmin":
-      openInNewTab(GlobalSettings.getBackendURL + "pgadmin");
-      break;
-    case "rundeck":
-      openInNewTab(GlobalSettings.getBackendURL + "rundeck");
+      session();
       break;
     case "documentation":
       openInNewTab("https://docs.nomana-it.fr/liberty/getting-started/");
-      break;
-    case "lyAI":
-
-
       break;
     case "lyTools":
       const toolsComponent: ComponentProperties = {
@@ -110,7 +100,6 @@ export const handleMenuAction = (
         isChildren: false,
       };
       setSelectedIndex(value);
-
       updateActiveComponent(toolsComponent);
       break;      
     default:

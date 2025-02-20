@@ -24,6 +24,7 @@ interface AppContextType {
     appsProperties: IAppsProps;
     connect: (apps: IAppsProps) => void;
     disconnect: () => void;
+    session: () => void;
     userProperties: IUsersProps;
     login: (user: IUsersProps) => void;
     logout: () => void;
@@ -214,6 +215,13 @@ export const AppProvider = (props: IAppProviderProps) => {
         setAppsProperties(apps);
     }
 
+    const session = () => {
+        setAppsProperties(prevState => ({
+            ...prevState,
+            [EApplications.session]: prevState[EApplications.session] === ESessionMode.framework ? ESessionMode.session : ESessionMode.framework,
+        }));
+    };
+
     const disconnect = () => {
         setAppsProperties({
             [EApplications.id]: 0,
@@ -268,6 +276,7 @@ export const AppProvider = (props: IAppProviderProps) => {
                 appsProperties,
                 connect,
                 disconnect,
+                session,
                 userProperties,
                 login,
                 logout,
@@ -299,6 +308,7 @@ export const useAppContext = (): AppContextType => {
             appsProperties: {} as IAppsProps,
             connect: () => { },
             disconnect: () => { },
+            session: () => { },
             userProperties: {} as IUsersProps,
             login: () => { },
             logout: () => { },

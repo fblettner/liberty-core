@@ -32,7 +32,6 @@ export function StaticMenus(props: IStaticMenusProps) {
   // Fixed data for the menu bottom
   const memoizedData = useMemo(
     () => [
-      { [EMenus.key]: "lyAI", [EMenus.label]: "Liberty AI", menuIcon: LYSmartToyIcon, [EMenus.visible]: true, children: [] },
       { [EMenus.key]: "documentation", [EMenus.label]: "Documentation", menuIcon: LYLocalLibraryIcon, [EMenus.visible]: true, children: [] },
       { [EMenus.key]: "lyTools", [EMenus.label]: "Liberty Tools", menuIcon: LYLinkIcon, [EMenus.visible]: true, children: [] },
       { [EMenus.key]: "admin", [EMenus.label]: t("admin"), menuIcon: LYSettingsIcon, [EMenus.visible]: userProperties[EUsers.admin] === "Y", children: [] },
