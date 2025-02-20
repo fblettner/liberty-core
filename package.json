@@ -1,7 +1,7 @@
 {
   "name": "@nomana-it/liberty-core",
   "license": "AGPL-3.0",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/liberty-core.umd.js",
   "module": "dist/liberty-core.es.js",
   "types": "dist/index.d.ts",
