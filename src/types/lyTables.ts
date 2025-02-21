@@ -201,3 +201,6 @@ export interface ISelectedRow {
   message: string,
   keys: ITableRow
 }
+
+export type LyGetTablePropertiesFunction = (table_id: number) => Promise<any>;
+export type LyGetTableDataFunction = (table_id: number) => Promise<any>;

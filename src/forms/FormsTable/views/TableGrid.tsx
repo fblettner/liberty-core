@@ -4,7 +4,7 @@
  */
 // React Import
 import { t } from "i18next";
-import { ChangeEvent, forwardRef, Fragment, Ref, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { ChangeEvent, forwardRef, Fragment, Ref, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Column, flexRender } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';

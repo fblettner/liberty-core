@@ -6,6 +6,7 @@
 
 export enum EModules {
     id = "MODULE_ID",
+    description = "MODULE_DESCRIPTION",
     enabled = "MODULE_ENABLED",
     params = "MODULE_PARAMS",
   }

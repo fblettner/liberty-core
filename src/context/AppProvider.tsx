@@ -16,6 +16,7 @@ import { LyGetEncryptedTextFunction, LyGetTokenFunction } from "@ly_types/lyQuer
 import { AuthContextProps } from "react-oidc-context";
 import { LyGetMenusFunction } from "@ly_types/lyMenus";
 import { LyGetDashboardFunction } from "@ly_types/lyDashboard";
+import { LyGetTableDataFunction, LyGetTablePropertiesFunction } from "@ly_types/lyTables";
 
 
 // Define Context Type
@@ -41,6 +42,10 @@ interface AppContextType {
     getEncryptedText?: LyGetEncryptedTextFunction;
     getMenus?: LyGetMenusFunction
     getDashboard?: LyGetDashboardFunction;
+    getTables?: {
+        getProperties: LyGetTablePropertiesFunction;
+        getData: LyGetTableDataFunction;
+    }
 }
 
 // Create Context
@@ -56,10 +61,14 @@ export interface IAppProviderProps {
     getEncryptedText?: LyGetEncryptedTextFunction;
     getMenus?: LyGetMenusFunction,
     getDashboard?: LyGetDashboardFunction;
+    getTables?: {
+        getProperties: LyGetTablePropertiesFunction;
+        getData: LyGetTableDataFunction;
+    }
 }
 
 export const AppProvider = (props: IAppProviderProps) => {
-    const { children, useAuth, getModules, getApplications, getToken, getUser, getEncryptedText, getMenus, getDashboard } = props;
+    const { children, useAuth, getModules, getApplications, getToken, getUser, getEncryptedText, getMenus, getDashboard, getTables } = props;
     const socket = useRef(new SocketClient());
     const auth = useAuth ? useAuth() : {
         isAuthenticated: false,
@@ -293,6 +302,7 @@ export const AppProvider = (props: IAppProviderProps) => {
                 getEncryptedText,
                 getMenus,
                 getDashboard,
+                getTables
             }}
         >
             {children}

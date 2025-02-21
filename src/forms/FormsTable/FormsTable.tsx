@@ -60,7 +60,7 @@ interface IFormsTable {
 
 export function FormsTable(params: IFormsTable) {
     const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly } = params;
-    const { userProperties, appsProperties, modulesProperties } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, getTables} = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const longPressTimeout = useRef<number | null>(null);
@@ -457,9 +457,11 @@ export function FormsTable(params: IFormsTable) {
             getColumnsVisibility,
             dialogComponent: dialogProperties,
             restoreState: restoreState,
-            setRowCount
+            setRowCount,
+            getTables
         };
         fetchDataHandler(params);
+
     }, [componentPropertiesRef,
         apiRef,
         displayMode,
@@ -483,7 +485,9 @@ export function FormsTable(params: IFormsTable) {
         setFilters,
         getColumnsVisibility,
         dialogProperties,
-        setRowCount]);
+        setRowCount,
+        getTables
+    ]);
 
     const handleContextMenu = useCallback((event: React.MouseEvent | React.TouchEvent) => {
         event.preventDefault();

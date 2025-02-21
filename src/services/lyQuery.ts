@@ -490,13 +490,12 @@ export class QueryDAO {
   }
 
   public modules = async () => {
-    let queryAPI = GlobalSettings.getBackendURL + QueryRoute.modules
 
+    let queryAPI = GlobalSettings.getBackendURL + QueryRoute.modules
     try {
       const axionsRes = await axios.get(queryAPI, {
         headers: { "Content-Type": "application/json" },
       });
-
       const result = axionsRes.data;
 
       const logger = new Logger({

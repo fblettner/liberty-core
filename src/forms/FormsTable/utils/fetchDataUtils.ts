@@ -16,7 +16,7 @@ import { parseDynamicParams } from "@ly_forms/FormsTable/utils/commonUtils";
 import { ToolsQuery } from "@ly_services/lyQuery";
 import { EEnumHeader, EEnumValues } from "@ly_types/lyEnums";
 import { QuerySource, ResultStatus } from "@ly_types/lyQuery";
-import { IColumnsProperties, ITableRow, ITableHeader, IColumnsVisibility, TablesGridHardCoded, ETableHeader } from "@ly_types/lyTables";
+import { IColumnsProperties, ITableRow, ITableHeader, IColumnsVisibility, TablesGridHardCoded, ETableHeader, LyGetTablePropertiesFunction, LyGetTableDataFunction } from "@ly_types/lyTables";
 import { CColumnsFilter } from "@ly_types/lyFilters";
 import { ComponentProperties, LYComponentDisplayMode } from "@ly_types/lyComponents";
 import { fetchTableProperties } from "@ly_forms/FormsTable/utils/apiUtils";
@@ -491,6 +491,10 @@ interface IGetDataFromAPIParams {
         columnsFilter: CColumnsFilter
     ) => void;
     setRowCount: React.Dispatch<React.SetStateAction<number>>;
+    getTables?: {
+        getProperties: LyGetTablePropertiesFunction;
+        getData: LyGetTableDataFunction;
+    }
 }
 
 
@@ -516,10 +520,11 @@ const getDataFromAPI = (async (params: IGetDataFromAPIParams) => {
         setOpenFilters,
         updateTableState,
         setFilters,
-        setRowCount
+        setRowCount,
+        getTables
     } = params;
     return new Promise(async (resolve) => {
-        const tables = await fetchTableProperties({
+        const tables = getTables && getTables.getProperties ? await getTables.getProperties(componentProperties.id) :  await fetchTableProperties({
             table_id: componentProperties.id, appsProperties: appsProperties, userProperties: userProperties,
             getAllColumns: true, columnsFilter, rowsFilterRef, modulesProperties
         });
@@ -549,10 +554,10 @@ const getDataFromAPI = (async (params: IGetDataFromAPIParams) => {
             appsProperties,
             userProperties,
             modulesProperties,
-            setRowCount
+            setRowCount,
         }
 
-        const entireData = await fetchEntireData(fetchEntireDataParams);
+        const entireData = getTables && getTables.getData ? await getTables.getData(componentProperties.id) : await fetchEntireData(fetchEntireDataParams,);
         updateTableState("tableData", {table_id: componentProperties.id,  rows: entireData, columns: tables.columns, columnsVisibility: columnsVisibility });
         setFilters(tables, componentProperties, columnsFilter);
 
@@ -590,6 +595,10 @@ export interface FetchDataParams {
     dialogComponent: React.MutableRefObject<ComponentProperties>;
     restoreState: boolean;
     setRowCount: React.Dispatch<React.SetStateAction<number>>;
+    getTables?: {
+        getProperties: LyGetTablePropertiesFunction;
+        getData: LyGetTableDataFunction;
+    }
 }
 
 export const fetchDataHandler = async (params: FetchDataParams) => {
@@ -618,7 +627,8 @@ export const fetchDataHandler = async (params: FetchDataParams) => {
         getColumnsVisibility,
         dialogComponent,
         restoreState,
-        setRowCount
+        setRowCount, 
+        getTables
     } = params;
 
     setIsLoading(true);
@@ -644,7 +654,8 @@ export const fetchDataHandler = async (params: FetchDataParams) => {
         setOpenFilters,
         updateTableState,
         setFilters,
-        setRowCount
+        setRowCount,
+        getTables
     }
     const data = await getDataFromAPI(getDataFromAPIParams);
     flushSync(async () => {
