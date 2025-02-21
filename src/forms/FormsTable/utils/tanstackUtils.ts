@@ -27,10 +27,9 @@ export const handleAutoSizeColumnsHandler = (parentRef: RefObject<HTMLDivElement
         if (parentRef.current) {
             parentRef.current.style.tableLayout = 'auto';
         }
-
+        
         const newColumnSizes: { [key: string]: number } = {};
         const font = '14px Arial';
-
         const columnsToResize = columnId
             ? table.getAllLeafColumns().filter((col) => col.id === columnId) // Single column
             : table.getAllLeafColumns(); // All columns

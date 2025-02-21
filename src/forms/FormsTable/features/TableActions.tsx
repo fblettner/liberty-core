@@ -13,6 +13,7 @@ import { LYContentCopyIcon, LYDeleteIcon, LYEditIcon, LYReactIcon, LYRestoreIcon
 import { LYIconSize } from "@ly_utils/commonUtils";
 import { Div_TableToolbarButtons } from '@ly_styles/Div';
 import { IconButton_Contrast } from '@ly_styles/IconButton';
+import { max } from 'date-fns';
 
 interface IActionsTableProps {
   handleOpenDialog: (mode: LYComponentMode, row: ITableRow) => void;
@@ -22,6 +23,35 @@ interface IActionsTableProps {
 interface IActionsGridProps {
   table: LYTableInstance<ITableRow>;
 }
+
+export const getActionsForNone = () => {
+
+  return {
+    accessorKey: 'actions',
+    header: 'Actions',
+    field: 'actions',
+    value: null,
+    type: '',
+    operator: "",
+    defined: false,
+    template: '',
+    rules: '',
+    disabled: false,
+    required: false,
+    rulesValues: '',
+    default: '',
+    target: 'actions',
+    editable: false,
+    visible: false,
+    filter: false,
+    dynamic_params: '',
+    fixed_params: '',
+    pool_params: '',
+    output_params: '',
+    key: false,
+    col_cdn_id: 0,
+  };
+};
 
 export const getActionsForTable = (params: IActionsTableProps) => {
   const { handleOpenDialog, handleDelete } = params;
@@ -51,7 +81,6 @@ export const getActionsForTable = (params: IActionsTableProps) => {
     key: false,
     col_cdn_id: 0,
     enableColumnFilter: false, 
-    minSize: 120,
     cell: ({ row }: { row: { original: ITableRow } }) => (
       <Div_TableToolbarButtons>
         <IconButton_Contrast size={LYIconSize.small} onClick={() => handleOpenDialog(LYComponentMode.edit, row.original)} icon={LYEditIcon} />
@@ -92,7 +121,6 @@ export const getActionsForGrid = (params: IActionsGridProps) => {
     key: false,
     col_cdn_id: 0,
     enableColumnFilter: false, 
-    minSize: 120,
     cell: ({ row }: { row: { original: ITableRow } }) => {
       const id = row.original[TablesGridHardCoded.row_id];
 

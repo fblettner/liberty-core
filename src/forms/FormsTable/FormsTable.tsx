@@ -13,7 +13,7 @@ import { ComponentProperties, LYComponentDisplayMode, LYComponentViewMode, LYCom
 import { IFiltersProperties } from "@ly_types/lyFilters";
 import { ITableRow, ITableHeader, TablesGridHardCoded, ETableHeader } from "@ly_types/lyTables";
 import { CColumnsFilter } from "@ly_types/lyFilters";
-import { getActionsForGrid, getActionsForTable } from "@ly_forms/FormsTable/features/TableActions";
+import { getActionsForGrid, getActionsForNone, getActionsForTable } from "@ly_forms/FormsTable/features/TableActions";
 import { ITableDisplayView, setFilters } from "@ly_forms/FormsTable/utils/commonUtils"
 import { IDialogAction, } from "@ly_utils/commonUtils";
 import { fetchDataHandler, FetchDataParams } from "@ly_forms/FormsTable/utils/fetchDataUtils";
@@ -227,6 +227,7 @@ export function FormsTable(params: IFormsTable) {
                         : updaterOrValue,
                 }
             }));
+            apiRef.current?.autosizeColumns()
         },
         onGlobalFilterChange: (updaterOrValue) => {
             setTableState((prevState) => {
@@ -375,6 +376,7 @@ export function FormsTable(params: IFormsTable) {
                 columnsVisibility: updatedVisibility
             });
             table.deselectAllRows();
+            apiRef.current?.autosizeColumns()
         }
 
     }, [tableState.tableEdit.editMode]);
@@ -413,31 +415,7 @@ export function FormsTable(params: IFormsTable) {
 
     const handleDelete = useCallback(() => { setOpenDeleteDialog(true); }, [setOpenDeleteDialog]);
     const ActionsForTable = useMemo(() => getActionsForTable({ handleOpenDialog, handleDelete }), [handleOpenDialog, handleDelete]);
-    const ActionsNone = useMemo(() => ({
-        accessorKey: 'actions',
-        header: 'Actions',
-        field: 'actions',
-        value: null,
-        type: '',
-        operator: "",
-        defined: false,
-        template: '',
-        rules: '',
-        disabled: false,
-        required: false,
-        rulesValues: '',
-        default: '',
-        target: 'actions',
-        editable: false,
-        visible: false,
-        filter: false,
-        dynamic_params: '',
-        fixed_params: '',
-        pool_params: '',
-        output_params: '',
-        key: false,
-        col_cdn_id: 0,
-    }), []);
+    const ActionsNone = useMemo(() => { return getActionsForNone() }, [table]);
     const ActionsForGrid = useMemo(() => { return getActionsForGrid({ table }) }, [table]);
 
     const fetchData = useCallback((restoreState: boolean) => {
