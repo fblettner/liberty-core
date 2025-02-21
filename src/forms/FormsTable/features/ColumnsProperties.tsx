@@ -848,7 +848,7 @@ export const getDefaultColumnProperties = (columnProperties: IColumnsProperties)
 
 // Utility function to get columns visibility
 export const getColumnsVisibility = (columnProperties: IColumnsProperties) => {
-    if (columnProperties.field === TablesGridHardCoded.row_id || columnProperties.field === "Actions") {
+    if (columnProperties.field === TablesGridHardCoded.row_id ) {
         return { [columnProperties.field]: false };
     }
     switch (columnProperties.rules) {

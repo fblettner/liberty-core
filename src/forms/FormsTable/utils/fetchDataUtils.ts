@@ -479,9 +479,9 @@ interface IGetDataFromAPIParams {
     ActionsNone: IColumnsProperties,
     getColumnsVisibility: (item: IColumnsProperties) => IColumnsVisibility,
     columnsFilter: CColumnsFilter,
-    rowsFilterRef: React.MutableRefObject<IFiltersProperties[]>,
-    cancelQueryStatus: React.MutableRefObject<boolean>,
-    loadDataRef: React.MutableRefObject<boolean>,
+    rowsFilterRef: React.RefObject<IFiltersProperties[]>,
+    cancelQueryStatus: React.RefObject<boolean>,
+    loadDataRef: React.RefObject<boolean>,
     getFilters: (params: IGetFiltersParams) => IFiltersProperties[],
     setOpenFilters: React.Dispatch<React.SetStateAction<boolean>>,
     updateTableState: <K extends keyof ITableState>(key: K, value: ITableState[K]) => void;
@@ -538,9 +538,10 @@ const getDataFromAPI = (async (params: IGetDataFromAPIParams) => {
             readonly,
             ActionsForGrid,
             ActionsForTable,
+            ActionsNone
         }
         const columnsProperties = setColumnProperties(columnsPropertiesParams);
-        const columnsVisibility = setColumnVisibility(tables, getColumnsVisibility);
+        const columnsVisibility = setColumnVisibility(columnsProperties, getColumnsVisibility);
 
         const fetchEntireDataParams = {
             tables,
@@ -592,7 +593,7 @@ export interface FetchDataParams {
         columnsFilter: CColumnsFilter
     ) => void;
     getColumnsVisibility: (item: IColumnsProperties) => IColumnsVisibility;
-    dialogComponent: React.MutableRefObject<ComponentProperties>;
+    dialogComponent: React.RefObject<ComponentProperties>;
     restoreState: boolean;
     setRowCount: React.Dispatch<React.SetStateAction<number>>;
     getTables?: {

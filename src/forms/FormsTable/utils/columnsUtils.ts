@@ -23,6 +23,7 @@ export interface ISetColumnProperties {
     readonly: boolean;
     ActionsForGrid: IColumnsProperties;
     ActionsForTable: IColumnsProperties;
+    ActionsNone: IColumnsProperties
 }
 
 // Define the type for the state
@@ -41,6 +42,7 @@ export const setColumnProperties = (params: ISetColumnProperties ) => {
         readonly,
         ActionsForGrid,
         ActionsForTable,
+        ActionsNone
     } = params;
     let columnsProperties: IColumnsProperties[] = [];
 
@@ -50,7 +52,7 @@ export const setColumnProperties = (params: ISetColumnProperties ) => {
     ) {
         columnsProperties.push(tableState.tableEdit.editMode
             ? ActionsForGrid
-            : (tables.tableProperties[ETableHeader.formID] != null && tables.tableProperties[ETableHeader.formID] != undefined) ? ActionsForTable : ActionsForGrid)
+            : (tables.tableProperties[ETableHeader.formID] != null && tables.tableProperties[ETableHeader.formID] != undefined) ? ActionsForTable : ActionsNone)
     }
 
     tables.columns.forEach((columnProperties: IColumnsProperties) => {
@@ -67,12 +69,12 @@ export const setColumnProperties = (params: ISetColumnProperties ) => {
 
 // Set column visibility
 export const setColumnVisibility = (
-    tables: ITablesProperties, 
+    columnsProperties: IColumnsProperties[], 
     getColumnsVisibility: (item: IColumnsProperties) => IColumnsVisibility
 ) => {
     let columnsVisibility = {};
 
-    tables.columns.forEach((item: IColumnsProperties) => {
+    columnsProperties.forEach((item: IColumnsProperties) => {
         const visibility = getColumnsVisibility(item);
         columnsVisibility = { ...columnsVisibility, ...visibility };
     });

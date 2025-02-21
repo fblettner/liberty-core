@@ -352,18 +352,27 @@ export function FormsTable(params: IFormsTable) {
         if (!isLoading && tableState.tableData.columns.length > 0) {
             // Create a shallow copy of the columns array
             const updatedColumns = tableState.tableData.columns.slice();
+            const updatedVisibility = tableState.tableData.columnsVisibility;
+
 
             // Copy the first column object and update it based on gridMode
-            updatedColumns[0] = tableState.tableEdit.editMode
-                ? { ...ActionsForGrid }
-                : readonly || tablePropertiesRef.current[ETableHeader.formID] === null || tablePropertiesRef.current[ETableHeader.formID] === undefined
-                    ? { ...ActionsNone }
-                    : { ...ActionsForTable };
+            const newActionColumn = tableState.tableEdit.editMode
+            ? { ...ActionsForGrid }
+            : readonly || tablePropertiesRef.current[ETableHeader.formID] === null || tablePropertiesRef.current[ETableHeader.formID] === undefined
+                ? { ...ActionsNone }
+                : { ...ActionsForTable };
+
+            // Update the first column with the determined action column
+            updatedColumns[0] = newActionColumn;
+
+            // Update the visibility of the "actions" column
+            updatedVisibility["actions"] = newActionColumn.visible;
 
             // Update the columns state
             updateTableState('tableData', {
                 ...tableState.tableData,
-                columns: updatedColumns
+                columns: updatedColumns,
+                columnsVisibility: updatedVisibility
             });
             table.deselectAllRows();
         }
@@ -405,7 +414,7 @@ export function FormsTable(params: IFormsTable) {
     const handleDelete = useCallback(() => { setOpenDeleteDialog(true); }, [setOpenDeleteDialog]);
     const ActionsForTable = useMemo(() => getActionsForTable({ handleOpenDialog, handleDelete }), [handleOpenDialog, handleDelete]);
     const ActionsNone = useMemo(() => ({
-        accessorKey: 'none',
+        accessorKey: 'actions',
         header: 'Actions',
         field: 'actions',
         value: null,
@@ -420,7 +429,7 @@ export function FormsTable(params: IFormsTable) {
         default: '',
         target: 'actions',
         editable: false,
-        visible: true,
+        visible: false,
         filter: false,
         dynamic_params: '',
         fixed_params: '',
