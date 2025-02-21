@@ -5,7 +5,7 @@ I'm currently migrate components used in Liberty Framework to be standalone comp
  - Documentation and preview of components are available at : [https://docs.nomana-it.fr/liberty-core/](https://docs.nomana-it.fr/liberty-core/)
  - More components will come very soon, they are already in the framework but overridable functions have to be implemented. 
 
-## Annoucements
+## Announcements
 I'm happy to announce that Advanced Grid is now part of Liberty Core components. Advanced Grid contains a lots of feature like 
 Editable rows with validation
 Dynamic context menus
@@ -15,6 +15,8 @@ Batch selection and clipboard integration
 Exporting, importing, and inline editing
 
 If you are are looking for alternative to MUI Datagrid or AG-Grid, this component is free and will stay free for all features included. You can preview this component in the documentation https://docs.nomana-it.fr/liberty-core/. (Forms Component / Advanced Grid)
+
+- **Release 1.0.8**: include Advanced List and Upload Table
 
 ## Try It Online!
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/~/github.com/fblettner/liberty-test)

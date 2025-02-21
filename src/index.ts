@@ -77,6 +77,7 @@ export * from "@ly_forms/FormsChatbot/FormsChatbot"
 export * from "@ly_forms/FormsDashboard/FormsDashboard"
 export * from "@ly_forms/FormsDialog/FormsDialog"
 export * from "@ly_forms/FormsTable/FormsTable"
+export * from "@ly_forms/FormsList/FormsList"
 export * from "@ly_forms/FormsTools/FormsTools"
 export * from "@ly_forms/FormsUpload/FormsUpload"
 

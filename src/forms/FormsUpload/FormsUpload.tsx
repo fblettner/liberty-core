@@ -47,7 +47,7 @@ type Props = Readonly<{
 
 export function FormsUpload(props: Props) {
     const { componentProperties, onClose } = props;
-    const { userProperties, appsProperties, modulesProperties, addSnackMessage } = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, addSnackMessage, getTables } = useAppContext();
 
     const component = useRef<ComponentProperties>(componentProperties);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -102,7 +102,7 @@ export function FormsUpload(props: Props) {
     const initDialog = async () => {
         setIsLoading(true);
 
-        const tables = await lyGetTableProperties({
+        const tables = getTables && getTables.getProperties ? await getTables.getProperties(componentProperties.id) : await lyGetTableProperties({
             appsProperties: appsProperties,
             userProperties: userProperties,
             [ETableHeader.id]: component.current.id,
