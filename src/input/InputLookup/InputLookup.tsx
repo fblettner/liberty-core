@@ -47,7 +47,7 @@ export const InputLookup = (props: IInputLookupProps) => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
-    }, []);
+    }, [id]);
 
     return (
         <Fragment>

@@ -193,7 +193,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 
 
-        const handleFocus = () => setFocused(true);
+        const handleFocus = () => {
+            setFocused(true);
+        }
         const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
             setFocused(false);
             setFilled(!!e.target.value || !!props.placeholder || !!props.defaultValue);

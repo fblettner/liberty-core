@@ -103,7 +103,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(({
                 setInputValue(''); // Clear input if no value
             }
         }
-    }, [value, options, isTyping]);
+    }, [value, isTyping]);
 
 
     // Open Popper on focus

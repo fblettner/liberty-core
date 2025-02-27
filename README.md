@@ -16,6 +16,8 @@ Exporting, importing, and inline editing
 
 If you are are looking for alternative to MUI Datagrid or AG-Grid, this component is free and will stay free for all features included. You can preview this component in the documentation https://docs.nomana-it.fr/liberty-core/. (Forms Component / Advanced Grid)
 
+- **Release 1.0.10**: Issue with focus on input lookup when opening search dialog
+- **Release 1.0.9**: Add Authorization for API call
 - **Release 1.0.8**: include Advanced List and Upload Table
 
 ## Try It Online!

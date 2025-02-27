@@ -27,7 +27,7 @@ interface ITableBodyProps {
     rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
     table: LYTableInstance<ITableRow>;
     tableState: ITableState;
-    tableRef: React.MutableRefObject<HTMLDivElement | null>;
+    tableRef: React.RefObject<HTMLDivElement | null>;
     onSelect: (event: React.MouseEvent<Element> | ChangeEvent<HTMLInputElement>, row: ITableRow) => void
     onMouseDown: (event: React.MouseEvent<Element>, row: ITableRow) => void;
     onTouchStart: (event: React.TouchEvent<HTMLDivElement>, row: ITableRow) => void
@@ -103,7 +103,7 @@ export const LYTableBody = ({
     };
 
     useEffect(() => {
-        if (editingCell) {
+        if (editingCell && !document.body.classList.contains("dialog-open")) {
             const inputElement = document.getElementById(`input-${editingCell.rowId}-${editingCell.columnId}`) as HTMLInputElement;
             if (inputElement) {
                 inputElement.focus();
