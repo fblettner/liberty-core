@@ -160,8 +160,9 @@ export const LookupInput = (props: ILookupInput) => {
     const handleFocus = useCallback(async () => {
         setIsLoading(true)
         await fetchLookupData(true);
-        setPopperOpen(true);
-    }, [fetchLookupData, setIsLoading, setPopperOpen, isLoading]);
+        if (!openSearch && !openDialog)
+            setPopperOpen(true);
+    }, [fetchLookupData, setIsLoading, setPopperOpen, isLoading, openSearch, openDialog]);
 
     // Event listener for keydown when input is focused
     useEffect(() => {
@@ -204,8 +205,9 @@ export const LookupInput = (props: ILookupInput) => {
 
 
     const handleOpen = useCallback(async () => {
-        setPopperOpen(true);
-    }, [setPopperOpen]);
+        if (!openSearch && !openDialog)
+            setPopperOpen(true);
+    }, [setPopperOpen, openDialog, openSearch]);
 
     const onInputChange = useCallback((event: SyntheticEvent<Element, Event>, value: string, reason: string) => {
         if (reason === 'clear') {
@@ -254,6 +256,7 @@ export const LookupInput = (props: ILookupInput) => {
     }, []);
 
     const onSearchClose = useCallback(() => {
+        document.body.classList.remove("dialog-open");
         setOpenSearch(false);
     }, []);
 
@@ -268,6 +271,7 @@ export const LookupInput = (props: ILookupInput) => {
             if (typeof onChange === "function") {
                 onChange({ id: id, value: action.keys[ddId], label: action.keys[ddLabel] as string, data: selected });
             }
+            document.body.classList.remove("dialog-open");
             setPopperOpen(false);
             setOpenSearch(false);
         }
@@ -311,12 +315,13 @@ export const LookupInput = (props: ILookupInput) => {
             setPopperOpen(false);
             setOpenDialog(true);
         }
-    }, [lookupState, label, filtersForAdd, filtersForEdit]);
+    }, [lookupState, label, filtersForAdd, filtersForEdit, setPopperOpen, setOpenSearch]);
 
     const onSearchOpen = useCallback(() => {
         const tbl_id = lookupState.header?.[ELookup.tbl_id];
 
         if (tbl_id !== undefined) {
+            document.body.classList.add("dialog-open");
             searchRef.current = {
                 id: parseInt(tbl_id),
                 type: LYComponentType.FormsTable,
@@ -326,10 +331,11 @@ export const LookupInput = (props: ILookupInput) => {
                 showPreviousButton: false,
                 isChildren: true,
             };
+
             setPopperOpen(false);
             setOpenSearch(true);
         }
-    }, [lookupState, filtersForSearch, label]);
+    }, [lookupState, filtersForSearch, label, setPopperOpen, setOpenSearch]);
 
 
     const onClose = useCallback((event: KeyboardEvent | React.MouseEvent<HTMLTableRowElement>) => {
