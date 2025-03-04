@@ -98,6 +98,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22' 
+          registry-url: "https://registry.npmjs.org/"
+          always-auth: true
 
       - name: Set version from previous job
         run: echo "VERSION=${{ needs.create-version-tag.outputs.version }}" >> $GITHUB_ENV
