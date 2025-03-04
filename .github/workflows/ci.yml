@@ -100,7 +100,7 @@ jobs:
           node-version: '22' 
 
       - name: Install core dependencies
-        run: npm install
+        run: npm ci --legacy-peer-deps
 
       - name: Build core
         run: npm run build
