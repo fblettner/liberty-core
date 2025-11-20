@@ -15,12 +15,12 @@ import { ToolsDictionary } from "@ly_services/lyDictionary";
 import { ToolsQuery } from "@ly_services/lyQuery";
 import { lyGetTableProperties } from "@ly_services/lyTables";
 import { EApplications, } from "@ly_types/lyApplications";
-import { ComponentProperties, LYComponentEvent } from "@ly_types/lyComponents";
+import { ComponentProperties, LYComponentEvent, LYComponentType } from "@ly_types/lyComponents";
 import { EDictionaryType, EDictionaryRules } from "@ly_types/lyDictionary";
 import { QuerySource, ResultStatus } from "@ly_types/lyQuery";
 import { ETableHeader, IColumnsProperties, ITableRow, TablesGridHardCoded } from "@ly_types/lyTables";
 import { EUsers } from "@ly_types/lyUsers";
-import { EStandardColor, ESeverity, IContentValue, IErrorState, IRestData } from "@ly_utils/commonUtils";
+import { EStandardColor, ESeverity, IContentValue, IErrorState, IRestData, ActionsType } from "@ly_utils/commonUtils";
 import { AlertMessage } from "@ly_common/AlertMessage";
 import { LoadingIndicator } from "@ly_common/LoadingIndicator";
 import { ClipboardFeature } from "@ly_forms/FormsTable/features/ClipBoard";
@@ -39,6 +39,15 @@ import { Div_DialogToolbarButtons } from "@ly_styles/Div";
 import { Paper_Dialogs, Paper_DialogToolbar, Paper_UploadFile } from "@ly_styles/Paper";
 import { Stack_Dialogs, Stack_Table } from "@ly_styles/Stack";
 import { useAppContext } from "@ly_context/AppProvider";
+import { lyGetEventsComponent } from "@ly_services/lyEvents";
+import { EEventComponent, IEventComponent } from "@ly_types/lyEvents";
+import { CDialogContent, IDialogContent } from "@ly_types/lyDialogs";
+import { convertRowtoContent } from "@ly_forms/FormsTable/utils/commonUtils";
+import { InputAction, InputActionProps } from "@ly_input/InputAction";
+import { IOriginalObject } from "@ly_forms/FormsAI/utils/tableUtils";
+import { IActionsStatus } from "@ly_types/lyActions";
+import { ENextNumber } from "@ly_types/lyNextNum";
+import { ESequence } from "@ly_types/lySequence";
 
 type Props = Readonly<{
     componentProperties: ComponentProperties;
@@ -85,6 +94,7 @@ export function FormsUpload(props: Props) {
     const apiRef = useRef<TableGridRef>(null);
     const rowsFilterRef = useRef<IFiltersProperties[]>([]);
     const [rowCount, setRowCount] = useState(0);
+    const [eventState, setEventState] = useState<InputActionProps[] | null>([]);
 
     // Use Effect
     useEffect(() => {
@@ -113,7 +123,7 @@ export function FormsUpload(props: Props) {
         tableProperties.current = tables.tableProperties;
 
         if (tables.status === ResultStatus.error) {
-            setErrorState({ open: true, message: tables.items[0].message, severity:  ESeverity.error });
+            setErrorState({ open: true, message: tables.items[0].message, severity: ESeverity.error });
         } else {
             let columnsProperties: IColumnsProperties[] = [];
 
@@ -171,7 +181,7 @@ export function FormsUpload(props: Props) {
                             col_cdn_id: item.col_cdn_id,
                             cell: (cell: CellContext<ITableRow, IContentValue>) => {
                                 const isActive = (item.rulesValues.split(";").includes(cell.getValue() as string)) ? true : false;
-                                return isActive ? <LYReactIcon icon={LYCheckIcon} color={EStandardColor.primary}  size={LYIconSize.small}/> : <LYReactIcon icon={LYCloseIcon} color={EStandardColor.secondary} size={LYIconSize.small}/>;
+                                return isActive ? <LYReactIcon icon={LYCheckIcon} color={EStandardColor.primary} size={LYIconSize.small} /> : <LYReactIcon icon={LYCloseIcon} color={EStandardColor.secondary} size={LYIconSize.small} />;
                             },
                         })
                         break;
@@ -251,18 +261,26 @@ export function FormsUpload(props: Props) {
 
     const handleCloseDialog = () => {
         if (onClose)
-            onClose({ event: LYComponentEvent.Cancel})
+            onClose({ event: LYComponentEvent.Cancel })
     }
-   
+
     const handleSaveDialog = async () => {
         let result = await saveDataAPI()
-        if (result === ResultStatus.success) {
-            addSnackMessage(t("files.success"), ESeverity.success)
-
-            if (onClose)
-                onClose({ event: LYComponentEvent.Cancel})
-        }
     }
+
+    const onEventEnd = useCallback((event: IActionsStatus & { id?: number }) => {
+        if (onClose && eventState?.length === 0)
+            onClose({ event: LYComponentEvent.Cancel })
+        else {
+            if (event.id != null) {
+                setEventState(prev =>
+                    prev
+                        ? prev.filter(action => action.id !== event.id)
+                        : prev
+                );
+            }
+        }
+    }, []);
 
     const saveDataAPI = async () => {
         setIsLoading(true)
@@ -288,7 +306,7 @@ export function FormsUpload(props: Props) {
             )
 
             if (result.status === ResultStatus.error) {
-                setErrorState({ open: true, message: result.items[0].message, severity:  ESeverity.error })
+                setErrorState({ open: true, message: result.items[0].message, severity: ESeverity.error })
                 setIsLoading(false)
                 return ResultStatus.error
             } else {
@@ -296,10 +314,11 @@ export function FormsUpload(props: Props) {
                 setIsLoading(false)
             }
         }
+        let eventComponent: InputActionProps[] = []
 
         await Promise.all(tableState.tableData.rows.map(async (item) => {
             let restData: IRestData = {}
-            importColumns.current.filter((columns: IColumnsProperties) => columns.target !== null).forEach((column: IColumnsProperties) => {
+            await Promise.all(importColumns.current.filter((columns: IColumnsProperties) => columns.target !== null).map(async (column: IColumnsProperties) => {
                 switch (column.rules) {
                     case EDictionaryRules.boolean:
                         restData[column.target] = item[(column.target === null) ? column.field : column.target] ?? "N";
@@ -319,6 +338,23 @@ export function FormsUpload(props: Props) {
                             ? item[(column.target === null) ? column.field : column.target]
                             : column.rulesValues;
                         break;
+                    case EDictionaryRules.sequence:
+                        restData[column.target] = item[(column.target === null) ? column.field : column.target] ?? await ToolsDictionary.getSequence({
+                            appsProperties: appsProperties,
+                            [ESequence.id]: parseInt(column.rulesValues),
+                            data: {},
+                            modulesProperties: modulesProperties
+                        })
+                        break; 
+                    case EDictionaryRules.nextNumber:
+                        restData[column.target] = item[(column.target === null) ? column.field : column.target] ?? await ToolsDictionary.getNextNumber({
+                            appsProperties: appsProperties,
+                            userProperties: userProperties,
+                            [ENextNumber.id]: column.rulesValues,
+                            overrideQueryPool: component.current.overrideQueryPool,
+                            modulesProperties: modulesProperties
+                        })
+                        break;                        
                     default:
                         switch (column.type) {
                             case EDictionaryType.jdedate:
@@ -330,7 +366,7 @@ export function FormsUpload(props: Props) {
                                 restData[column.target] = item[(column.target === null) ? column.field : column.target];
                         }
                 }
-            })
+            }))
             let result;
             result = await ToolsQuery.put({
                 source: QuerySource.Query,
@@ -342,7 +378,7 @@ export function FormsUpload(props: Props) {
                 jwt_token: appsProperties[EApplications.jwt_token]
             },
                 JSON.stringify(restData));
-            if (result.status === ResultStatus.error)
+            if (result.status === ResultStatus.error) {
                 errorMessage.push(
                     {
                         open: true,
@@ -350,6 +386,39 @@ export function FormsUpload(props: Props) {
                         message: "Row: " + rowNumber + " | " + result.items[0].message,
 
                     });
+            } else {
+                // Get Event Component
+                const getEvents = await lyGetEventsComponent({
+                    appsProperties,
+                    userProperties,
+                    modulesProperties,
+                    [EEventComponent.component]: LYComponentType.FormsTable,
+                    [EEventComponent.componentID]: component.current.id,
+                    [EEventComponent.eventID]: 2
+                });
+
+                if (getEvents.status === ResultStatus.success && getEvents.items.length > 0) {
+                    let dialogContent = new CDialogContent()
+                    dialogContent.fields = convertRowtoContent(item) as IDialogContent;
+
+                    getEvents.items.forEach((item: IEventComponent) => {
+                        eventComponent.push({
+                            id: dialogContent.fields.ROW_ID.value as number,
+                            actionID: item[EEventComponent.actionID],
+                            type: ActionsType.event,
+                            dialogContent: dialogContent,
+                            dynamic_params: "",
+                            fixed_params: "",
+                            label: "On save",
+                            status: onEventEnd,
+                            disabled: false,
+                            component: component.current,
+                        });
+                    });
+
+                }
+
+            }
             rowNumber++;
         }));
 
@@ -359,10 +428,13 @@ export function FormsUpload(props: Props) {
             return ResultStatus.error
         }
         else {
-            setErrorState({ open: true, message: t("files.success"), severity: ESeverity.success })
+            addSnackMessage(t("files.success"), ESeverity.success)
+            setEventState(eventComponent);
+            if (eventComponent.length === 0 && onClose) {
+                onClose({ event: LYComponentEvent.Cancel })
+            }
             return ResultStatus.success
         }
-
     }
 
     const table: LYTableInstance<ITableRow> = useReactTable({
@@ -511,9 +583,26 @@ export function FormsUpload(props: Props) {
                     ) : (
                         <Typography variant="subtitle1">Drag and drop a file here or click to select</Typography>
                     )}
-                    <LYReactIcon icon={LYCloudUploadIcon} size={LYIconSize.extra_large} /> 
+                    <LYReactIcon icon={LYCloudUploadIcon} size={LYIconSize.extra_large} />
                 </Paper_UploadFile>
                 <Stack_Table>
+                    {eventState !== null && eventState.length > 0 &&
+                        eventState.map((item: InputActionProps) => (
+                            <InputAction
+                                key={item.id} // Add a unique key
+                                id={item.id}
+                                actionID={item.actionID}
+                                type={item.type}
+                                dialogContent={item.dialogContent}
+                                dynamic_params={item.dynamic_params}
+                                fixed_params={item.fixed_params}
+                                label={item.label}
+                                status={item.status}
+                                disabled={item.disabled}
+                                component={item.component}
+                            />
+                        ))
+                    }
                     <TableGrid
                         ref={apiRef}
                         isLoading={isLoading}

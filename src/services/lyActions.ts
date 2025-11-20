@@ -64,7 +64,6 @@ export const lyGetActionsParams = async (props: IActionsParamsProps) => {
     filters: filters,
     jwt_token: props.appsProperties[EApplications.jwt_token]
   })
-
   return { data: results.items };
 }
 

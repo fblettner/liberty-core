@@ -183,7 +183,7 @@ export const rowUpdate = async (params: IRowUpdate) => {
                             modulesProperties: modulesProperties,
                         });
                         restData[column.target] =
-                            (rowValue[col] !== "" && rowValue[col] !== null)
+                            (rowValue[col] !== "" && rowValue[col] !== null && rowValue[col] !== undefined)
                                 ? rowValue[col] : sequence;
                         break;
                     case EDictionaryRules.nextNumber:

@@ -8,12 +8,12 @@ import { RowData } from "@tanstack/react-table";
 
 // Custom Import
 import { IColumnsProperties, ITableRow, ITableHeader, TablesGridHardCoded } from "@ly_types/lyTables";
-import { ITableDisplayView } from "@ly_forms/FormsTable/utils/commonUtils";
-import { ComponentProperties,  LYComponentEvent, LYComponentMode } from "@ly_types/lyComponents";
+import { convertRowtoContent, ITableDisplayView } from "@ly_forms/FormsTable/utils/commonUtils";
+import { ComponentProperties, LYComponentEvent, LYComponentMode } from "@ly_types/lyComponents";
 import { IUsersProps } from "@ly_types/lyUsers";
 import { IAppsProps } from "@ly_types/lyApplications";
 import { rowDelete, rowUpdate } from "@ly_forms/FormsTable/utils/apiUtils";
-import { IErrorState } from "@ly_utils/commonUtils";
+import { ActionsType, IErrorState } from "@ly_utils/commonUtils";
 import { ITableState, LYTableInstance } from "@ly_forms/FormsTable/utils/tanstackUtils";
 import { IModulesProps } from "@ly_types/lyModules";
 import { ResultStatus } from "@ly_types/lyQuery";
@@ -21,6 +21,11 @@ import { TableEditState } from "@ly_forms/FormsTable/features/TableEdit";
 import { IFiltersProperties } from "@ly_types/lyFilters";
 import { TableGridRef } from "@ly_forms/FormsTable/views/TableGrid";
 import { ChangeEvent } from "react";
+import { EEventComponent, IEventComponent } from "@ly_types/lyEvents";
+import { lyGetEventsComponent } from "@ly_services/lyEvents";
+import { InputActionProps } from "@ly_input/InputAction";
+import { IActionsStatus } from "@ly_types/lyActions";
+import { CDialogContent, IDialogContent } from "@ly_types/lyDialogs";
 
 const hiddenFields = [TablesGridHardCoded.row_id, '__row_group_by_columns_group__'];
 
@@ -44,7 +49,7 @@ export const getRowClassNameHandler = (
 ) => {
     const unsavedRow = unsavedChanges.unsavedRows[rowId];
 
-    if (row["error"]  && row["error"] === true) {
+    if (row["error"] && row["error"] === true) {
         return 'row--error'; // Return class for error rows
     }
 
@@ -75,7 +80,7 @@ export const pasteFromClipboardHandler = (table: LYTableInstance<ITableRow>) => 
 };
 
 export interface ISaveDataAPI {
-    table: LYTableInstance<ITableRow>; 
+    table: LYTableInstance<ITableRow>;
     tableState: ITableState;
     setTableState: React.Dispatch<React.SetStateAction<ITableState>>;
     component: ComponentProperties;
@@ -88,16 +93,19 @@ export interface ISaveDataAPI {
     updateTableState: <K extends keyof ITableState>(
         key: K,
         value: ITableState[K] | ((prevValue: ITableState[K]) => ITableState[K])
-      ) => void;
+    ) => void;
+    onEventEnd: (event: IActionsStatus) => void;
+    setEventState: React.Dispatch<React.SetStateAction<InputActionProps[] | null>>;
 }
 export const saveDataAPI = async (params: ISaveDataAPI) => {
-    const { table, tableState, setTableState, component, tableProperties, columns, userProperties, appsProperties, modulesProperties, setErrorState, updateTableState } = params;
+    const { table, tableState, setTableState, component, tableProperties, columns, userProperties, appsProperties, modulesProperties, setErrorState, updateTableState, onEventEnd, setEventState } = params;
     // Call API to remove rows marked for deletion
     const rowsToDelete = Object.values(tableState.tableEdit.unsavedRows).filter((row) => row._action === 'delete') as ITableRow[];
     let errorFound: boolean = false
 
     if (rowsToDelete.length > 0) {
         // Use Promise.all to wait for all rowDelete calls to complete
+        let eventComponent: InputActionProps[] = []
         for (const row of rowsToDelete) {
             const deleteParams = {
                 rowValue: row,
@@ -114,13 +122,47 @@ export const saveDataAPI = async (params: ISaveDataAPI) => {
             };
             let status = await rowDelete(deleteParams);
             if (status === ResultStatus.error) {
-               errorFound = true;
-           } 
+                errorFound = true;
+            } else {
+                // Get Event Component
+                const getEvents = await lyGetEventsComponent({
+                    appsProperties,
+                    userProperties,
+                    modulesProperties,
+                    [EEventComponent.component]: component.type,
+                    [EEventComponent.componentID]: component.id,
+                    [EEventComponent.eventID]: 3
+                });
+
+                if (getEvents.status === ResultStatus.success && getEvents.items.length > 0) {
+                    let dialogContent = new CDialogContent()
+                    dialogContent.fields = convertRowtoContent(row) as IDialogContent;
+
+                    getEvents.items.forEach((item: IEventComponent) => {
+                        eventComponent.push({
+                            id: dialogContent.fields.ROW_ID.value as number,
+                            actionID: item[EEventComponent.actionID],
+                            type: ActionsType.event,
+                            dialogContent: dialogContent,
+                            dynamic_params: "",
+                            fixed_params: "",
+                            label: "On Delete",
+                            status: onEventEnd,
+                            disabled: false,
+                            component: component,
+                        });
+                    });
+
+                }
+
+            }
         }
+        setEventState(eventComponent);
     }
 
     const rowsToUpdate = Object.values(tableState.tableEdit.unsavedRows).filter((row) => row._action !== 'delete') as ITableRow[];
     if (rowsToUpdate.length > 0) {
+        let eventComponent: InputActionProps[] = []
         for (const row of rowsToUpdate) {
             const updateParams = {
                 rowValue: row,
@@ -132,21 +174,52 @@ export const saveDataAPI = async (params: ISaveDataAPI) => {
                 component,
                 setErrorState,
                 table,
-                tableState, 
+                tableState,
                 setTableState,
                 updateTableState
             }
             let status = await rowUpdate(updateParams);
             if (status === ResultStatus.error) {
                 errorFound = true;
+            } else {
+                // Get Event Component
+                const getEvents = await lyGetEventsComponent({
+                    appsProperties,
+                    userProperties,
+                    modulesProperties,
+                    [EEventComponent.component]: component.type,
+                    [EEventComponent.componentID]: component.id,
+                    [EEventComponent.eventID]: 2
+                });
+                if (getEvents.status === ResultStatus.success && getEvents.items.length > 0) {
+                    getEvents.items.forEach((item: IEventComponent) => {
+                        let dialogContent = new CDialogContent()
+                        dialogContent.fields = convertRowtoContent(row) as IDialogContent;
+                        eventComponent.push({
+                            id: dialogContent.fields.ROW_ID.value as number,
+                            actionID: item[EEventComponent.actionID],
+                            type: ActionsType.event,
+                            dialogContent: dialogContent,
+                            dynamic_params: "",
+                            fixed_params: "",
+                            label: "On save",
+                            status: onEventEnd,
+                            disabled: false,
+                            component: component,
+                        });
+                    });
+
+                }
+
             }
         }
+        setEventState(eventComponent);
     }
     return errorFound
 };
 
 
-export const discardHandler = async(table: LYTableInstance<ITableRow>, setOpenSaveDialog: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const discardHandler = async (table: LYTableInstance<ITableRow>, setOpenSaveDialog: React.Dispatch<React.SetStateAction<boolean>>) => {
     // Reset the unsaved changes
     table.discardAllChanges();
     // Close the save dialog
@@ -154,7 +227,7 @@ export const discardHandler = async(table: LYTableInstance<ITableRow>, setOpenSa
 };
 
 
-export interface IConfirmDeleteHandler  {
+export interface IConfirmDeleteHandler {
     setOpenDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
     tableProperties: ITableHeader;
     columns: IColumnsProperties[];
@@ -168,12 +241,18 @@ export interface IConfirmDeleteHandler  {
     updateTableState: <K extends keyof ITableState>(
         key: K,
         value: ITableState[K] | ((prevValue: ITableState[K]) => ITableState[K])
-      ) => void;
+    ) => void;
+    onEventEnd: (event: IActionsStatus) => void;
+    setEventState: React.Dispatch<React.SetStateAction<InputActionProps[] | null>>;
+    component: ComponentProperties;
 }
 
 export const confirmDeleteHandler = async (params: IConfirmDeleteHandler) => {
-    const { setOpenDeleteDialog, tableProperties, columns, userProperties, appsProperties, modulesProperties, setErrorState, table, tableState, setTableState, updateTableState } = params;
+    const { setOpenDeleteDialog, tableProperties, columns, userProperties, appsProperties, modulesProperties, setErrorState, table, tableState, setTableState, updateTableState, onEventEnd, setEventState, component } = params;
     const selectedRow = table.getAllSelectedRows() as ITableRow[];
+    let eventComponent: InputActionProps[] = []
+    let errorFound: boolean = false
+
     // Perform delete operation for the selected rows
     for (const row of selectedRow) {
         const deleteParams = {
@@ -189,15 +268,51 @@ export const confirmDeleteHandler = async (params: IConfirmDeleteHandler) => {
             setTableState,
             updateTableState
         };
-        await rowDelete(deleteParams); 
+        let status = await rowDelete(deleteParams);
+        if (status === ResultStatus.error) {
+            errorFound = true;
+        } else {
+            // Get Event Component
+            const getEvents = await lyGetEventsComponent({
+                appsProperties,
+                userProperties,
+                modulesProperties,
+                [EEventComponent.component]: component.type,
+                [EEventComponent.componentID]: component.id,
+                [EEventComponent.eventID]: 3
+            });
+
+            if (getEvents.status === ResultStatus.success && getEvents.items.length > 0) {
+                let dialogContent = new CDialogContent()
+                dialogContent.fields = convertRowtoContent(row) as IDialogContent;
+
+                getEvents.items.forEach((item: IEventComponent) => {
+                    eventComponent.push({
+                        id: dialogContent.fields.ROW_ID.value as number,
+                        actionID: item[EEventComponent.actionID],
+                        type: ActionsType.event,
+                        dialogContent: dialogContent,
+                        dynamic_params: "",
+                        fixed_params: "",
+                        label: "On Delete",
+                        status: onEventEnd,
+                        disabled: false,
+                        component: component,
+                    });
+                });
+
+            }
+
+        }
     }
+    setEventState(eventComponent);
     // After deletion, close the dialog and clear the selected rows
     setOpenDeleteDialog(false);
 
 }
 
 export interface ISaveChangesHandler {
-    table: LYTableInstance<ITableRow>; 
+    table: LYTableInstance<ITableRow>;
     tableState: ITableState;
     setTableState: React.Dispatch<React.SetStateAction<ITableState>>;
     component: ComponentProperties;
@@ -210,11 +325,13 @@ export interface ISaveChangesHandler {
     updateTableState: <K extends keyof ITableState>(
         key: K,
         value: ITableState[K] | ((prevValue: ITableState[K]) => ITableState[K])
-      ) => void;
+    ) => void;
+    onEventEnd: (event: IActionsStatus) => void;
+    setEventState: React.Dispatch<React.SetStateAction<InputActionProps[] | null>>;
 }
 
 export const saveChangesHandler = async (params: ISaveChangesHandler) => {
-    const {updateTableState, tableState} = params;
+    const { updateTableState, tableState, appsProperties, userProperties, modulesProperties, component, onEventEnd, setEventState } = params;
     let error = await saveDataAPI(params);
 
     if (!error) {
@@ -235,7 +352,7 @@ export interface ICellMouseDownHandler {
     apiRef: React.RefObject<TableGridRef | null>,
     row: ITableRow,
     table: LYTableInstance<ITableRow>;
-    handleOpenDialog?:  (mode: LYComponentMode, row?: ITableRow) => void;
+    handleOpenDialog?: (mode: LYComponentMode, row?: ITableRow) => void;
 }
 
 let clickTimeout: number | null = null;
@@ -253,13 +370,13 @@ export const cellMouseDownHandler = (params: ICellMouseDownHandler) => {
         table.deselectAllRows();
         table.toggleRowSelected(row[TablesGridHardCoded.row_id].toString());
 
-        if (displayView.tree && apiRef.current ) {
+        if (displayView.tree && apiRef.current) {
             apiRef.current.scrollToRow(row[TablesGridHardCoded.row_id]);
         }
     }, 250); // 200ms delay for single click
 };
 
-export const selectHandler =(params: ICellMouseDownHandler) => {
+export const selectHandler = (params: ICellMouseDownHandler) => {
     const { event, apiRef, row, table } = params;
     if (row !== undefined) {
         table.toggleRowSelected(row[TablesGridHardCoded.row_id]);
@@ -268,7 +385,7 @@ export const selectHandler =(params: ICellMouseDownHandler) => {
 
 // Handle the double-click event separately
 export const cellDoubleClickHandler = (params: ICellMouseDownHandler) => {
-    const {event, row, table, handleOpenDialog } = params;
+    const { event, row, table, handleOpenDialog } = params;
 
     // Clear the single-click timeout so it doesn't trigger
     if (clickTimeout) {
@@ -287,12 +404,12 @@ export const cellDoubleClickHandler = (params: ICellMouseDownHandler) => {
 export const touchStartHandler = (params: ICellMouseDownHandler) => {
     const { event, displayView, apiRef, row, table } = params;
 
-        table.deselectAllRows();
-        table.toggleRowSelected(row[TablesGridHardCoded.row_id]);
+    table.deselectAllRows();
+    table.toggleRowSelected(row[TablesGridHardCoded.row_id]);
 
-        if (displayView.tree && row !== undefined && apiRef.current) {
-            apiRef.current.scrollToRow(row[TablesGridHardCoded.row_id]);
-        }
+    if (displayView.tree && row !== undefined && apiRef.current) {
+        apiRef.current.scrollToRow(row[TablesGridHardCoded.row_id]);
+    }
 };
 
 export const touchEndHandler = (
