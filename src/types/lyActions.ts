@@ -175,7 +175,8 @@ export enum EActionsType {
 export interface IActionsStatus {
     status: "success" | "error" | "warning" | "info";
     message: string;
-    params?: CDialogContent
+    params?: CDialogContent;
+    id?: number;
 }
 
 export interface IActionsData {

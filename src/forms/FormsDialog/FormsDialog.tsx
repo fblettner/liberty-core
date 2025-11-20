@@ -292,6 +292,7 @@ export function FormsDialog(props: Props) {
 
 
     const onEventEnd = useCallback((event: IActionsStatus) => {
+        setErrorState({ open: true, severity: (event.status === ResultStatus.error) ? ESeverity.error : (event.status === ResultStatus.warning) ? ESeverity.warning : ESeverity.success, message: event.message });
         setEventState(null);
     }, [setEventState]);
 

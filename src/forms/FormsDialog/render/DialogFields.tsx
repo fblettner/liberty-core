@@ -128,7 +128,7 @@ export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAu
                             id={field}
                             // Initialize the picker with the current cell value
                             value={
-                                dialogContent.fields[field].value
+                                dialogContent.fields[field].value && parseInt(dialogContent.fields[field].value as string) !== 0
                                     ? dayjs(ToolsDictionary.JdeToDate(dialogContent.fields[field].value as number))
                                     : null
                             }

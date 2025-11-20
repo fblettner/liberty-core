@@ -44,10 +44,15 @@ export const importExcelFiles = async (props: IFileListenerProps) => {
     var file = files[0];
     let importData = await Excel.import(file);
     let sysdate = new Date().toISOString();
-
+    
+    /*
+    // Remove this part because Sequence must be calculated for each row.
+    // This was done to create a unique UKID per import in NOMASX1.
+    // This is replace by a global update after the import to set the UKID for all imported rows.
     // Get Sequence value for all the file to be imported. Sequence will not change during the import
-    let dictionaryRules = importColumns.filter((columns: IColumnsProperties) => columns.rules === EDictionaryRules.sequence);
     let value: { [key: string]: ITableRow } = {};
+    let dictionaryRules = importColumns.filter((columns: IColumnsProperties) => columns.rules === EDictionaryRules.sequence);
+    
     await Promise.all(dictionaryRules.map(async (column: IColumnsProperties) => {
         value[(column.target === null) ? column.field : column.target] = await ToolsDictionary.getSequence({
             appsProperties: appsProperties,
@@ -56,6 +61,7 @@ export const importExcelFiles = async (props: IFileListenerProps) => {
             modulesProperties: modulesProperties
         })
     }))
+*/
 
     // Read all the grid to set dictionary value and default value for column not in the excel files
     if (!importData) {
@@ -136,7 +142,7 @@ export const importExcelFiles = async (props: IFileListenerProps) => {
                             item[target] = item[target] ?? sysdate;
                         break;
                     case EDictionaryRules.sequence:
-                        item[target] = item[target] ?? value[column["field"]];
+                        item[target] = item[target] ;
                         break;
                     case EDictionaryRules.nextNumber:
                         item[target] = item[target] ?? await ToolsDictionary.getNextNumber({
@@ -151,7 +157,7 @@ export const importExcelFiles = async (props: IFileListenerProps) => {
                         item[target] = item[target] ?? column.rulesValues;
                         break;
                     default:
-                        item[target] = item[target] ?? (value[target] ?? column.default);
+                        item[target] = item[target] ??  column.default;
                         break
                 }
 

@@ -11,7 +11,7 @@ import { IEnumOption } from "@ly_types/lyEnums";
 import { ILookupOption } from "@ly_types/lyLookup";
 import { IColumnsProperties, ITableRow } from "@ly_types/lyTables";
 import { CColumnsFilter, IFiltersProperties } from "@ly_types/lyFilters";
-import { IContentValue } from "@ly_utils/commonUtils";
+import { IContentValue, IRestData } from "@ly_utils/commonUtils";
 import { Cell, CellContext, Row, RowData } from "@tanstack/react-table";
 
 export const autosizeOptions = {

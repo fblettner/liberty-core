@@ -17,7 +17,7 @@ import { EActionsHeader, EActionsDirection, EActionsTasks, EActionsParams, EActi
 import { ComponentProperties, LYComponentDisplayMode, LYComponentEvent, LYComponentMode, LYComponentType, LYComponentViewMode } from '@ly_types/lyComponents';
 import { ActionsType, IContentValue, IDialogAction, IRestData, OnChangeParams } from "@ly_utils/commonUtils";
 import { EApplications } from '@ly_types/lyApplications';
-import { EDictionaryRules } from '@ly_types/lyDictionary';
+import { EDictionaryRules, EDictionaryType } from '@ly_types/lyDictionary';
 import { lyGetActionsHeader, lyGetActionsParams, lyGetActionsTasks, lyGetActionsTasksParams } from '@ly_services/lyActions';
 import { IFiltersProperties } from '@ly_types/lyFilters';
 import { lyCheckConditions } from '@ly_services/lyConditions';
@@ -79,6 +79,8 @@ export const InputAction = (props: InputActionProps) => {
     const [actionsTasks, setActionsEvents] = useState<IActionsTasks[]>([]);
     const [openParamsDialog, setOpenParamsDialog] = useState(false);
     const [openComponent, setOpenComponent] = useState(false);
+
+    const [autoRun, setAutoRun] = useState<boolean>(false);
 
     const [paramsDP, setParamsDP] = useState<CDialogContent>(new CDialogContent());
     const allParams = useRef<IActionsData>({});
@@ -149,7 +151,10 @@ export const InputAction = (props: InputActionProps) => {
             });
             setActionsEvents(resultEvents.data);
             if (props.type === ActionsType.event) {
-                setOpenParamsDialog(true);
+                if (resultParams.data.filter(((param: { [x: string]: string; }) => param[EActionsParams.display] === "Y")).length > 0)
+                    setOpenParamsDialog(true);
+                else
+                    setAutoRun(true);
             }
             setIsLoading(false);
 
@@ -191,14 +196,25 @@ export const InputAction = (props: InputActionProps) => {
         }
     }, [props.dialogContent]);
 
+    useEffect(() => {
+
+        if (autoRun) {
+            runTask();
+        }
+
+    }, [autoRun]);
+
     const handleActionEvent = async () => {
-        setOpenParamsDialog(true);
+        if (actionsParams.filter(((param) => param[EActionsParams.display] === "Y")).length > 0)
+            setOpenParamsDialog(true);
+        else
+            setAutoRun(true);
     }
 
     const getParamsValue = async (param: IActionsTasksParams | IActionsParams) => {
         let value;
 
-        if (param[EActionsParams.default] !== null)
+        if (paramsDP.fields[param[EActionsParams.var_id]].value === null && param[EActionsParams.default] !== null)
             value = param[EActionsParams.default]
         else
             switch (param[EActionsParams.rules]) {
@@ -228,9 +244,8 @@ export const InputAction = (props: InputActionProps) => {
                         : nn;
                     break;
                 case EDictionaryRules.boolean:
-                    value =
-                        (props.dialogContent.fields[param[EActionsParams.var_id]].value)
-                            ? props.dialogContent.fields[param[EActionsParams.var_id]][EDialogDetails.rulesValues]
+                    value = paramsDP.fields[param[EActionsParams.var_id]].value
+                            ? paramsDP.fields[param[EActionsParams.var_id]][EDialogDetails.rulesValues]
                             : "N";
                     break;
                 case EDictionaryRules.login:
@@ -238,15 +253,20 @@ export const InputAction = (props: InputActionProps) => {
                     break;
                 case EDictionaryRules.sysdate:
                 case EDictionaryRules.current_date:
-                    value = new Date().toISOString();
-                    break;
+                    if (param[EActionsParams.var_type] === EDictionaryType.jdedate)
+                        value = ToolsDictionary.DateToJde(new Date().toISOString());
+                    else
+                        value = new Date().toISOString();  
+                    break;                  
                 case EDictionaryRules.default:
-                    value = (paramsDP.fields[param[EActionsParams.var_id]].value !== null)
+                    value = (paramsDP.fields[param[EActionsParams.var_id]] !== undefined && paramsDP.fields[param[EActionsParams.var_id]].value !== null)
                         ? paramsDP.fields[param[EActionsParams.var_id]].value
                         : param[EActionsParams.default]
                     break;
                 default:
-                    value = paramsDP.fields[param[EActionsParams.var_id]].value
+                    value = (paramsDP.fields[param[EActionsParams.var_id]] !== undefined && paramsDP.fields[param[EActionsParams.var_id]].value !== null)
+                        ? paramsDP.fields[param[EActionsParams.var_id]].value
+                        : param[EActionsParams.default]
             }
         return value
     }
@@ -272,7 +292,6 @@ export const InputAction = (props: InputActionProps) => {
         if (filterStringACT !== null)
             filterStringACT.split(";").forEach((filters) => {
                 let filter = filters.split("=")
-
                 filtersACT.push({
                     header: "",
                     field: filter[0],
@@ -308,16 +327,13 @@ export const InputAction = (props: InputActionProps) => {
 
         await Promise.all(actionsParams.filter((action) => action[EActionsParams.direction] !== EActionsDirection.out).map(async (param) => {
             let value = filtersACT.filter((field: IFiltersProperties) => field.field === param[EActionsParams.var_id]);
-
             if (value.length > 0)
                 paramsValue[param[EActionsParams.var_id]] = value[0].value
             else {
                 paramsValue[param[EActionsParams.var_id]] = await getParamsValue(param)
-
             }
         }))
-
-
+ 
         allParams.current = { 'INPUT': paramsValue }
         for (const task of actionsTasks) {
             let result;
@@ -334,7 +350,6 @@ export const InputAction = (props: InputActionProps) => {
                 });
                 let taskParamsValue: IRestData = {};
                 let taskPool;
-
                 await Promise.all(taskParams.data.filter(
                     (action: IActionsTasksParams) => action[EActionsTasksParams.direction] !== EActionsDirection.out
                 ).map(async (param: IActionsTasksParams) => {
@@ -426,9 +441,8 @@ export const InputAction = (props: InputActionProps) => {
                     }
             }
         }
-
         if (typeof props.status === "function")
-            props.status({ status: ResultStatus.success, message: t("run_ok") + actionsHeader[0][EActionsHeader.label], params: paramsDP });
+            props.status({ status: ResultStatus.success, message: t("run_ok") + actionsHeader[0][EActionsHeader.label], params: paramsDP, id: props.id });
 
 
     }
@@ -576,7 +590,7 @@ export const InputAction = (props: InputActionProps) => {
 
     const handleCancelTask = () => {
         setOpenParamsDialog(false);
-        props.status({ status: ResultStatus.warning, message: t("run_cancel") });
+        props.status({ status: ResultStatus.warning, message: t("run_cancel"), id: props.id });
     };
 
     const handleRunTask = () => {
@@ -667,7 +681,7 @@ export const InputAction = (props: InputActionProps) => {
                         fullWidth />
                 )
             default:
-                switch (item[EActionsParams.type]) {
+                switch (item[EActionsParams.var_type]) {
                     case "number":
                         return (
                             <Input

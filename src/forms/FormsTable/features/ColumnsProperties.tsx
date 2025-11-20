@@ -507,7 +507,7 @@ export const getDefaultColumnProperties = (columnProperties: IColumnsProperties)
                 operator: columnProperties.operator,
                 filter: columnProperties.filter,
                 cell: (cell: CellContext<ITableRow, IContentValue>) => {
-                    if (cell.getValue() !== null && cell.getValue() !== undefined) {
+                    if (cell.getValue() !== null && cell.getValue() !== undefined && parseInt(cell.getValue() as string) !== 0) {
                         return ToolsDictionary.JdeToDate(cell.getValue() as number)?.toLocaleDateString();
                     }
                     else
@@ -521,7 +521,7 @@ export const getDefaultColumnProperties = (columnProperties: IColumnsProperties)
                 },
                 // Render edit cell with MUI DatePicker
                 editCell: (params: IEditCell) => {
-                    const selectedDate = params.value ? dayjs(ToolsDictionary.JdeToDate(params.value as number)) : null
+                    const selectedDate = params.value && parseInt(params.value as string) !== 0 ? dayjs(ToolsDictionary.JdeToDate(params.value as number)) : null
                     return (
                         <DatePicker
                             id={`input-${params.cell.row.id}-${params.cell.column.id}`} 

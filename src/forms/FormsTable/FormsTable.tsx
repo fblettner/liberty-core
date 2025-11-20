@@ -48,6 +48,8 @@ import { Stack_FormsTable } from "@ly_styles/Stack";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
 import { AnchorPosition } from "@ly_types/common";
 import { useAppContext } from "@ly_context/AppProvider";
+import { InputAction, InputActionProps } from "@ly_input/InputAction";
+import { IActionsStatus } from "@ly_types/lyActions";
 
 interface IFormsTable {
     componentProperties: ComponentProperties;
@@ -60,7 +62,7 @@ interface IFormsTable {
 
 export function FormsTable(params: IFormsTable) {
     const { componentProperties, displayMode, viewGrid, viewMode, onSelectRow, readonly } = params;
-    const { userProperties, appsProperties, modulesProperties, getTables} = useAppContext();
+    const { userProperties, appsProperties, modulesProperties, getTables } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const longPressTimeout = useRef<number | null>(null);
@@ -163,6 +165,8 @@ export function FormsTable(params: IFormsTable) {
         showPreviousButton: false,
         isChildren: true
     });
+    const [eventState, setEventState] = useState<InputActionProps[] | null>(null);
+
 
     const table = useReactTable({
         _features: [DensityFeature, RowSelectionFeature, TableEditFeature, ClipboardFeature, GlobalFilterFeature],
@@ -358,10 +362,10 @@ export function FormsTable(params: IFormsTable) {
 
             // Copy the first column object and update it based on gridMode
             const newActionColumn = tableState.tableEdit.editMode
-            ? { ...ActionsForGrid }
-            : readonly || tablePropertiesRef.current[ETableHeader.formID] === null || tablePropertiesRef.current[ETableHeader.formID] === undefined
-                ? { ...ActionsNone }
-                : { ...ActionsForTable };
+                ? { ...ActionsForGrid }
+                : readonly || tablePropertiesRef.current[ETableHeader.formID] === null || tablePropertiesRef.current[ETableHeader.formID] === undefined
+                    ? { ...ActionsNone }
+                    : { ...ActionsForTable };
 
             // Update the first column with the determined action column
             updatedColumns[0] = newActionColumn;
@@ -721,7 +725,10 @@ export function FormsTable(params: IFormsTable) {
                 setErrorState,
                 tableState,
                 setTableState,
-                updateTableState
+                updateTableState,
+                onEventEnd,
+                setEventState,
+                component: componentPropertiesRef.current,
             }
             confirmDeleteHandler(params)
             fetchData(true)
@@ -745,7 +752,10 @@ export function FormsTable(params: IFormsTable) {
                 appsProperties,
                 modulesProperties,
                 setErrorState,
-                updateTableState
+                updateTableState,
+                onEventEnd,
+                setEventState
+
             }
             await saveChangesHandler(params)
         },
@@ -759,6 +769,15 @@ export function FormsTable(params: IFormsTable) {
         [setOpenImport]
     );
 
+    const onEventEnd = useCallback((event: IActionsStatus & { id?: number }) => {
+    if (event.id != null) {
+        setEventState(prev =>
+            prev
+                ? prev.filter(action => action.id !== event.id) 
+                : prev
+        );
+    }
+}, []);
 
     return (
         <Fragment>
@@ -818,6 +837,23 @@ export function FormsTable(params: IFormsTable) {
                     componentProperties={uploadComponent.current}
                     handleRefresh={handleRefresh}
                 />
+                {eventState !== null && eventState.length > 0 &&
+                    eventState.map((item: InputActionProps) => (
+                        <InputAction
+                            key={item.id} // Add a unique key
+                            id={item.id}
+                            actionID={item.actionID}
+                            type={item.type}
+                            dialogContent={item.dialogContent}
+                            dynamic_params={item.dynamic_params}
+                            fixed_params={item.fixed_params}
+                            label={item.label}
+                            status={item.status}
+                            disabled={item.disabled}
+                            component={item.component}
+                        />
+                    ))
+                }
                 <TableRender
                     isLoading={isLoading}
                     displayMode={displayMode}
