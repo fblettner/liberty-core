@@ -5,6 +5,7 @@
     "unexpectedError": "Unexpected Error, please contact your admin",
     "save_ok": "Data saved successfully",
     "run_ok": "Task executed successfully: ",
+    "run_now": "Task is running...",
     "run_cancel": "Task canceled",
     "save_ko": "Your changes are not saved, please cancel or save",
     "ui_settings": "UI Settings",
@@ -68,6 +69,8 @@
         "saveDialog": "Please close the dialog before moving to another application",
         "dataNotSaved": "Data not saved",
         "confirmCloseDialog": "Data are not saved, are you sure you want to cancel? Unsaved data will be lost",
+        "runTask": "Run task",
+        "confirmRunTask": "Do you want to execute the task? ",
         "export" : {
             "allColumns" : "All",
             "visibleColumns" : "Visible",

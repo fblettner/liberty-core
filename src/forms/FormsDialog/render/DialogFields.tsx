@@ -135,7 +135,7 @@ export const DialogFields = ({ item, dialogContent, reserveStatus, maxRows, onAu
                             disabled={dialogContent.fields[field][EDialogDetails.disabled] || reserveStatus.status}
                             onChange={(selectedDate: any) => {
                                 const formattedDate = selectedDate ? selectedDate.format("YYYY-MM-DD") : null;
-                                const jdeDate = formattedDate ? ToolsDictionary.DateToJde(formattedDate) : null;
+                                const jdeDate = formattedDate ? ToolsDictionary.DateToJde(formattedDate) : 0;
 
                                 // Call the onChange with the converted JDE date
                                 onInputChange({

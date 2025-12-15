@@ -529,7 +529,7 @@ export const getDefaultColumnProperties = (columnProperties: IColumnsProperties)
                             value={selectedDate}
                             onChange={(newValue) => {
                                 const formattedDate = newValue ? newValue.format('YYYY-MM-DD') : null;
-                                const jdeDate = formattedDate ? ToolsDictionary.DateToJde(formattedDate) : null;
+                                const jdeDate = formattedDate ? ToolsDictionary.DateToJde(formattedDate) : 0;
                                 const onChangeParams = {
                                     row: params.cell.row,
                                     columnId: params.cell.column.id,

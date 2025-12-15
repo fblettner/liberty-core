@@ -3,7 +3,7 @@
  * *
  */
 // React Import
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { t } from 'i18next';
 import { useSpring } from "@react-spring/web";
@@ -48,6 +48,7 @@ import { Input } from '@ly_common/Input';
 import { GridContainer, GridItem } from '@ly_common/Grid';
 import { DraggableDialog } from '@ly_common/DragableDialog';
 import { useAppContext } from '@ly_context/AppProvider';
+import { ConfirmationDialog } from '@ly_common/ConfirmationDialog';
 
 export interface InputActionProps {
     id: number;
@@ -79,6 +80,7 @@ export const InputAction = (props: InputActionProps) => {
     const [actionsTasks, setActionsEvents] = useState<IActionsTasks[]>([]);
     const [openParamsDialog, setOpenParamsDialog] = useState(false);
     const [openComponent, setOpenComponent] = useState(false);
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
     const [autoRun, setAutoRun] = useState<boolean>(false);
 
@@ -208,13 +210,20 @@ export const InputAction = (props: InputActionProps) => {
         if (actionsParams.filter(((param) => param[EActionsParams.display] === "Y")).length > 0)
             setOpenParamsDialog(true);
         else
-            setAutoRun(true);
+            setOpenConfirmDialog(true)
     }
+    const handleDiscardAccept = useCallback(() => {
+        setOpenConfirmDialog(false);
+        setAutoRun(true);
+    }, [setOpenConfirmDialog]);
+    const handleDiscardConfirm = useCallback(() => { setOpenConfirmDialog(false) }, [setOpenConfirmDialog]);
+    const handleDiscardDecline = useCallback(() => { setOpenConfirmDialog(false) }, [setOpenConfirmDialog]);
+
 
     const getParamsValue = async (param: IActionsTasksParams | IActionsParams) => {
         let value;
 
-        if (paramsDP.fields[param[EActionsParams.var_id]].value === null && param[EActionsParams.default] !== null)
+        if (paramsDP.fields[param[EActionsParams.var_id]] && paramsDP.fields[param[EActionsParams.var_id]].value === null && param[EActionsParams.default] !== null)
             value = param[EActionsParams.default]
         else
             switch (param[EActionsParams.rules]) {
@@ -245,8 +254,8 @@ export const InputAction = (props: InputActionProps) => {
                     break;
                 case EDictionaryRules.boolean:
                     value = paramsDP.fields[param[EActionsParams.var_id]].value
-                            ? paramsDP.fields[param[EActionsParams.var_id]][EDialogDetails.rulesValues]
-                            : "N";
+                        ? paramsDP.fields[param[EActionsParams.var_id]][EDialogDetails.rulesValues]
+                        : "N";
                     break;
                 case EDictionaryRules.login:
                     value = userProperties[EUsers.id];
@@ -256,8 +265,8 @@ export const InputAction = (props: InputActionProps) => {
                     if (param[EActionsParams.var_type] === EDictionaryType.jdedate)
                         value = ToolsDictionary.DateToJde(new Date().toISOString());
                     else
-                        value = new Date().toISOString();  
-                    break;                  
+                        value = new Date().toISOString();
+                    break;
                 case EDictionaryRules.default:
                     value = (paramsDP.fields[param[EActionsParams.var_id]] !== undefined && paramsDP.fields[param[EActionsParams.var_id]].value !== null)
                         ? paramsDP.fields[param[EActionsParams.var_id]].value
@@ -271,20 +280,38 @@ export const InputAction = (props: InputActionProps) => {
         return value
     }
 
-    const getNestedValue = (obj: IActionsData, path: string): IContentValue | undefined => {
+    const getNestedValue = (obj: any, path: string): any => {
         return path.split('.').reduce<IActionsData | undefined>((acc, part) => {
-            if (acc && typeof acc === 'object') {
-                // Find the key in the current object that matches the uppercase part
-                const uppercasedPart = part.toUpperCase();
-                const matchingKey = Object.keys(acc).find(key => key.toUpperCase() === uppercasedPart);
+            if (!acc) return undefined;
 
-                if (matchingKey) {
-                    return acc[matchingKey] as IActionsData; // Type assertion to navigate nested objects
-                }
+            // Check for array access: "RESULTS[0]"
+            const match = part.match(/^([^\[]+)\[(\d+)\]$/);
+
+            if (match) {
+                const objectKey = match[1];
+                const index = Number(match[2]);
+
+                // case-insensitive matching
+                const realKey = Object.keys(acc).find(
+                    key => key.toUpperCase() === objectKey.toUpperCase()
+                );
+
+                if (!realKey) return undefined;
+                if (!Array.isArray(acc[realKey])) return undefined;
+
+                return acc[realKey][index];
             }
-            return undefined;
-        }, obj) as IContentValue | undefined; // Final type casting for the result
+
+            // Regular object property (no brackets)
+            const upper = part.toUpperCase();
+            const realKey = Object.keys(acc).find(
+                key => key.toUpperCase() === upper
+            );
+
+            return realKey ? acc[realKey] : undefined;
+        }, obj);
     };
+
 
     const runTask = async () => {
         let filtersACT: IFiltersProperties[] = [];
@@ -333,7 +360,11 @@ export const InputAction = (props: InputActionProps) => {
                 paramsValue[param[EActionsParams.var_id]] = await getParamsValue(param)
             }
         }))
- 
+
+        if (typeof props.status === "function")
+            props.status({ status: ResultStatus.warning, message: t("run_now") + actionsHeader[0][EActionsHeader.label], params: paramsDP, id: props.id });
+
+
         allParams.current = { 'INPUT': paramsValue }
         for (const task of actionsTasks) {
             let result;
@@ -484,6 +515,7 @@ export const InputAction = (props: InputActionProps) => {
             fixed_params: "",
             modulesProperties: modulesProperties
         })
+
         if (rest)
             currentBranch.current = task[EActionsTasks.branch_false]
         else
@@ -859,6 +891,7 @@ export const InputAction = (props: InputActionProps) => {
     }
 
 
+
     const onDialogClose = (action: IDialogAction) => {
         switch (action.event) {
             case LYComponentEvent.Cancel:
@@ -1047,9 +1080,20 @@ export const InputAction = (props: InputActionProps) => {
                 , document.body)
         else if (props.type === ActionsType.button)
             return (
-                <Button variant="outlined" onClick={handleActionEvent} disabled={props.disabled}>
-                    {props.label}
-                </Button>
+                <Fragment>
+                    <ConfirmationDialog
+                        open={openConfirmDialog}
+                        title={t("dialogs.runTask")}
+                        content={t('dialogs.confirmRunTask')}
+                        onClose={handleDiscardConfirm}
+                        onAccept={handleDiscardAccept}
+                        onDecline={handleDiscardDecline}
+                    />
+
+                    <Button variant="outlined" onClick={handleActionEvent} disabled={props.disabled}>
+                        {props.label}
+                    </Button>
+                </Fragment>
             )
 
 };

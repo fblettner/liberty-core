@@ -5,6 +5,7 @@
     "unexpectedError": "Erreur inconnue, veuillez contacter votre administrateur",
     "save_ok": "Données enregistrées avec succès",
     "run_ok": "Exécution réussie",
+    "run_now": "Tâche en cours d'exécution...",
     "run_cancel": "Exécution annulée",
     "save_ko": "Vos modifications ne sont pas enregistrées, veuillez annuler ou sauvegarder",
     "ui_settings": "Paramètres Affichage",
@@ -68,6 +69,8 @@
         "saveDialog": "Veuillez fermer le dialogue avant de passer à une autre application",
         "dataNotSaved": "Données non enregistrées",
         "confirmCloseDialog": "Les données ne sont pas enregistrées, êtes-vous sûr de vouloir annuler ? Les données non enregistrées seront perdues",
+        "runTask": "Exécuter la tâche",
+        "confirmRunTask": "Voulez-vous exécuter la tâche ? ",
         "export" : {
             "allColumns" : "Toutes",
             "visibleColumns" : "Visibles",

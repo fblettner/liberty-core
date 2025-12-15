@@ -121,8 +121,7 @@ export const LookupInput = (props: ILookupInput) => {
                 if (getAllValues) {
                     setFilteredData(results.data);
                 }
-
-                if (!getAllValues && defaultValue) {
+                if (!getAllValues && defaultValue !== undefined && defaultValue !== null) {
                     const selectedLookup = findSelectedOption(results, searchByLabel, defaultValue);
                     setSelectedOption(selectedLookup ?? null);
                 }
@@ -194,7 +193,7 @@ export const LookupInput = (props: ILookupInput) => {
     }, [popperOpen, handleFocus]);
 
     const findSelectedOption = useCallback((options: IGetLookup, isByLabel: boolean | undefined, value: IContentValue) => {
-        if (!value) return null;
+        if (value == null) return null;
         const dd_label = options.header[ELookup.dd_label];
         const dd_id = options.header[ELookup.dd_id]
 
