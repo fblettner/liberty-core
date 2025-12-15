@@ -293,7 +293,10 @@ export function FormsDialog(props: Props) {
 
     const onEventEnd = useCallback((event: IActionsStatus) => {
         setErrorState({ open: true, severity: (event.status === ResultStatus.error) ? ESeverity.error : (event.status === ResultStatus.warning) ? ESeverity.warning : ESeverity.success, message: event.message });
-        setEventState(null);
+        if (event.status !== ResultStatus.warning) {
+            setEventState(null);
+            setDialogsMode(LYComponentMode.edit)
+        }
     }, [setEventState]);
 
 
@@ -349,8 +352,7 @@ export function FormsDialog(props: Props) {
             };
 
             componentRef.current = currentComponent;
-            setDialogsMode(LYComponentMode.edit)
-
+            
             // Get Event Component
             const getEvents = await lyGetEventsComponent({
                 appsProperties,
@@ -378,6 +380,8 @@ export function FormsDialog(props: Props) {
                     });
                 });
                 setEventState( eventComponent);
+            } else {
+                setDialogsMode(LYComponentMode.edit)
             }
         }
     }, [

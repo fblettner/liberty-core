@@ -431,7 +431,7 @@ export const initDialog = async (params: IInitDialogProps) => {
                                 ? null
                                 : (dialogContent.fields[item.field][EDialogDetails.rules] === EDictionaryRules.boolean)
                                     ? (dialogContent.fields[item.field][EDialogDetails.rulesValues] === restCopy.items[0][item.field]) ? true : false
-                                    : restCopy.items[0][item.field];
+                                    : (dialogContent.fields[item.field][EDialogDetails.type] === EDictionaryType.text && restCopy.items[0][item.field] && typeof restCopy.items[0][item.field] === "string")? restCopy.items[0][item.field].trim() : restCopy.items[0][item.field];
 
                     }
                 });
@@ -453,7 +453,7 @@ export const initDialog = async (params: IInitDialogProps) => {
                         dialogContent.fields[item.field].value =
                             (dialogContent.fields[item.field][EDialogDetails.rules] === EDictionaryRules.boolean)
                                 ? (dialogContent.fields[item.field][EDialogDetails.rulesValues] === restEdit.items[0][item.field]) ? true : false
-                                : restEdit.items[0][item.field];
+                                : (dialogContent.fields[item.field][EDialogDetails.type] === EDictionaryType.text && restEdit.items[0][item.field] && typeof restEdit.items[0][item.field] === "string") ? restEdit.items[0][item.field].trim() : restEdit.items[0][item.field];
                     }
                 });
                 setDialogsMode(LYComponentMode.edit)
