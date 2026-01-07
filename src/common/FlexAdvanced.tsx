@@ -116,18 +116,24 @@ interface BiDimensionalResizableProps {
     rows: number; // Number of rows
     columns: number; // Number of columns
     children: ReactNode[][]; // Bi-dimensional array of children
+    initialRowSizes?: number[]; // Optional initial row sizes (must sum to 1)
+    initialColumnSizes?: number[][]; // Optional initial column sizes per row (each row must sum to 1)
+    enableDrag?: boolean; // Enable drag and drop functionality for swapping panels (default: true)
 }
 
 export const AdvancedFlexPanels: React.FC<BiDimensionalResizableProps> = ({
     rows,
     columns,
     children,
+    initialRowSizes,
+    initialColumnSizes,
+    enableDrag = true,
 }) => {
     const [rowSizes, setRowSizes] = useState<number[]>(
-        Array(rows).fill(1 / rows)
+        initialRowSizes || Array(rows).fill(1 / rows)
     );
     const [columnSizes, setColumnSizes] = useState<number[][]>(
-        Array(rows)
+        initialColumnSizes || Array(rows)
             .fill(null)
             .map(() => Array(columns).fill(1 / columns))
     );
@@ -209,11 +215,12 @@ export const AdvancedFlexPanels: React.FC<BiDimensionalResizableProps> = ({
     );
 
     const handleDragStart = (row: number, col: number) => {
+        if (!enableDrag) return;
         setDraggingItem({ row, col });
     };
 
     const handleDrop = (targetRow: number, targetCol: number) => {
-        if (!draggingItem) return;
+        if (!enableDrag || !draggingItem) return;
 
         const { row: sourceRow, col: sourceCol } = draggingItem;
 
@@ -235,10 +242,10 @@ export const AdvancedFlexPanels: React.FC<BiDimensionalResizableProps> = ({
                             {columnSizes[rowIdx].map((_, colIdx) => (
                                 <React.Fragment key={colIdx}>
                                     <PanelContent
-                                        draggable
-                                        onDragStart={() => handleDragStart(rowIdx, colIdx)}
-                                        onDrop={() => handleDrop(rowIdx, colIdx)}
-                                        onDragOver={(e) => e.preventDefault()}
+                                        draggable={enableDrag}
+                                        onDragStart={enableDrag ? () => handleDragStart(rowIdx, colIdx) : undefined}
+                                        onDrop={enableDrag ? () => handleDrop(rowIdx, colIdx) : undefined}
+                                        onDragOver={enableDrag ? (e) => e.preventDefault() : undefined}
                                         style={columnSprings[rowIdx][colIdx]} >
                                         {children[rowIdx][colIdx]}
                                     </PanelContent>

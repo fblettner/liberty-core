@@ -34,12 +34,13 @@ export interface IOpenDialogHandler  {
     dialogPropertiesRef: React.MutableRefObject<ComponentProperties>;
     apiRef: React.RefObject<TableGridRef | null>
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpenVisualDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
 export const openDialogHandler = async  (params: IOpenDialogHandler) => {
 
-    const { mode, row, tableState, componentPropertiesRef, tablePropertiesRef, onSelectRow, setErrorState, dialogPropertiesRef, apiRef, setOpenDialog,table } = params;
+    const { mode, row, tableState, componentPropertiesRef, tablePropertiesRef, onSelectRow, setErrorState, dialogPropertiesRef, apiRef, setOpenDialog, setOpenVisualDialog, table } = params;
 
     const selectedRow = table.getFirstSelectedRow();
 
@@ -55,7 +56,7 @@ export const openDialogHandler = async  (params: IOpenDialogHandler) => {
     if (tablePropertiesRef.current[ETableHeader.formID] === null || tablePropertiesRef.current[ETableHeader.formID] === undefined)
         return;
 
-    if (mode !== LYComponentMode.add && !selectedRow  && !row ) {
+    if (mode !== LYComponentMode.add && mode !== LYComponentMode.visual_add && !selectedRow  && !row ) {
         setErrorState({ open: true, message: t("tables.SelectedRowsError"), severity: ESeverity.error});
         return;
     }
@@ -131,6 +132,9 @@ export const openDialogHandler = async  (params: IOpenDialogHandler) => {
         overrideQueryPool: componentPropertiesRef.current.overrideQueryPool
     }
 
-    setOpenDialog(true);
+    if (mode.startsWith("VISUAL_"))
+        setOpenVisualDialog(true);
+    else
+        setOpenDialog(true);
 
 }
