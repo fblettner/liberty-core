@@ -67,7 +67,10 @@ export enum LYComponentMode {
   import = "IMPORT",
   search = "SEARCH",
   chat = "CHAT",
-  standard = "STANDARD"
+  standard = "STANDARD",
+  visual_add = "VISUAL_ADD",
+  visual_edit = "VISUAL_EDIT",
+  visual_copy = "VISUAL_COPY"
 }
 
 export enum LYComponentType {
@@ -87,7 +90,7 @@ export enum LYComponentType {
   FormsGrid = "FormsGrid",
   FormsAI = "FormsAI",
   FormsTools = "FormsTools",
-  FormsContent = "FormsContent"
+  FormsContent = "FormsContent",
 }
 
 export enum LYComponentDisplayMode {

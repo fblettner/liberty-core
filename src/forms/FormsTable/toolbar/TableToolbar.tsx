@@ -15,7 +15,7 @@ import { ITableRow, ITableHeader, ETableHeader } from "@ly_types/lyTables";
 import { CColumnsFilter } from "@ly_types/lyFilters";
 import { IFiltersProperties } from "@ly_types/lyFilters";
 import { LYTableInstance } from "@ly_forms/FormsTable/utils/tanstackUtils";
-import { LYAccountTreeIcon, LYAddIcon, LYContentCopyIcon, LYDeleteIcon, LYDownloadIcon, LYEditIcon, LYEditRoadIcon, LYFilterAltIcon, LYInfoOutlinedIcon,  LYListIcon,  LYRefreshIcon, LYTableViewIcon, LYUploadIcon } from "@ly_styles/icons";
+import { LYAccountTreeIcon, LYAddIcon, LYContentCopyIcon, LYDeleteIcon, LYDownloadIcon, LYEditIcon, LYEditRoadIcon, LYFilterAltIcon, LYInfoOutlinedIcon, LYListIcon, LYRefreshIcon, LYTableViewIcon, LYUploadIcon } from "@ly_styles/icons";
 import { Divider } from "@ly_common/Divider";
 import { Paper_TableToolbar } from "@ly_styles/Paper";
 import { useDeviceDetection, useMediaQuery } from '@ly_common/UseMediaQuery';
@@ -64,7 +64,7 @@ export const TableToolbar = ({
     setOpenUpload,
 
 }: ITableToolbar) => {
-    const { userProperties, appsProperties,  addSnackMessage } = useAppContext();
+    const { userProperties, appsProperties, addSnackMessage } = useAppContext();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isMobile = useDeviceDetection();
     const [openExport, setOpenExport] = useState<{
@@ -97,16 +97,20 @@ export const TableToolbar = ({
     }, [displayView.tree, isMobile, isSmallScreen, isEditMode]);
 
     const displayListToolbar = useMemo(() => {
-        return !displayView.tree && !isEditMode && !isMobile && !isSmallScreen ;
+        return !displayView.tree && !isEditMode && !isMobile && !isSmallScreen;
     }, [displayView.tree, isMobile, isEditMode, isSmallScreen]);
 
     const displayTreeToolbar = useMemo(() => {
-        return tableProperties[ETableHeader.treeID] !== null && !isEditMode && component.componentMode !== LYComponentMode.search ;
+        return tableProperties[ETableHeader.treeID] !== null && !isEditMode && component.componentMode !== LYComponentMode.search;
     }, [tableProperties[ETableHeader.treeID], component.componentMode, displayView.list, isEditMode]);
 
     const displayImportToolbar = useMemo(() => {
         return tableProperties[ETableHeader.uploadable] && userProperties[EUsers.readonly] !== EUserReadonly.true && !isEditMode;
     }, [tableProperties[ETableHeader.uploadable], userProperties[EUsers.readonly], isEditMode]);
+
+    const displayBuilderToolbar = useMemo(() => {
+        return tableProperties[ETableHeader.dbName] === 'LY_DLG_FRM' && userProperties[EUsers.readonly] !== EUserReadonly.true && !isEditMode;
+    }, [tableProperties[ETableHeader.dbName], userProperties[EUsers.readonly], isEditMode]);
 
     const displayExportToolbar = useMemo(() => {
         return displayView.table && !isEditMode;
@@ -262,7 +266,7 @@ export const TableToolbar = ({
             open: false
         });
     }, [setOpenExport]);
-   
+
     const exportExcel = useCallback(async () => {
         addSnackMessage("Export of table has started", ESeverity.warning)
         let columnsOptions = (exportOptions.columns === "allColumns") ? table.getAllColumns() : table.getVisibleLeafColumns();
@@ -475,6 +479,24 @@ export const TableToolbar = ({
                     <IconButton
                         onClick={() => handleDelete()}
                         icon={LYDeleteIcon}
+                    />
+                    <Divider />
+                </Fragment>
+            }
+
+            {displayBuilderToolbar &&
+                <Fragment>
+                    <IconButton
+                        onClick={() => handleOpenDialog(LYComponentMode.visual_add)}
+                        icon={LYAddIcon}
+                    />
+                    <IconButton
+                        onClick={() => handleOpenDialog(LYComponentMode.visual_edit)}
+                        icon={LYEditIcon}
+                    />
+                    <IconButton
+                        onClick={() => handleOpenDialog(LYComponentMode.visual_copy)}
+                        icon={LYContentCopyIcon}
                     />
                     <Divider />
                 </Fragment>

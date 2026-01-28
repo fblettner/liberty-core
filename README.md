@@ -4,6 +4,7 @@
 I'm currently migrate components used in Liberty Framework to be standalone component and npm installable. This work is in progress, any contributions is welcome
  - Documentation and preview of components are available at : [https://docs.nomana-it.fr/liberty-core/](https://docs.nomana-it.fr/liberty-core/)
  - More components will come very soon, they are already in the framework but overridable functions have to be implemented. 
+ - **New visual component to create dialogs (currently under development), UI is done but API functions have to be implemented** 
 
 ## Announcements
 I'm happy to announce that Advanced Grid is now part of Liberty Core components. Advanced Grid contains a lots of feature like 

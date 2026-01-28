@@ -50,6 +50,7 @@ import { AnchorPosition } from "@ly_types/common";
 import { useAppContext } from "@ly_context/AppProvider";
 import { InputAction, InputActionProps } from "@ly_input/InputAction";
 import { IActionsStatus } from "@ly_types/lyActions";
+import { DialogBuilderWrapper } from "@ly_forms/FormsDialogBuilder";
 
 interface IFormsTable {
     componentProperties: ComponentProperties;
@@ -108,6 +109,7 @@ export function FormsTable(params: IFormsTable) {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [errorState, setErrorState] = useState<IErrorState>({ message: '', open: false });
     const [openDialog, setOpenDialog] = useState(false);
+    const [openVisualDialog, setOpenVisualDialog] = useState(false);
     const [openTable, setOpenTable] = useState(false);
     const [openImport, setOpenImport] = useState(false);
     const [openUpload, setOpenUpload] = useState(false);
@@ -399,6 +401,7 @@ export function FormsTable(params: IFormsTable) {
             dialogPropertiesRef: dialogProperties,
             apiRef,
             setOpenDialog,
+            setOpenVisualDialog,
             table
         }
         openDialogHandler(params);
@@ -412,6 +415,7 @@ export function FormsTable(params: IFormsTable) {
         dialogProperties,
         apiRef,
         setOpenDialog,
+        setOpenVisualDialog,
         table,
         tableState
     ]);
@@ -587,6 +591,12 @@ export function FormsTable(params: IFormsTable) {
                 break;
         }
     }, [handleRefresh, setOpenDialog, setSendAction]);
+
+
+    const onVisualDialogClose = useCallback(() => {
+        handleRefresh();
+        setOpenVisualDialog(false);
+    }, [handleRefresh, setOpenVisualDialog]);
 
     const onTableDialogClose = useCallback((action: ISelectedRow) => {
         switch (action.event) {
@@ -770,14 +780,14 @@ export function FormsTable(params: IFormsTable) {
     );
 
     const onEventEnd = useCallback((event: IActionsStatus & { id?: number }) => {
-    if (event.id != null) {
-        setEventState(prev =>
-            prev
-                ? prev.filter(action => action.id !== event.id) 
-                : prev
-        );
-    }
-}, []);
+        if (event.id != null) {
+            setEventState(prev =>
+                prev
+                    ? prev.filter(action => action.id !== event.id)
+                    : prev
+            );
+        }
+    }, []);
 
     return (
         <Fragment>
@@ -817,6 +827,13 @@ export function FormsTable(params: IFormsTable) {
                         sendAction={sendAction}
                     />
                 }
+                {openVisualDialog &&
+                    <DialogBuilderWrapper
+                        open={openVisualDialog}
+                        onClose={onVisualDialogClose}
+                    />
+                }
+
                 <TableDialog
                     open={openTable}
                     componentProperties={dialogProperties.current}
