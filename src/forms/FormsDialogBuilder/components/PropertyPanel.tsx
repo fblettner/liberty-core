@@ -12,7 +12,7 @@ import { Select } from '@ly_common/Select';
 import { InputCheckbox } from '@ly_input/InputCheckbox';
 import { InputLookup } from '@ly_input/InputLookup/InputLookup';
 import { InputEnum } from '@ly_input/InputEnum/InputEnum';
-import { IBuilderField, IBuilderTab, IFieldParameter, IFieldConditionParameter } from '../types/builderTypes';
+import { IBuilderField, IBuilderTab, IFieldParameter, IFieldConditionParameter } from '@ly_forms/FormsDialogBuilder/types/builderTypes';
 import { EDialogDetails } from '@ly_types/lyDialogs';
 import { Divider } from '@ly_common/Divider';
 import { Button } from '@ly_common/Button';
@@ -22,6 +22,7 @@ import { IconButton } from '@ly_common/IconButton';
 import { Dialog } from '@ly_common/Dialog';
 import { LYAddIcon, LYDeleteIcon, LYEditIcon } from '@ly_styles/icons';
 import { LYIconSize } from '@ly_utils/commonUtils';
+import { GridFlexContainer, GridItem } from '@ly_common/Grid';
 
 const PropertyContainer = styled(Div)(({ theme }) => ({
     display: "flex",
@@ -42,14 +43,6 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const EmptyState = styled(Div)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '200px',
-    padding: '24px',
-}));
 
 const ParameterList = styled(Div)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -87,7 +80,6 @@ interface IPropertyPanelProps {
     onFieldUpdate: (field: IBuilderField) => void;
     onTabUpdate: (tab: IBuilderTab) => void;
     onFieldMoveToTab: (field: IBuilderField, newTabID: string) => void;
-    onClose: () => void;
     dialogID: number | null;
     dialogLabel: string;
     queryID: number;
@@ -101,7 +93,6 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
     onFieldUpdate,
     onTabUpdate,
     onFieldMoveToTab,
-    onClose,
     dialogID,
     dialogLabel,
     queryID,
@@ -132,7 +123,7 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
     }, [selectedTab, onTabUpdate]);
 
     // Find which tab contains the selected field
-    const currentFieldTab = selectedField 
+    const currentFieldTab = selectedField
         ? tabs.find((tab) => tab.fields.some((f) => f.builderID === selectedField.builderID))
         : null;
 
@@ -160,74 +151,88 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
             <PropertyContainer>
                 <Div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                     <Typography variant="h6">Tab Properties</Typography>
-                    <Button onClick={onClose}>Close</Button>
                 </Div>
                 <Divider />
-
-                <PropertySection>
-                    <SectionTitle variant="caption">Properties</SectionTitle>
-
-                    <Input
-                        id="tab-order"
-                        label="Tab Order"
-                        type="number"
-                        value={selectedTab.sequence || 1}
-                        onChange={(e) => handleTabChange('sequence', parseInt(e.target.value))}
-                        fullWidth
-                        variant="standard"
-                    />
-
-                    <Input
-                        id="tab-description"
-                        label="Description"
-                        value={selectedTab.label || ''}
-                        onChange={(e) => handleTabChange('label', e.target.value)}
-                        fullWidth
-                        variant="standard"
-                    />
-                </PropertySection>
-
-                <PropertySection>
-                    <SectionTitle variant="caption">Display</SectionTitle>
-
-                    <Input
-                        id="tab-condition"
-                        label="Display condition"
-                        type="number"
-                        value={selectedTab.condition || ''}
-                        onChange={(e) => handleTabChange('condition', e.target.value ? parseInt(e.target.value) : undefined)}
-                        fullWidth
-                        variant="standard"
-                    />
-
-                    <Input
-                        id="tab-cols"
-                        label="Columns to display"
-                        type="number"
-                        value={selectedTab.cols || 1}
-                        onChange={(e) => handleTabChange('cols', parseInt(e.target.value))}
-                        fullWidth
-                        variant="standard"
-                    />
-                </PropertySection>
-
-                <PropertySection>
-                    <SectionTitle variant="caption">Behavior</SectionTitle>
-
-                    <InputCheckbox
-                        id="tab-disable-add"
-                        label="Disable on Add (Y/N)"
-                        defaultValue={selectedTab.disable_add || false}
-                        onChange={(e: { value: any; }) => handleTabChange('disable_add', e.value)}
-                    />
-
-                    <InputCheckbox
-                        id="tab-disable-edit"
-                        label="Disable on Edit (Y/N)"
-                        defaultValue={selectedTab.disable_edit || false}
-                        onChange={(e: { value: any; }) => handleTabChange('disable_edit', e.value)}
-                    />
-                </PropertySection>
+                <GridFlexContainer key={'tab-properties-grid'} spacing={2} px={0} py={2}
+                    flexDirection='row'>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="tab-properties-order">
+                        <Input
+                            id="tab-order"
+                            label="Tab Order"
+                            type="number"
+                            value={selectedTab.sequence || 1}
+                            onChange={(e) => handleTabChange('sequence', parseInt(e.target.value))}
+                            fullWidth
+                            variant="standard"
+                        />
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="tab-properties-description">
+                        <Input
+                            id="tab-description"
+                            label="Description"
+                            value={selectedTab.label || ''}
+                            onChange={(e) => handleTabChange('label', e.target.value)}
+                            fullWidth
+                            variant="standard"
+                        />
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="tab-properties-cols">
+                        <Input
+                            id="tab-cols"
+                            label="Columns to display"
+                            type="number"
+                            value={selectedTab.cols || 1}
+                            onChange={(e) => handleTabChange('cols', parseInt(e.target.value))}
+                            fullWidth
+                            variant="standard"
+                        />
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="tab-properties-condition">
+                        <Input
+                            id="tab-condition"
+                            label="Display condition"
+                            type="number"
+                            value={selectedTab.condition || ''}
+                            onChange={(e) => handleTabChange('condition', e.target.value ? parseInt(e.target.value) : undefined)}
+                            fullWidth
+                            variant="standard"
+                        />
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={6}
+                        key="tab-properties-disable-add">
+                        <InputCheckbox
+                            id="tab-disable-add"
+                            label="Disable on Add (Y/N)"
+                            defaultValue={selectedTab.disable_add || false}
+                            onChange={(e: { value: any; }) => handleTabChange('disable_add', e.value)}
+                        />
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={6}
+                        key="tab-properties-disable-edit">
+                        <InputCheckbox
+                            id="tab-disable-edit"
+                            label="Disable on Edit (Y/N)"
+                            defaultValue={selectedTab.disable_edit || false}
+                            onChange={(e: { value: any; }) => handleTabChange('disable_edit', e.value)}
+                        />
+                    </GridItem>
+                </GridFlexContainer>
             </PropertyContainer>
         );
     }
@@ -239,20 +244,25 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                     <Typography variant="h6">Dialog Properties</Typography>
                 </Div>
                 <Divider />
-
-                <PropertySection>
-                    <SectionTitle variant="caption">Header</SectionTitle>
-
-                    <Input
-                        id="dialog-label"
-                        label="Dialog Label"
-                        value={dialogLabel}
-                        onChange={(e) => onDialogHeaderUpdate('dialogLabel', e.target.value)}
-                        fullWidth
-                        variant="standard"
-                    />
-
-                    <div style={{ marginTop: '16px' }}>
+                <GridFlexContainer key={'dialog-properties-grid'} spacing={2} px={0} py={2}
+                    flexDirection='row'>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="dialog-properties-label">
+                        <Input
+                            id="dialog-label"
+                            label="Dialog Label"
+                            value={dialogLabel}
+                            onChange={(e) => onDialogHeaderUpdate('dialogLabel', e.target.value)}
+                            fullWidth
+                            variant="standard"
+                        />
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="dialog-properties-id">
                         <InputLookup
                             id="dialog-id"
                             lookupID={24}
@@ -265,9 +275,11 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                             fixed_params={dialogID ? `DLG_ID=${dialogID}` : ""}
                             variant="standard"
                         />
-                    </div>
-
-                    <div style={{ marginTop: '16px' }}>
+                    </GridItem>
+                    <GridItem
+                        style={{ flexGrow: 0 }}
+                        size={12}
+                        key="dialog-properties-query">
                         <InputLookup
                             id="query-id"
                             lookupID={1}
@@ -280,8 +292,8 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                             fixed_params={queryID ? `QUERY_TYPE=CRUD;QUERY_ID=${queryID}` : "QUERY_TYPE=CRUD"}
                             variant="standard"
                         />
-                    </div>
-                </PropertySection>
+                    </GridItem>
+                </GridFlexContainer>
             </PropertyContainer>
         );
     }
@@ -294,7 +306,6 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
         <PropertyContainer>
             <Div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <Typography variant="h6">Field Properties</Typography>
-                <Button onClick={onClose}>Close</Button>
             </Div>
             <Divider />
 
@@ -304,12 +315,28 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                 <Tab id="tab-conditions" label="Conditions" value="conditions" />
             </Tabs>
 
-            <Div style={{ marginTop: '16px' }}>
+            <Div>
                 {/* Properties Tab */}
                 {activeFieldTab === 'properties' && (
-                    <>
-                        <PropertySection>
-                            <SectionTitle variant="caption">Field Order</SectionTitle>
+                    <GridFlexContainer key={'field-properties-grid'} spacing={2} px={0} py={0}
+                        flexDirection='row'>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-id">
+                            <Input
+                                id="input-field"
+                                label="Field ID"
+                                value={selectedField[EDialogDetails.id] || ''}
+                                onChange={(e) => handleChange(EDialogDetails.id, e.target.value)}
+                                fullWidth
+                                variant="standard"
+                            />
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-sequence">
                             <Input
                                 id="input-sequence"
                                 label="Field Order"
@@ -319,10 +346,11 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                 fullWidth
                                 variant="standard"
                             />
-                        </PropertySection>
-
-                        <PropertySection>
-                            <SectionTitle variant="caption">Description</SectionTitle>
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-label">
                             <Input
                                 id="input-label"
                                 label="Description"
@@ -331,20 +359,11 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                 fullWidth
                                 variant="standard"
                             />
-                        </PropertySection>
-
-                        <PropertySection>
-                            <SectionTitle variant="caption">Field Definition</SectionTitle>
-                            
-                            <Input
-                                id="input-field"
-                                label="Field ID"
-                                value={selectedField[EDialogDetails.id] || ''}
-                                onChange={(e) => handleChange(EDialogDetails.id, e.target.value)}
-                                fullWidth
-                                variant="standard"
-                            />
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-dictionary">
                             <Input
                                 id="input-dd"
                                 label="Dictionary ID"
@@ -354,7 +373,11 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                 variant="standard"
                                 helperText="Column dictionary (use custom value to override)"
                             />
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-target">
                             <Input
                                 id="input-target"
                                 label="Target Field"
@@ -363,11 +386,11 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                 fullWidth
                                 variant="standard"
                             />
-                        </PropertySection>
-
-                        <PropertySection>
-                            <SectionTitle variant="caption">Layout</SectionTitle>
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-tab">
                             <Select
                                 id="input-tab"
                                 label="Tab"
@@ -386,7 +409,11 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                 selectOnly
                                 showClearButton={false}
                             />
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-colspan">
                             <Input
                                 id="input-colspan"
                                 label="Columns to display"
@@ -396,93 +423,127 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                 fullWidth
                                 variant="standard"
                             />
-                        </PropertySection>
-
-                        <PropertySection>
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={12}
+                            key="field-properties-behavior">
                             <SectionTitle variant="caption">Behavior</SectionTitle>
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={6}
+                            key="field-properties-visible">
                             <InputCheckbox
                                 id="visible"
                                 label="Visible (Y/N)"
                                 defaultValue={selectedField[EDialogDetails.visible] === 'Y'}
                                 onChange={(e: { value: any; }) => handleChange(EDialogDetails.visible, e.value ? 'Y' : 'N')}
                             />
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={6}
+                            key="field-properties-disabled">
                             <InputCheckbox
                                 id="disabled"
                                 label="Disabled (Y/N)"
                                 defaultValue={selectedField[EDialogDetails.disabled] === 'Y'}
                                 onChange={(e: { value: any; }) => handleChange(EDialogDetails.disabled, e.value ? 'Y' : 'N')}
                             />
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={6}
+                            key="field-properties-required">
                             <InputCheckbox
                                 id="required"
                                 label="Required (Y/N)"
                                 defaultValue={selectedField[EDialogDetails.required] === 'Y'}
                                 onChange={(e: { value: any; }) => handleChange(EDialogDetails.required, e.value ? 'Y' : 'N')}
                             />
-
+                        </GridItem>
+                        <GridItem
+                            style={{ flexGrow: 0 }}
+                            size={6}
+                            key="field-properties-key">
                             <InputCheckbox
                                 id="key"
                                 label="Key Field (Y/N)"
                                 defaultValue={selectedField[EDialogDetails.key] === 'Y'}
                                 onChange={(e: { value: any; }) => handleChange(EDialogDetails.key, e.value ? 'Y' : 'N')}
                             />
-                        </PropertySection>
-
-                        {/* Validation & Rules */}
+                        </GridItem>
                         {!isDataComponent && (
-                            <PropertySection>
-                                <SectionTitle variant="caption">Validation</SectionTitle>
-
-                                <Input
-                                    id="input-rules"
-                                    label="Rules"
-                                    value={selectedField[EDialogDetails.rules] || ''}
-                                    onChange={(e) => handleChange(EDialogDetails.rules, e.target.value)}
-                                    fullWidth
-                                    variant="standard"
-                                />
-
-                                <Input
-                                    id="input-rules-values"
-                                    label="Rules Values (ID)"
-                                    value={selectedField[EDialogDetails.rulesValues] || ''}
-                                    onChange={(e) => handleChange(EDialogDetails.rulesValues, e.target.value)}
-                                    fullWidth
-                                    variant="standard"
-                                    helperText="For enum/lookup: enter the ID"
-                                />
-
-                                <Input
-                                    id="input-default"
-                                    label="Default Value"
-                                    value={selectedField[EDialogDetails.default] || ''}
-                                    onChange={(e) => handleChange(EDialogDetails.default, e.target.value)}
-                                    fullWidth
-                                    variant="standard"
-                                />
-                            </PropertySection>
+                            <>
+                                <GridItem
+                                    style={{ flexGrow: 0 }}
+                                    size={12}
+                                    key="field-properties-rules">
+                                    <Input
+                                        id="input-rules"
+                                        label="Rules"
+                                        value={selectedField[EDialogDetails.rules] || ''}
+                                        onChange={(e) => handleChange(EDialogDetails.rules, e.target.value)}
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </GridItem>
+                                <GridItem
+                                    style={{ flexGrow: 0 }}
+                                    size={12}
+                                    key="field-properties-rules-values">
+                                    <Input
+                                        id="input-rules-values"
+                                        label="Rules Values (ID)"
+                                        value={selectedField[EDialogDetails.rulesValues] || ''}
+                                        onChange={(e) => handleChange(EDialogDetails.rulesValues, e.target.value)}
+                                        fullWidth
+                                        variant="standard"
+                                        helperText="For enum/lookup: enter the ID"
+                                    />
+                                </GridItem>
+                                <GridItem
+                                    style={{ flexGrow: 0 }}
+                                    size={12}
+                                    key="field-properties-default">
+                                    <Input
+                                        id="input-default"
+                                        label="Default Value"
+                                        value={selectedField[EDialogDetails.default] || ''}
+                                        onChange={(e) => handleChange(EDialogDetails.default, e.target.value)}
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </GridItem>
+                            </>
                         )}
-
-                        {/* Data Component Properties */}
                         {isDataComponent && (
-                            <PropertySection>
-                                <SectionTitle variant="caption">Data Component</SectionTitle>
-
-                                <Input
-                                    id="input-component-id"
-                                    label="Component ID"
-                                    type="number"
-                                    value={selectedField[EDialogDetails.componentID] || ''}
-                                    onChange={(e) => handleChange(EDialogDetails.componentID, parseInt(e.target.value))}
-                                    fullWidth
-                                    variant="standard"
-                                    helperText="Table/Tree/List/Grid ID"
-                                />
-                            </PropertySection>
+                            <>
+                                <GridItem
+                                    style={{ flexGrow: 0 }}
+                                    size={12}
+                                    key="field-properties-data-component">
+                                    <SectionTitle variant="caption">Data Component</SectionTitle>
+                                </GridItem>
+                                <GridItem
+                                    style={{ flexGrow: 0 }}
+                                    size={12}
+                                    key="field-properties-component-id">
+                                    <Input
+                                        id="input-component-id"
+                                        label="Component ID"
+                                        type="number"
+                                        value={selectedField[EDialogDetails.componentID] || ''}
+                                        onChange={(e) => handleChange(EDialogDetails.componentID, parseInt(e.target.value))}
+                                        fullWidth
+                                        variant="standard"
+                                        helperText="Table/Tree/List/Grid ID"
+                                    />
+                                </GridItem>
+                            </>
                         )}
-                    </>
+                    </GridFlexContainer>
                 )}
 
                 {/* Parameters Tab */}
@@ -555,33 +616,6 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                             )}
                         </PropertySection>
 
-                        <PropertySection>
-                            <SectionTitle variant="caption">Legacy String Parameters (Read-only)</SectionTitle>
-                            
-                            <Input
-                                id="input-dynamic-params"
-                                label="Dynamic Params"
-                                value={selectedField[EDialogDetails.dynamic_params] || ''}
-                                fullWidth
-                                multiline
-                                rows={2}
-                                variant="standard"
-                                disabled
-                                helperText="Deprecated: Use parameter list above"
-                            />
-
-                            <Input
-                                id="input-fixed-params"
-                                label="Fixed Params"
-                                value={selectedField[EDialogDetails.fixed_params] || ''}
-                                fullWidth
-                                multiline
-                                rows={2}
-                                variant="standard"
-                                disabled
-                                helperText="Deprecated: Use parameter list above"
-                            />
-                        </PropertySection>
                     </>
                 )}
 
@@ -667,34 +701,6 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                                     ))}
                                 </ParameterList>
                             )}
-                        </PropertySection>
-
-                        <PropertySection>
-                            <SectionTitle variant="caption">Legacy String Parameters (Read-only)</SectionTitle>
-
-                            <Input
-                                id="input-condition-dynamic-params"
-                                label="Condition Dynamic Params"
-                                value={selectedField[EDialogDetails.cdn_dynamic_params] || ''}
-                                fullWidth
-                                multiline
-                                rows={2}
-                                variant="standard"
-                                disabled
-                                helperText="Deprecated: Use parameter list above"
-                            />
-
-                            <Input
-                                id="input-condition-fixed-params"
-                                label="Condition Fixed Params"
-                                value={selectedField[EDialogDetails.cdn_fixed_params] || ''}
-                                fullWidth
-                                multiline
-                                rows={2}
-                                variant="standard"
-                                disabled
-                                helperText="Deprecated: Use parameter list above"
-                            />
                         </PropertySection>
                     </>
                 )}
@@ -788,46 +794,46 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                         />
                     )}
 
-                    {editingParameter?.param.flt_type && 
-                     editingParameter.param.flt_type !== 'VALUE' && 
-                     editingParameter.param.flt_type !== 'POOL' && (
-                        <>
-                            <Input
-                                id="param-source"
-                                label="Source"
-                                value={editingParameter.param.flt_source || ''}
-                                onChange={(e) => {
-                                    setEditingParameter({
-                                        ...editingParameter,
-                                        param: {
-                                            ...editingParameter.param,
-                                            flt_source: e.target.value,
-                                        },
-                                    });
-                                }}
-                                fullWidth
-                                variant="standard"
-                                style={{ marginTop: '16px' }}
-                            />
-                            <Input
-                                id="param-target"
-                                label="Target"
-                                value={editingParameter.param.flt_target || ''}
-                                onChange={(e) => {
-                                    setEditingParameter({
-                                        ...editingParameter,
-                                        param: {
-                                            ...editingParameter.param,
-                                            flt_target: e.target.value,
-                                        },
-                                    });
-                                }}
-                                fullWidth
-                                variant="standard"
-                                style={{ marginTop: '16px' }}
-                            />
-                        </>
-                    )}
+                    {editingParameter?.param.flt_type &&
+                        editingParameter.param.flt_type !== 'VALUE' &&
+                        editingParameter.param.flt_type !== 'POOL' && (
+                            <>
+                                <Input
+                                    id="param-source"
+                                    label="Source"
+                                    value={editingParameter.param.flt_source || ''}
+                                    onChange={(e) => {
+                                        setEditingParameter({
+                                            ...editingParameter,
+                                            param: {
+                                                ...editingParameter.param,
+                                                flt_source: e.target.value,
+                                            },
+                                        });
+                                    }}
+                                    fullWidth
+                                    variant="standard"
+                                    style={{ marginTop: '16px' }}
+                                />
+                                <Input
+                                    id="param-target"
+                                    label="Target"
+                                    value={editingParameter.param.flt_target || ''}
+                                    onChange={(e) => {
+                                        setEditingParameter({
+                                            ...editingParameter,
+                                            param: {
+                                                ...editingParameter.param,
+                                                flt_target: e.target.value,
+                                            },
+                                        });
+                                    }}
+                                    fullWidth
+                                    variant="standard"
+                                    style={{ marginTop: '16px' }}
+                                />
+                            </>
+                        )}
 
                     <Div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '24px' }}>
                         <Button variant="outlined" onClick={() => setEditingParameter(null)}>
@@ -928,46 +934,46 @@ export const PropertyPanel: React.FC<IPropertyPanelProps> = ({
                         />
                     )}
 
-                    {editingConditionParameter?.param.cdn_type && 
-                     editingConditionParameter.param.cdn_type !== 'VALUE' && 
-                     editingConditionParameter.param.cdn_type !== 'POOL' && (
-                        <>
-                            <Input
-                                id="cdn-param-source"
-                                label="Source"
-                                value={editingConditionParameter.param.cdn_source || ''}
-                                onChange={(e) => {
-                                    setEditingConditionParameter({
-                                        ...editingConditionParameter,
-                                        param: {
-                                            ...editingConditionParameter.param,
-                                            cdn_source: e.target.value,
-                                        },
-                                    });
-                                }}
-                                fullWidth
-                                variant="standard"
-                                style={{ marginTop: '16px' }}
-                            />
-                            <Input
-                                id="cdn-param-target"
-                                label="Target"
-                                value={editingConditionParameter.param.cdn_target || ''}
-                                onChange={(e) => {
-                                    setEditingConditionParameter({
-                                        ...editingConditionParameter,
-                                        param: {
-                                            ...editingConditionParameter.param,
-                                            cdn_target: e.target.value,
-                                        },
-                                    });
-                                }}
-                                fullWidth
-                                variant="standard"
-                                style={{ marginTop: '16px' }}
-                            />
-                        </>
-                    )}
+                    {editingConditionParameter?.param.cdn_type &&
+                        editingConditionParameter.param.cdn_type !== 'VALUE' &&
+                        editingConditionParameter.param.cdn_type !== 'POOL' && (
+                            <>
+                                <Input
+                                    id="cdn-param-source"
+                                    label="Source"
+                                    value={editingConditionParameter.param.cdn_source || ''}
+                                    onChange={(e) => {
+                                        setEditingConditionParameter({
+                                            ...editingConditionParameter,
+                                            param: {
+                                                ...editingConditionParameter.param,
+                                                cdn_source: e.target.value,
+                                            },
+                                        });
+                                    }}
+                                    fullWidth
+                                    variant="standard"
+                                    style={{ marginTop: '16px' }}
+                                />
+                                <Input
+                                    id="cdn-param-target"
+                                    label="Target"
+                                    value={editingConditionParameter.param.cdn_target || ''}
+                                    onChange={(e) => {
+                                        setEditingConditionParameter({
+                                            ...editingConditionParameter,
+                                            param: {
+                                                ...editingConditionParameter.param,
+                                                cdn_target: e.target.value,
+                                            },
+                                        });
+                                    }}
+                                    fullWidth
+                                    variant="standard"
+                                    style={{ marginTop: '16px' }}
+                                />
+                            </>
+                        )}
 
                     <Div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '24px' }}>
                         <Button variant="outlined" onClick={() => setEditingConditionParameter(null)}>

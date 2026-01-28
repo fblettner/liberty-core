@@ -556,10 +556,6 @@ export const DialogBuilder: React.FC<IDialogBuilderProps> = ({
                             onFieldUpdate={handleFieldUpdate}
                             onTabUpdate={handleTabUpdate}
                             onFieldMoveToTab={handleFieldMoveToTab}
-                            onClose={() => {
-                                setShowHeaderProperties(false);
-                                setBuilderState((prev) => ({ ...prev, selectedField: null, selectedTab: null }));
-                            }}
                             dialogID={builderState.dialogID}
                             dialogLabel={builderState.dialogLabel}
                             queryID={builderState.queryID}
