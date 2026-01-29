@@ -100,7 +100,7 @@ export const Div_AppsLogin = styled(Div)(({ theme }) => ({
 
 export const Div_ColumnsFilter = styled(Div)(({ theme }) => ({
     padding: '16px',
-    width: '600px',
+    width: '800px',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: '12px'
 }));
