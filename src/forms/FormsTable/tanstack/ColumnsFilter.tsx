@@ -31,19 +31,23 @@ import { GridFlexContainer, GridItem } from '@ly_common/Grid';
 // Define operators
 const stringOperators = [
     { value: 'contains', label: 'Contains' },
+    { value: 'notContains', label: 'Not contains' },
     { value: 'equals', label: 'Equals' },
+    { value: 'notEquals', label: 'Not equals' },
     { value: 'isEmpty', label: 'Is empty' },
     { value: 'isNotEmpty', label: 'Is not empty' },
 ];
 
 const booleanOperators = [
     { value: 'is', label: 'Is' },
+    { value: 'notIs', label: 'Is not' },
     { value: 'isEmpty', label: 'Is empty' },
     { value: 'isNotEmpty', label: 'Is not empty' },
 ];
 
 const enumOperators = [
     { value: 'equals', label: 'Equals' },
+    { value: 'notEquals', label: 'Not equals' },
     { value: 'isEmpty', label: 'Is empty' },
     { value: 'isNotEmpty', label: 'Is not empty' },
 ];
@@ -51,14 +55,17 @@ const enumOperators = [
 
 const dateOperators = [
     { value: 'equals', label: 'Equals' },
+    { value: 'notEquals', label: 'Not equals' },
     { value: 'greater', label: 'Greater' },
     { value: 'less', label: 'Less' },
+    { value: 'between', label: 'Between' },
     { value: 'isEmpty', label: 'Is empty' },
     { value: 'isNotEmpty', label: 'Is not empty' },
 ];
 
 const numberOperators = [
     { value: 'equals', label: 'Equals' },
+    { value: 'notEquals', label: 'Not equals' },
     { value: 'greater', label: 'Greater' },
     { value: 'less', label: 'Less' },
     { value: 'isEmpty', label: 'Is empty' },
@@ -79,6 +86,8 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
         operator: string;
         operators: Array<{ value: string; label: string }>;
         value: IContentValue;
+        startDate?: IContentValue;
+        endDate?: IContentValue;
         type: string | null;
     }
 
@@ -131,11 +140,28 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
                 const columnType = column ? column.columnDef.type : 'string';
                 const columnRules = column ? column.columnDef.rules : null;
                 const operators = getOperatorsByTypeOrRules(defaultType as string, columnRules as EDictionaryRules);
+                const filterValue = filter.value as { operator: string, value: IContentValue };
+                const operator = filterValue.operator || defaultOp;
+                
+                // Handle 'between' operator with startDate and endDate
+                if (operator === 'between' && typeof filterValue.value === 'object' && filterValue.value !== null) {
+                    const rangeValue = filterValue.value as { startDate?: IContentValue, endDate?: IContentValue };
+                    return {
+                        column: column || null,
+                        operator,
+                        operators,
+                        value: null,
+                        startDate: rangeValue.startDate || null,
+                        endDate: rangeValue.endDate || null,
+                        type: columnType
+                    };
+                }
+                
                 return {
                     column: column || null,
-                    operator: (filter.value as { operator: string }).operator || defaultOp,
+                    operator,
                     operators,
-                    value: (filter.value as { operator: string, value: IContentValue }).value || null,
+                    value: filterValue.value || null,
                     type: columnType
                 };
             });
@@ -226,6 +252,48 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
         }
     };
 
+    const handleStartDateChange = (index: number) => (value: string | null) => {
+        const updatedFilters = [...filters];
+        updatedFilters[index].startDate = value;
+        setFilters(updatedFilters);
+        // Automatically apply the filter when both dates are set or at least one is set
+        if (updatedFilters[index].column && (updatedFilters[index].startDate || updatedFilters[index].endDate)) {
+            table.setColumnFilters(
+                updatedFilters.map((f) => ({
+                    id: f.column?.id || "",
+                    value: { 
+                        operator: f.operator, 
+                        value: f.operator === 'between' 
+                            ? { startDate: f.startDate, endDate: f.endDate } 
+                            : f.value, 
+                        type: f.type 
+                    },
+                }))
+            );
+        }
+    };
+
+    const handleEndDateChange = (index: number) => (value: string | null) => {
+        const updatedFilters = [...filters];
+        updatedFilters[index].endDate = value;
+        setFilters(updatedFilters);
+        // Automatically apply the filter when both dates are set or at least one is set
+        if (updatedFilters[index].column && (updatedFilters[index].startDate || updatedFilters[index].endDate)) {
+            table.setColumnFilters(
+                updatedFilters.map((f) => ({
+                    id: f.column?.id || "",
+                    value: { 
+                        operator: f.operator, 
+                        value: f.operator === 'between' 
+                            ? { startDate: f.startDate, endDate: f.endDate } 
+                            : f.value, 
+                        type: f.type 
+                    },
+                }))
+            );
+        }
+    };
+
     const handleEnumChange = (index: number) => (value: IContentValue) => {
         const updatedFilters = [...filters];
         updatedFilters[index].value = value;
@@ -292,14 +360,25 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
             updatedFilters.length > 0
                 ? updatedFilters.map((f) => ({
                     id: f.column?.id || "",
-                    value: { operator: f.operator, value: f.value }, // Store both operator and value in the filter object
+                    value: { 
+                        operator: f.operator, 
+                        value: f.operator === 'between' 
+                            ? { startDate: f.startDate, endDate: f.endDate } 
+                            : f.value,
+                        type: f.type
+                    },
                 }))
                 : [] // Clear filters if no filters remain
         );
     };
 
     // Determine if the "Add Filter" button should be enabled
-    const isAddFilterEnabled = filters.some(f => f.column && f.value);
+    const isAddFilterEnabled = filters.some(f => 
+        f.column && (
+            f.value || 
+            (f.operator === 'between' && (f.startDate || f.endDate))
+        )
+    );
 
     return (
         <Popper
@@ -309,7 +388,7 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
             modal
             placement='bottom-start'
             style={{
-                width: "600px", // Use column width if larger than minWidth (300)
+                width: "800px", // Increased width to accommodate two date pickers for 'between' filter
             }}
         >
             <Paper_Popup>
@@ -333,7 +412,7 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
                             </GridItem>
 
                             {/* Column selector */}
-                            <GridItem size={4}>
+                            <GridItem size={3}>
                                 <Select
                                     label="Column"
                                     id={`select-${index}`}
@@ -349,7 +428,7 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
                             </GridItem>
 
                             {/* Operator selector */}
-                            <GridItem size={3} >
+                            <GridItem size={2} >
                                 <Select
                                     label="operator"
                                     id={`operator-${index}`}
@@ -366,8 +445,33 @@ export const ColumnsFilter = (params: IColumnsFilter) => {
                             </GridItem>
 
                             {/* Value input */}
-                            {filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty' ? null : (
-                            <GridItem size={4}>
+                            {filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty' ? null : filter.operator === 'between' && filter.column?.columnDef && (filter.column.columnDef.type === EDictionaryType.date || filter.column.columnDef.type === EDictionaryType.jdedate) ? (
+                            <>
+                                <GridItem size={3}>
+                                    <DatePicker
+                                        id={`input-start-${index}-${filter.column.id}`}
+                                        label="Start Date"
+                                        value={filter.startDate ? dayjs(filter.startDate as Date) : null}
+                                        onChange={(newValue) => {
+                                            const formattedDate = newValue ? newValue.format('YYYY-MM-DD') : null;
+                                            handleStartDateChange(index)(formattedDate);
+                                        }}
+                                    />
+                                </GridItem>
+                                <GridItem size={3}>
+                                    <DatePicker
+                                        id={`input-end-${index}-${filter.column.id}`}
+                                        label="End Date"
+                                        value={filter.endDate ? dayjs(filter.endDate as Date) : null}
+                                        onChange={(newValue) => {
+                                            const formattedDate = newValue ? newValue.format('YYYY-MM-DD') : null;
+                                            handleEndDateChange(index)(formattedDate);
+                                        }}
+                                    />
+                                </GridItem>
+                            </>
+                            ) : (
+                            <GridItem size={6}>
                                 {filter.column?.columnDef
                                     && filter.column.columnDef.rules === EDictionaryRules.enum
                                     ? (

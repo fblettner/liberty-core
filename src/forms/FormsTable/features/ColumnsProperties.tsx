@@ -61,8 +61,34 @@ const getDynamicFilterFn = (operator: string, type: EDictionaryType) => {
                 }
                 return cellValue === filterValue; // Fallback for other types (string, etc.)
             };
+        case 'notEquals':
+            return (row: Row<ITableRow>, columnId: string, filterValue: IContentValue) => {
+                const cellValue = row.getValue(columnId);
+                const cellValueDate = dayjs.isDayjs(cellValue) ? cellValue : dayjs(cellValue as string | number | Date | null | undefined);
+                const filterValueDate = dayjs.isDayjs(filterValue) ? filterValue : dayjs(filterValue as string | number | Date | null | undefined);
+                if (filterValueDate.isValid() && type === EDictionaryType.jdedate) {
+                    return cellValue !== Number(ToolsDictionary.DateToJde(filterValue as string)); // JDE Date comparison
+                }
+
+                if (typeof cellValue === 'number' && typeof filterValue === 'number') {
+                    return cellValue !== filterValue; // Number comparison
+                }
+
+                if (cellValueDate.isValid() && filterValueDate.isValid()) {
+                    return !cellValueDate.isSame(filterValueDate, 'day'); // Date comparison
+                }
+                return cellValue !== filterValue; // Fallback for other types (string, etc.)
+            };
         case 'contains':
             return filterFns.includesString; // Case-insensitive substring matching
+        case 'notContains':
+            return (row: Row<ITableRow>, columnId: string, filterValue: IContentValue) => {
+                const cellValue = row.getValue(columnId);
+                if (typeof cellValue !== 'string' || typeof filterValue !== 'string') {
+                    return true;
+                }
+                return !cellValue.toLowerCase().includes(filterValue.toLowerCase());
+            };
         case 'startsWith':
             return (row: Row<ITableRow>, columnId: string, filterValue: IContentValue) => {
                 const cellValue = row.getValue(columnId);
@@ -89,6 +115,17 @@ const getDynamicFilterFn = (operator: string, type: EDictionaryType) => {
                 }
 
                 return cellValue !== null && cellValue !== 'N';
+
+            };
+        case 'notIs':
+            return (row: Row<ITableRow>, columnId: string, filterValue: IContentValue) => {
+                const cellValue = row.getValue(columnId);
+
+                if (!filterValue) {
+                    return cellValue !== 'N' && cellValue !== null;
+                }
+
+                return cellValue === null || cellValue === 'N';
 
             };
         case 'greater':
@@ -132,6 +169,59 @@ const getDynamicFilterFn = (operator: string, type: EDictionaryType) => {
                 }
 
                 return false; // Default to false if types don't match
+            };
+        case 'between':
+            return (row: Row<ITableRow>, columnId: string, filterValue: IContentValue) => {
+                const cellValue = row.getValue(columnId);
+                
+                // Expect filterValue to be an object with startDate and endDate
+                if (typeof filterValue !== 'object' || filterValue === null) {
+                    return true; // If no valid range provided, show all rows
+                }
+                
+                const { startDate, endDate } = filterValue as { startDate?: IContentValue, endDate?: IContentValue };
+                
+                if (!startDate && !endDate) {
+                    return true; // If no dates provided, show all rows
+                }
+                
+                const cellValueDate = dayjs.isDayjs(cellValue) ? cellValue : dayjs(cellValue as string | number | Date | null | undefined);
+                
+                if (!cellValueDate.isValid()) {
+                    return false; // Invalid cell date
+                }
+                
+                // Handle JDE dates
+                if (type === EDictionaryType.jdedate) {
+                    const cellJdeNumber = cellValue as number;
+                    const startJde = startDate ? Number(ToolsDictionary.DateToJde(startDate as string)) : null;
+                    const endJde = endDate ? Number(ToolsDictionary.DateToJde(endDate as string)) : null;
+                                       
+                    if (startJde !== null && endJde !== null) {
+                        const result = cellJdeNumber >= startJde && cellJdeNumber <= endJde;
+                        return result;
+                    } else if (startJde !== null) {
+                        return cellJdeNumber >= startJde;
+                    } else if (endJde !== null) {
+                        return cellJdeNumber <= endJde;
+                    }
+                }
+                
+                // Handle regular dates
+                const startDateParsed = startDate ? dayjs(startDate as string | number | Date) : null;
+                const endDateParsed = endDate ? dayjs(endDate as string | number | Date) : null;
+                
+                if (startDateParsed?.isValid() && endDateParsed?.isValid()) {
+                    const result = (cellValueDate.isAfter(startDateParsed, 'day') || cellValueDate.isSame(startDateParsed, 'day')) && 
+                           (cellValueDate.isBefore(endDateParsed, 'day') || cellValueDate.isSame(endDateParsed, 'day'));
+                    return result;
+                } else if (startDateParsed?.isValid()) {
+                    return cellValueDate.isAfter(startDateParsed, 'day') || cellValueDate.isSame(startDateParsed, 'day');
+                } else if (endDateParsed?.isValid()) {
+                    return cellValueDate.isBefore(endDateParsed, 'day') || cellValueDate.isSame(endDateParsed, 'day');
+                }
+                
+                return true;
             };
         default:
             return filterFns.includesString; // Default to contains
